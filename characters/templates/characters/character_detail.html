@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ character.name }} - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="character-detail-container">
+    <div class="character-detail-header">
+        <div class="character-title">
+            <div class="character-name-section">
+                <h1>
+                    {% if character.type == 'NPC' %}
+                        <i class="fas fa-ghost"></i>
+                    {% else %}
+                        <i class="fas fa-user"></i>
+                    {% endif %}
+                    {{ character.name }}
+                </h1>
+                <div class="character-type-badge large">
+                    <i class="fas fa-{% if character.type == 'NPC' %}ghost{% else %}user{% endif %}"></i>
+                    {{ character.get_type_display }}
+                </div>
+            </div>
+            <div class="character-actions">
+                <a href="{% url 'characters:character_edit' character.pk %}" class="btn btn-outline">
+                    <i class="fas fa-edit"></i> Edit Character
+                </a>
+                <a href="{% url 'characters:character_delete' character.pk %}" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Delete Character
+                </a>
+            </div>
+        </div>
+        
+        <div class="character-meta">
+            <div class="meta-item">
+                <i class="fas fa-map"></i>
+                <strong>Campaign:</strong> 
+                <a href="{% url 'campaigns:campaign_detail' character.campaign.pk %}">
+                    {{ character.campaign.name }}
+                </a>
+            </div>
+            <div class="meta-item">
+                <i class="fas fa-crown"></i>
+                <strong>DM:</strong> {{ character.campaign.dm }}
+            </div>
+            <div class="meta-item">
+                <i class="fas fa-calendar"></i>
+                <strong>Created:</strong> {{ character.created_at|date:"F d, Y" }}
+            </div>
+            {% if character.updated_at != character.created_at %}
+                <div class="meta-item">
+                    <i class="fas fa-clock"></i>
+                    <strong>Last Updated:</strong> {{ character.updated_at|date:"F d, Y" }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="character-content">
+        <div class="character-stats-grid">
+            {% if character.race %}
+                <div class="stat-card">
+                    <i class="fas fa-dragon"></i>
+                    <h4>Race</h4>
+                    <p class="stat-value">{{ character.race }}</p>
+                </div>
+            {% endif %}
+            
+            {% if character.character_class %}
+                <div class="stat-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>Class</h4>
+                    <p class="stat-value">{{ character.character_class }}</p>
+                </div>
+            {% endif %}
+            
+            <div class="stat-card">
+                <i class="fas fa-calendar-alt"></i>
+                <h4>Campaign Age</h4>
+                <p class="stat-value">{{ character.campaign.created_at|timesince }}</p>
+            </div>
+        </div>
+
+        {% if character.background %}
+            <div class="character-background-section">
+                <h3><i class="fas fa-scroll"></i> Character Background</h3>
+                <div class="background-content">
+                    {{ character.background|linebreaks }}
+                </div>
+            </div>
+        {% else %}
+            <div class="character-background-section">
+                <h3><i class="fas fa-scroll"></i> Character Background</h3>
+                <div class="background-content">
+                    <p class="no-background">No background information provided yet.</p>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="character-relationships">
+            <h3><i class="fas fa-link"></i> Related Information</h3>
+            <div class="relationships-grid">
+                <div class="relationship-card">
+                    <i class="fas fa-users"></i>
+                    <h4>Campaign Characters</h4>
+                    <p class="relationship-count">{{ character.campaign.characters.count }}</p>
+                    <p class="relationship-label">Total Characters</p>
+                    <a href="{% url 'characters:campaign_characters' character.campaign.pk %}" class="btn btn-sm btn-outline">
+                        View All
+                    </a>
+                </div>
+                
+                <div class="relationship-card">
+                    <i class="fas fa-dice-d20"></i>
+                    <h4>Campaign Sessions</h4>
+                    <p class="relationship-count">0</p>
+                    <p class="relationship-label">Total Sessions</p>
+                    <a href="#" class="btn btn-sm btn-outline disabled">
+                        Coming Soon
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="character-navigation">
+        <a href="{% url 'characters:character_list' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to Characters
+        </a>
+        <a href="{% url 'campaigns:campaign_detail' character.campaign.pk %}" class="btn btn-outline">
+            <i class="fas fa-map"></i> View Campaign
+        </a>
+    </div>
+</div>
+{% endblock %}

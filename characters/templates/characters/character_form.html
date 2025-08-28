@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if form.instance.pk %}Edit Character{% else %}New Character{% endif %} - D&D Tracker
+{% endblock %}
+
+{% block content %}
+<div class="character-form-container">
+    <div class="character-form-header">
+        <h1>
+            {% if form.instance.pk %}
+                <i class="fas fa-edit"></i> Edit Character
+            {% else %}
+                <i class="fas fa-plus"></i> New Character
+            {% endif %}
+        </h1>
+        <p>
+            {% if form.instance.pk %}
+                Update your character details below.
+            {% else %}
+                Create a new character for your D&D campaign!
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="character-form-content">
+        <form method="post" class="character-form">
+            {% csrf_token %}
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.campaign.id_for_label }}">
+                        Campaign <span class="required">*</span>
+                    </label>
+                    {{ form.campaign }}
+                    {% if form.campaign.errors %}
+                        <div class="error-message">
+                            {% for error in form.campaign.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.type.id_for_label }}">
+                        Character Type <span class="required">*</span>
+                    </label>
+                    {{ form.type }}
+                    {% if form.type.errors %}
+                        <div class="error-message">
+                            {% for error in form.type.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}">
+                    Character Name <span class="required">*</span>
+                </label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="error-message">
+                        {% for error in form.name.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.race.id_for_label }}">
+                        Race
+                    </label>
+                    {{ form.race }}
+                    {% if form.race.errors %}
+                        <div class="error-message">
+                            {% for error in form.race.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="form-text">
+                        e.g., Human, Elf, Dwarf, Dragonborn
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.character_class.id_for_label }}">
+                        Class
+                    </label>
+                    {{ form.character_class }}
+                    {% if form.character_class.errors %}
+                        <div class="error-message">
+                            {% for error in form.character_class.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="form-text">
+                        e.g., Fighter, Wizard, Cleric, Rogue
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.background.id_for_label }}">
+                    Background
+                </label>
+                {{ form.background }}
+                {% if form.background.errors %}
+                    <div class="error-message">
+                        {% for error in form.background.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div class="form-text">
+                    Describe your character's backstory, personality, or any other background information.
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'characters:character_list' %}" class="btn btn-outline">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    {% if form.instance.pk %}
+                        <i class="fas fa-save"></i> Update Character
+                    {% else %}
+                        <i class="fas fa-plus"></i> Create Character
+                    {% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

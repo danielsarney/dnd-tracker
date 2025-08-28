@@ -132,11 +132,79 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteForms = document.querySelectorAll('.delete-form');
     deleteForms.forEach(form => {
         form.addEventListener('submit', function(e) {
-            if (!confirm('Are you absolutely sure you want to delete this campaign? This action cannot be undone.')) {
+            const isCharacter = form.closest('.character-detail-container') !== null;
+            const itemType = isCharacter ? 'character' : 'campaign';
+            if (!confirm(`Are you absolutely sure you want to delete this ${itemType}? This action cannot be undone.`)) {
                 e.preventDefault();
             }
         });
     });
+    
+    // Character card hover effects
+    const characterCards = document.querySelectorAll('.character-card');
+    characterCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+    
+    // Character form validation
+    const characterForm = document.querySelector('.character-form');
+    if (characterForm) {
+        characterForm.addEventListener('submit', function(e) {
+            const campaignSelect = this.querySelector('select[name="campaign"]');
+            const typeSelect = this.querySelector('select[name="type"]');
+            const nameInput = this.querySelector('input[name="name"]');
+            
+            if (!campaignSelect.value) {
+                e.preventDefault();
+                showFieldError(campaignSelect, 'Please select a campaign');
+                return;
+            }
+            
+            if (!typeSelect.value) {
+                e.preventDefault();
+                showFieldError(typeSelect, 'Please select a character type');
+                return;
+            }
+            
+            if (!nameInput.value.trim()) {
+                e.preventDefault();
+                showFieldError(nameInput, 'Character name is required');
+                return;
+            }
+        });
+    }
+    
+    // Character filter form enhancement
+    const filterForm = document.querySelector('.filter-form');
+    if (filterForm) {
+        const campaignSelect = filterForm.querySelector('select[name="campaign"]');
+        const typeSelect = filterForm.querySelector('select[name="type"]');
+        const searchInput = filterForm.querySelector('input[name="search"]');
+        
+        // Auto-submit on filter change
+        [campaignSelect, typeSelect].forEach(select => {
+            if (select) {
+                select.addEventListener('change', () => filterForm.submit());
+            }
+        });
+        
+        // Search with debouncing
+        if (searchInput) {
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    filterForm.submit();
+                }, 500);
+            });
+        }
+    }
 });
 
 // Helper function to show field errors

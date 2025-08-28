@@ -54,8 +54,11 @@
             <div class="stat-card">
                 <i class="fas fa-users"></i>
                 <h4>Characters</h4>
-                <p class="stat-number">0</p>
+                <p class="stat-number">{{ campaign.characters.count }}</p>
                 <p class="stat-label">Total Characters</p>
+                <a href="{% url 'characters:campaign_characters' campaign.pk %}" class="btn btn-sm btn-outline">
+                    View All
+                </a>
             </div>
             
             <div class="stat-card">

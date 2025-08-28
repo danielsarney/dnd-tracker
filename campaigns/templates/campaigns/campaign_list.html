@@ -18,17 +18,20 @@
                 <div class="campaign-card">
                     <div class="campaign-header">
                         <h3>{{ campaign.name }}</h3>
-                        <div class="campaign-actions">
-                            <a href="{% url 'campaigns:campaign_detail' campaign.pk %}" class="btn btn-sm btn-outline">
-                                <i class="fas fa-eye"></i> View
-                            </a>
-                            <a href="{% url 'campaigns:campaign_edit' campaign.pk %}" class="btn btn-sm btn-outline">
-                                <i class="fas fa-edit"></i> Edit
-                            </a>
-                            <a href="{% url 'campaigns:campaign_delete' campaign.pk %}" class="btn btn-sm btn-danger">
-                                <i class="fas fa-trash"></i> Delete
-                            </a>
-                        </div>
+                                            <div class="campaign-actions">
+                        <a href="{% url 'campaigns:campaign_detail' campaign.pk %}" class="btn btn-sm btn-outline">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                        <a href="{% url 'characters:campaign_characters' campaign.pk %}" class="btn btn-sm btn-outline">
+                            <i class="fas fa-users"></i> Characters
+                        </a>
+                        <a href="{% url 'campaigns:campaign_edit' campaign.pk %}" class="btn btn-sm btn-outline">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{% url 'campaigns:campaign_delete' campaign.pk %}" class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
                     </div>
                     
                     <div class="campaign-info">

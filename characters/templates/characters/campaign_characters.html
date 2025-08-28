@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ campaign.name }} - Characters - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="campaign-characters-container">
+    <div class="campaign-characters-header">
+        <div class="campaign-info">
+            <h1><i class="fas fa-users"></i> {{ campaign.name }} - Characters</h1>
+            <p class="campaign-dm">
+                <i class="fas fa-crown"></i> <strong>DM:</strong> {{ campaign.dm }}
+            </p>
+        </div>
+        <div class="campaign-actions">
+            <a href="{% url 'characters:character_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add Character
+            </a>
+            <a href="{% url 'campaigns:campaign_detail' campaign.pk %}" class="btn btn-outline">
+                <i class="fas fa-map"></i> View Campaign
+            </a>
+        </div>
+    </div>
+
+    {% if characters %}
+        <div class="characters-summary">
+            <div class="summary-stats">
+                <div class="summary-stat">
+                    <i class="fas fa-user"></i>
+                    <span class="stat-number">{{ characters|length }}</span>
+                    <span class="stat-label">Total Characters</span>
+                </div>
+                <div class="summary-stat">
+                    <i class="fas fa-user"></i>
+                    <span class="stat-number">{{ characters|dictsort:"type"|length|add:"0" }}</span>
+                    <span class="stat-label">Player Characters</span>
+                </div>
+                <div class="summary-stat">
+                    <i class="fas fa-ghost"></i>
+                    <span class="stat-number">{{ characters|dictsort:"type"|length|add:"0" }}</span>
+                    <span class="stat-label">NPCs</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="characters-grid">
+            {% for character in characters %}
+                <div class="character-card {% if character.type == 'NPC' %}npc-card{% else %}player-card{% endif %}">
+                    <div class="character-header">
+                        <div class="character-type-badge">
+                            <i class="fas fa-{% if character.type == 'NPC' %}ghost{% else %}user{% endif %}"></i>
+                            {{ character.get_type_display }}
+                        </div>
+                        <div class="character-actions">
+                            <a href="{% url 'characters:character_detail' character.pk %}" class="btn btn-sm btn-outline">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a href="{% url 'characters:character_edit' character.pk %}" class="btn btn-sm btn-outline">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'characters:character_delete' character.pk %}" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="character-info">
+                        <h3 class="character-name">{{ character.name }}</h3>
+                        
+                        {% if character.race %}
+                            <p class="character-race">
+                                <i class="fas fa-dragon"></i> <strong>Race:</strong> {{ character.race }}
+                            </p>
+                        {% endif %}
+                        
+                        {% if character.character_class %}
+                            <p class="character-class">
+                                <i class="fas fa-shield-alt"></i> <strong>Class:</strong> {{ character.character_class }}
+                            </p>
+                        {% endif %}
+                        
+                        {% if character.background %}
+                            <p class="character-background">
+                                <i class="fas fa-scroll"></i> <strong>Background:</strong> 
+                                {{ character.background|truncatewords:20 }}
+                            </p>
+                        {% endif %}
+                        
+                        <p class="character-date">
+                            <i class="fas fa-calendar"></i> Created: {{ character.created_at|date:"M d, Y" }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" class="btn btn-outline">&laquo; First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline">Previous</a>
+                {% endif %}
+                
+                <span class="current-page">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline">Last &raquo;</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-users fa-3x"></i>
+            <h3>No characters in this campaign yet</h3>
+            <p>Start building your campaign by adding some characters!</p>
+            <a href="{% url 'characters:character_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add First Character
+            </a>
+        </div>
+    {% endif %}
+
+    <div class="campaign-characters-navigation">
+        <a href="{% url 'characters:character_list' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to All Characters
+        </a>
+    </div>
+</div>
+{% endblock %}

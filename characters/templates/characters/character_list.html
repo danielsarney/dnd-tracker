@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Characters - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="characters-container">
+    <div class="characters-header">
+        <h1><i class="fas fa-users"></i> Characters</h1>
+        <a href="{% url 'characters:character_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> New Character
+        </a>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="characters-filters">
+        <form method="get" class="filter-form">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="campaign">Campaign:</label>
+                    <select name="campaign" id="campaign" class="form-control">
+                        <option value="">All Campaigns</option>
+                        {% for campaign in campaigns %}
+                            <option value="{{ campaign.pk }}" {% if selected_campaign == campaign.pk|stringformat:"s" %}selected{% endif %}>
+                                {{ campaign.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="type">Type:</label>
+                    <select name="type" id="type" class="form-control">
+                        <option value="">All Types</option>
+                        {% for type_code, type_name in character_types %}
+                            <option value="{{ type_code }}" {% if selected_type == type_code %}selected{% endif %}>
+                                {{ type_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="search">Search:</label>
+                    <input type="text" name="search" id="search" class="form-control" 
+                           placeholder="Search characters..." value="{{ search_query|default:'' }}">
+                </div>
+                
+                <div class="filter-actions">
+                    <button type="submit" class="btn btn-outline">
+                        <i class="fas fa-search"></i> Filter
+                    </button>
+                    <a href="{% url 'characters:character_list' %}" class="btn btn-outline">
+                        <i class="fas fa-times"></i> Clear
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% if characters %}
+        <div class="characters-grid">
+            {% for character in characters %}
+                <div class="character-card {% if character.type == 'NPC' %}npc-card{% else %}player-card{% endif %}">
+                    <div class="character-header">
+                        <div class="character-type-badge">
+                            <i class="fas fa-{% if character.type == 'NPC' %}ghost{% else %}user{% endif %}"></i>
+                            {{ character.get_type_display }}
+                        </div>
+                        <div class="character-actions">
+                            <a href="{% url 'characters:character_detail' character.pk %}" class="btn btn-sm btn-outline">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a href="{% url 'characters:character_edit' character.pk %}" class="btn btn-sm btn-outline">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'characters:character_delete' character.pk %}" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="character-info">
+                        <h3 class="character-name">{{ character.name }}</h3>
+                        
+                        <div class="character-campaign">
+                            <i class="fas fa-map"></i> <strong>Campaign:</strong> 
+                            <a href="{% url 'campaigns:campaign_detail' character.campaign.pk %}">
+                                {{ character.campaign.name }}
+                            </a>
+                        </div>
+                        
+                        {% if character.race %}
+                            <p class="character-race">
+                                <i class="fas fa-dragon"></i> <strong>Race:</strong> {{ character.race }}
+                            </p>
+                        {% endif %}
+                        
+                        {% if character.character_class %}
+                            <p class="character-class">
+                                <i class="fas fa-shield-alt"></i> <strong>Class:</strong> {{ character.character_class }}
+                            </p>
+                        {% endif %}
+                        
+                        {% if character.background %}
+                            <p class="character-background">
+                                <i class="fas fa-scroll"></i> <strong>Background:</strong> 
+                                {{ character.background|truncatewords:20 }}
+                            </p>
+                        {% endif %}
+                        
+                        <p class="character-date">
+                            <i class="fas fa-calendar"></i> Created: {{ character.created_at|date:"M d, Y" }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" class="btn btn-outline">&laquo; First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" class="btn btn-outline">Previous</a>
+                {% endif %}
+                
+                <span class="current-page">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" class="btn btn-outline">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" class="btn btn-outline">Last &raquo;</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-users fa-3x"></i>
+            <h3>No characters found</h3>
+            <p>{% if search_query or selected_campaign or selected_type %}Try adjusting your filters or search terms.{% else %}Create your first character to get started!{% endif %}</p>
+            <a href="{% url 'characters:character_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create Character
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

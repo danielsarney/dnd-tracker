@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Character - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="delete-confirmation-container">
+    <div class="delete-confirmation-content">
+        <div class="delete-header">
+            <i class="fas fa-exclamation-triangle fa-3x"></i>
+            <h1>Delete Character</h1>
+        </div>
+
+        <div class="delete-message">
+            <p>Are you sure you want to delete the character <strong>"{{ object.name }}"</strong>?</p>
+            <p class="warning-text">
+                <i class="fas fa-exclamation-circle"></i>
+                This action cannot be undone. All character data will be permanently lost.
+            </p>
+        </div>
+
+        <div class="character-summary">
+            <h3>Character Details</h3>
+            <div class="summary-item">
+                <strong>Name:</strong> {{ object.name }}
+            </div>
+            <div class="summary-item">
+                <strong>Type:</strong> {{ object.get_type_display }}
+            </div>
+            <div class="summary-item">
+                <strong>Campaign:</strong> {{ object.campaign.name }}
+            </div>
+            {% if object.race %}
+                <div class="summary-item">
+                    <strong>Race:</strong> {{ object.race }}
+                </div>
+            {% endif %}
+            {% if object.character_class %}
+                <div class="summary-item">
+                    <strong>Class:</strong> {{ object.character_class }}
+                </div>
+            {% endif %}
+            <div class="summary-item">
+                <strong>Created:</strong> {{ object.created_at|date:"F d, Y" }}
+            </div>
+        </div>
+
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <div class="delete-actions">
+                <a href="{% url 'characters:character_detail' object.pk %}" class="btn btn-outline">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Delete Character
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

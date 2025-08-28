@@ -1,7 +1,7 @@
 
 ## 1) Scope (v1)
 **Apps:**
-- **accounts**: auth, simple profile (display name, avatar), sign-up page.
+- **accounts**: auth, simple profile (display name, avatar), sign-up page - Done
 - **campaigns**: campaign CRUD.
 - **characters**: shared Character (players & NPCs) with race, class, notes section for background.
 - **sessions**: session records per campaign with free text field to log information on what's happen that session.

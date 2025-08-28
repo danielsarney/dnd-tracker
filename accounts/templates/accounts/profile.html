@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <h1>Your Profile</h1>
+        <p>Customize your adventurer's identity</p>
+    </div>
+    
+    <div class="profile-content">
+        <div class="profile-info">
+            <div class="avatar-section">
+                {% if user.profile.avatar %}
+                    <img src="{{ user.profile.avatar.url }}" alt="Profile Avatar" class="profile-avatar">
+                {% else %}
+                    <div class="avatar-placeholder">
+                        <i class="fas fa-user"></i>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="profile-details">
+                <h2>{{ user.profile.get_display_name }}</h2>
+                <p class="username">@{{ user.username }}</p>
+                <p class="member-since">Member since {{ user.date_joined|date:"F Y" }}</p>
+            </div>
+        </div>
+        
+        <div class="profile-edit">
+            <h3>Edit Profile</h3>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <form method="post" enctype="multipart/form-data" class="profile-form">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="{{ form.display_name.id_for_label }}">Display Name <span class="required">*</span></label>
+                    {{ form.display_name }}
+                    {% if form.display_name.errors %}
+                    <div class="error-message">{{ form.display_name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email <span class="required">*</span></label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <div class="error-message">{{ form.email.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.avatar.id_for_label }}">Profile Picture</label>
+                    {{ form.avatar }}
+                    {% if form.avatar.errors %}
+                    <div class="error-message">{{ form.avatar.errors.0 }}</div>
+                    {% endif %}
+                    <small class="form-text">Upload a new image to replace your current avatar</small>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Update Profile</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

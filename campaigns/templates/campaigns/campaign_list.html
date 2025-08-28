@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Campaigns - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="campaigns-container">
+    <div class="campaigns-header">
+        <h1><i class="fas fa-map"></i> Campaigns</h1>
+        <a href="{% url 'campaigns:campaign_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> New Campaign
+        </a>
+    </div>
+
+    {% if campaigns %}
+        <div class="campaigns-grid">
+            {% for campaign in campaigns %}
+                <div class="campaign-card">
+                    <div class="campaign-header">
+                        <h3>{{ campaign.name }}</h3>
+                        <div class="campaign-actions">
+                            <a href="{% url 'campaigns:campaign_detail' campaign.pk %}" class="btn btn-sm btn-outline">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a href="{% url 'campaigns:campaign_edit' campaign.pk %}" class="btn btn-sm btn-outline">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'campaigns:campaign_delete' campaign.pk %}" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="campaign-info">
+                        <p class="campaign-dm">
+                            <i class="fas fa-crown"></i> <strong>DM:</strong> {{ campaign.dm }}
+                        </p>
+                        {% if campaign.description %}
+                            <p class="campaign-description">{{ campaign.description|truncatewords:30 }}</p>
+                        {% endif %}
+                        <p class="campaign-date">
+                            <i class="fas fa-calendar"></i> Created: {{ campaign.created_at|date:"M d, Y" }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" class="btn btn-outline">&laquo; First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline">Previous</a>
+                {% endif %}
+                
+                <span class="current-page">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline">Last &raquo;</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-map fa-3x"></i>
+            <h3>No campaigns yet</h3>
+            <p>Create your first campaign to get started on your D&D adventure!</p>
+            <a href="{% url 'campaigns:campaign_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create Campaign
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Campaign - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="delete-confirmation-container">
+    <div class="delete-confirmation-content">
+        <div class="delete-header">
+            <i class="fas fa-exclamation-triangle fa-3x"></i>
+            <h1>Delete Campaign</h1>
+        </div>
+
+        <div class="delete-message">
+            <p>Are you sure you want to delete the campaign <strong>"{{ object.name }}"</strong>?</p>
+            <p class="warning-text">
+                <i class="fas fa-exclamation-circle"></i>
+                This action cannot be undone. All campaign data will be permanently lost.
+            </p>
+        </div>
+
+        <div class="campaign-summary">
+            <h3>Campaign Details</h3>
+            <div class="summary-item">
+                <strong>Name:</strong> {{ object.name }}
+            </div>
+            <div class="summary-item">
+                <strong>DM:</strong> {{ object.dm }}
+            </div>
+            {% if object.description %}
+                <div class="summary-item">
+                    <strong>Description:</strong> {{ object.description|truncatewords:20 }}
+                </div>
+            {% endif %}
+            <div class="summary-item">
+                <strong>Created:</strong> {{ object.created_at|date:"F d, Y" }}
+            </div>
+        </div>
+
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <div class="delete-actions">
+                <a href="{% url 'campaigns:campaign_detail' object.pk %}" class="btn btn-outline">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Delete Campaign
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

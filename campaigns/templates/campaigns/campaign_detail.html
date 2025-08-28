@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ campaign.name }} - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="campaign-detail-container">
+    <div class="campaign-detail-header">
+        <div class="campaign-title">
+            <h1><i class="fas fa-map"></i> {{ campaign.name }}</h1>
+            <div class="campaign-actions">
+                <a href="{% url 'campaigns:campaign_edit' campaign.pk %}" class="btn btn-outline">
+                    <i class="fas fa-edit"></i> Edit Campaign
+                </a>
+                <a href="{% url 'campaigns:campaign_delete' campaign.pk %}" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Delete Campaign
+                </a>
+            </div>
+        </div>
+        
+        <div class="campaign-meta">
+            <p class="campaign-dm">
+                <i class="fas fa-crown"></i> <strong>Dungeon Master:</strong> {{ campaign.dm }}
+            </p>
+            <p class="campaign-date">
+                <i class="fas fa-calendar"></i> <strong>Created:</strong> {{ campaign.created_at|date:"F d, Y" }}
+            </p>
+            {% if campaign.updated_at != campaign.created_at %}
+                <p class="campaign-updated">
+                    <i class="fas fa-clock"></i> <strong>Last Updated:</strong> {{ campaign.updated_at|date:"F d, Y" }}
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="campaign-content">
+        {% if campaign.description %}
+            <div class="campaign-description-section">
+                <h3><i class="fas fa-scroll"></i> Campaign Description</h3>
+                <div class="description-content">
+                    {{ campaign.description|linebreaks }}
+                </div>
+            </div>
+        {% else %}
+            <div class="campaign-description-section">
+                <h3><i class="fas fa-scroll"></i> Campaign Description</h3>
+                <div class="description-content">
+                    <p class="no-description">No description provided yet.</p>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="campaign-stats">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <h4>Characters</h4>
+                <p class="stat-number">0</p>
+                <p class="stat-label">Total Characters</p>
+            </div>
+            
+            <div class="stat-card">
+                <i class="fas fa-dice-d20"></i>
+                <h4>Sessions</h4>
+                <p class="stat-number">0</p>
+                <p class="stat-label">Total Sessions</p>
+            </div>
+            
+            <div class="stat-card">
+                <i class="fas fa-calendar-alt"></i>
+                <h4>Duration</h4>
+                <p class="stat-number">{{ campaign.created_at|timesince }}</p>
+                <p class="stat-label">Campaign Age</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="campaign-navigation">
+        <a href="{% url 'campaigns:campaign_list' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to Campaigns
+        </a>
+    </div>
+</div>
+{% endblock %}

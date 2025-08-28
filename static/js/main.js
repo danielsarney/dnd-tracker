@@ -94,7 +94,75 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // Campaign card hover effects
+    const campaignCards = document.querySelectorAll('.campaign-card');
+    campaignCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+    
+    // Campaign form validation
+    const campaignForm = document.querySelector('.campaign-form');
+    if (campaignForm) {
+        campaignForm.addEventListener('submit', function(e) {
+            const nameInput = this.querySelector('input[name="name"]');
+            const dmInput = this.querySelector('input[name="dm"]');
+            
+            if (!nameInput.value.trim()) {
+                e.preventDefault();
+                showFieldError(nameInput, 'Campaign name is required');
+                return;
+            }
+            
+            if (!dmInput.value.trim()) {
+                e.preventDefault();
+                showFieldError(dmInput, 'Dungeon Master is required');
+                return;
+            }
+        });
+    }
+    
+    // Delete confirmation enhancement
+    const deleteForms = document.querySelectorAll('.delete-form');
+    deleteForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!confirm('Are you absolutely sure you want to delete this campaign? This action cannot be undone.')) {
+                e.preventDefault();
+            }
+        });
+    });
 });
+
+// Helper function to show field errors
+function showFieldError(field, message) {
+    // Remove existing error
+    const existingError = field.parentNode.querySelector('.error-message');
+    if (existingError) {
+        existingError.remove();
+    }
+    
+    // Add new error
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = message;
+    field.parentNode.appendChild(errorDiv);
+    
+    // Focus on the field
+    field.focus();
+    
+    // Remove error after 5 seconds
+    setTimeout(() => {
+        if (errorDiv.parentNode) {
+            errorDiv.remove();
+        }
+    }, 5000);
+}
 
 
 

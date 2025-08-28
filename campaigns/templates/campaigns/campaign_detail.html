@@ -64,8 +64,11 @@
             <div class="stat-card">
                 <i class="fas fa-dice-d20"></i>
                 <h4>Sessions</h4>
-                <p class="stat-number">0</p>
+                <p class="stat-number">{{ campaign.sessions.count }}</p>
                 <p class="stat-label">Total Sessions</p>
+                <a href="{% url 'game_sessions:campaign_sessions' campaign.pk %}" class="btn btn-sm btn-outline">
+                    View All
+                </a>
             </div>
             
             <div class="stat-card">

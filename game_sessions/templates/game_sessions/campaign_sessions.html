@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ campaign.name }} - Sessions - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="campaign-sessions-container">
+    <div class="campaign-sessions-header">
+        <div class="campaign-info">
+            <h1><i class="fas fa-dice-d20"></i> {{ campaign.name }} - Sessions</h1>
+            <p class="campaign-dm">
+                <i class="fas fa-crown"></i> <strong>DM:</strong> {{ campaign.dm }}
+            </p>
+        </div>
+        <div class="campaign-actions">
+            <a href="{% url 'game_sessions:session_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Log Session
+            </a>
+            <a href="{% url 'campaigns:campaign_detail' campaign.pk %}" class="btn btn-outline">
+                <i class="fas fa-map"></i> View Campaign
+            </a>
+        </div>
+    </div>
+
+    {% if sessions %}
+        <div class="sessions-summary">
+            <div class="summary-stats">
+                <div class="summary-stat">
+                    <i class="fas fa-dice-d20"></i>
+                    <span class="stat-number">{{ sessions|length }}</span>
+                    <span class="stat-label">Total Sessions</span>
+                </div>
+                <div class="summary-stat">
+                    <i class="fas fa-calendar"></i>
+                    <span class="stat-number">{{ sessions.0.date|date:"M d, Y" }}</span>
+                    <span class="stat-label">Latest Session</span>
+                </div>
+                <div class="summary-stat">
+                    <i class="fas fa-users"></i>
+                    <span class="stat-number">{{ campaign.characters.count }}</span>
+                    <span class="stat-label">Campaign Characters</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sessions-grid">
+            {% for session in sessions %}
+                <div class="session-card {% if session.is_today %}today-session{% elif session.is_recent %}recent-session{% endif %}">
+                    <div class="session-header">
+                        <div class="session-date">
+                            <i class="fas fa-calendar"></i>
+                            {{ session.date|date:"M d, Y" }}
+                            {% if session.is_today %}
+                                <span class="today-badge">Today</span>
+                            {% elif session.is_recent %}
+                                <span class="recent-badge">Recent</span>
+                            {% endif %}
+                        </div>
+                        <div class="session-actions">
+                            <a href="{% url 'game_sessions:session_detail' session.pk %}" class="btn btn-sm btn-outline">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a href="{% url 'game_sessions:session_edit' session.pk %}" class="btn btn-sm btn-outline">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'game_sessions:session_delete' session.pk %}" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="session-info">
+                        <div class="session-summary">
+                            <p class="summary-text">{{ session.summary|truncatewords:40 }}</p>
+                        </div>
+                        
+                        <p class="session-date-created">
+                            <i class="fas fa-clock"></i> Logged: {{ session.created_at|date:"M d, Y" }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" class="btn btn-outline">&laquo; First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline">Previous</a>
+                {% endif %}
+                
+                <span class="current-page">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline">Last &raquo;</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-dice-d20 fa-3x"></i>
+            <h3>No sessions logged for this campaign yet</h3>
+            <p>Start tracking your campaign progress by logging your first session!</p>
+            <a href="{% url 'game_sessions:session_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Log First Session
+            </a>
+        </div>
+    {% endif %}
+
+    <div class="campaign-sessions-navigation">
+        <a href="{% url 'game_sessions:session_list' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to All Sessions
+        </a>
+    </div>
+</div>
+{% endblock %}

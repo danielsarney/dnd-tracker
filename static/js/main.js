@@ -205,6 +205,73 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
+    
+    // Game session card hover effects
+    const sessionCards = document.querySelectorAll('.session-card');
+    sessionCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+    
+    // Game session form validation
+    const sessionForm = document.querySelector('.session-form');
+    if (sessionForm) {
+        sessionForm.addEventListener('submit', function(e) {
+            const campaignSelect = this.querySelector('select[name="campaign"]');
+            const dateInput = this.querySelector('input[name="date"]');
+            const summaryInput = this.querySelector('textarea[name="summary"]');
+            
+            if (!campaignSelect.value) {
+                e.preventDefault();
+                showFieldError(campaignSelect, 'Please select a campaign');
+                return;
+            }
+            
+            if (!dateInput.value) {
+                e.preventDefault();
+                showFieldError(dateInput, 'Please select a session date');
+                return;
+            }
+            
+            if (!summaryInput.value.trim()) {
+                e.preventDefault();
+                showFieldError(summaryInput, 'Session summary is required');
+                return;
+            }
+        });
+    }
+    
+    // Game session filter form enhancement
+    const sessionFilterForm = document.querySelector('.sessions-filters .filter-form');
+    if (sessionFilterForm) {
+        const campaignSelect = sessionFilterForm.querySelector('select[name="campaign"]');
+        const dateFromInput = sessionFilterForm.querySelector('input[name="date_from"]');
+        const dateToInput = sessionFilterForm.querySelector('input[name="date_to"]');
+        const searchInput = sessionFilterForm.querySelector('input[name="search"]');
+        
+        // Auto-submit on filter change
+        [campaignSelect, dateFromInput, dateToInput].forEach(select => {
+            if (select) {
+                select.addEventListener('change', () => sessionFilterForm.submit());
+            }
+        });
+        
+        // Search with debouncing
+        if (searchInput) {
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    sessionFilterForm.submit();
+                }, 500);
+            });
+        }
+    }
 });
 
 // Helper function to show field errors

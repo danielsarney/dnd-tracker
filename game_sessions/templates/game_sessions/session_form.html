@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if form.instance.pk %}Edit Game Session{% else %}New Game Session{% endif %} - D&D Tracker
+{% endblock %}
+
+{% block content %}
+<div class="session-form-container">
+    <div class="session-form-header">
+        <h1>
+            {% if form.instance.pk %}
+                <i class="fas fa-edit"></i> Edit Game Session
+            {% else %}
+                <i class="fas fa-plus"></i> New Game Session
+            {% endif %}
+        </h1>
+        <p>
+            {% if form.instance.pk %}
+                Update your game session details below.
+            {% else %}
+                Log a new game session to record what happened in your campaign!
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="session-form-content">
+        <form method="post" class="session-form">
+            {% csrf_token %}
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.campaign.id_for_label }}">
+                        Campaign <span class="required">*</span>
+                    </label>
+                    {{ form.campaign }}
+                    {% if form.campaign.errors %}
+                        <div class="error-message">
+                            {% for error in form.campaign.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.date.id_for_label }}">
+                        Session Date <span class="required">*</span>
+                    </label>
+                    {{ form.date }}
+                    {% if form.date.errors %}
+                        <div class="error-message">
+                            {% for error in form.date.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="form-text">
+                        When did this session take place?
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.summary.id_for_label }}">
+                    Session Summary <span class="required">*</span>
+                </label>
+                {{ form.summary }}
+                {% if form.summary.errors %}
+                    <div class="error-message">
+                        {% for error in form.summary.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div class="form-text">
+                    Describe what happened in this session. Include key events, character actions, NPC interactions, combat outcomes, and any important story developments.
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'game_sessions:session_list' %}" class="btn btn-outline">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    {% if form.instance.pk %}
+                        <i class="fas fa-save"></i> Update Session
+                    {% else %}
+                        <i class="fas fa-plus"></i> Log Session
+                    {% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

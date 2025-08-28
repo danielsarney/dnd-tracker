@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Game Session - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="delete-confirmation-container">
+    <div class="delete-confirmation-content">
+        <div class="delete-header">
+            <i class="fas fa-exclamation-triangle fa-3x"></i>
+            <h1>Delete Game Session</h1>
+        </div>
+
+        <div class="delete-message">
+            <p>Are you sure you want to delete the game session for <strong>"{{ object.campaign.name }}"</strong> on <strong>{{ object.date|date:"F d, Y" }}</strong>?</p>
+            <p class="warning-text">
+                <i class="fas fa-exclamation-circle"></i>
+                This action cannot be undone. All session data will be permanently lost.
+            </p>
+        </div>
+
+        <div class="session-summary">
+            <h3>Session Details</h3>
+            <div class="summary-item">
+                <strong>Campaign:</strong> {{ object.campaign.name }}
+            </div>
+            <div class="summary-item">
+                <strong>Date:</strong> {{ object.date|date:"F d, Y" }}
+            </div>
+            <div class="summary-item">
+                <strong>DM:</strong> {{ object.campaign.dm }}
+            </div>
+            <div class="summary-item">
+                <strong>Summary:</strong> {{ object.summary|truncatewords:30 }}
+            </div>
+            <div class="summary-item">
+                <strong>Logged:</strong> {{ object.created_at|date:"F d, Y" }}
+            </div>
+        </div>
+
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <div class="delete-actions">
+                <a href="{% url 'game_sessions:session_detail' object.pk %}" class="btn btn-outline">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Delete Session
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

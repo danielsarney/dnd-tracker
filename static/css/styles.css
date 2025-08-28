@@ -1482,6 +1482,405 @@ p {
     margin-top: 2rem;
 }
 
+/* Game Session Styles */
+.sessions-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.sessions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.sessions-header h1 {
+    color: #4a90e2;
+    margin-bottom: 0;
+}
+
+/* Session Filters */
+.sessions-filters {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Session Grid */
+.sessions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.session-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.session-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4a90e2, #7bb3f0);
+}
+
+.today-session::before {
+    background: linear-gradient(90deg, #28a745, #20c997);
+}
+
+.recent-session::before {
+    background: linear-gradient(90deg, #ffc107, #fd7e14);
+}
+
+.session-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(74, 144, 226, 0.3);
+}
+
+.session-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.session-date {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #4a90e2;
+    font-weight: 600;
+}
+
+.session-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.session-info p {
+    margin-bottom: 0.75rem;
+    color: #d1d1d1;
+}
+
+.session-campaign {
+    color: #4a90e2;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.session-campaign a {
+    color: #4a90e2;
+    text-decoration: none;
+}
+
+.session-campaign a:hover {
+    text-decoration: underline;
+}
+
+.session-dm {
+    color: #ffc107 !important;
+}
+
+.session-summary {
+    margin-bottom: 1rem;
+}
+
+.summary-text {
+    color: #d1d1d1 !important;
+    line-height: 1.6;
+}
+
+.session-date-created {
+    font-size: 0.9rem;
+    color: #888 !important;
+}
+
+/* Session Date Badges */
+.today-badge, .recent-badge {
+    background: rgba(40, 167, 69, 0.2);
+    color: #28a745;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.recent-badge {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+    border-color: rgba(255, 193, 7, 0.3);
+}
+
+.today-badge.large, .recent-badge.large {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+}
+
+/* Session Detail Styles */
+.session-detail-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.session-detail-header {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.session-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.session-info-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.session-info-section h1 {
+    color: #4a90e2;
+    margin-bottom: 0;
+}
+
+.session-date-badges {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.session-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.session-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.meta-item {
+    color: #d1d1d1;
+    margin-bottom: 0;
+}
+
+.meta-item a {
+    color: #4a90e2;
+    text-decoration: none;
+}
+
+.meta-item a:hover {
+    text-decoration: underline;
+}
+
+.session-content {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.session-summary-section {
+    margin-bottom: 2rem;
+}
+
+.session-summary-section h3 {
+    color: #4a90e2;
+    margin-bottom: 1rem;
+}
+
+.summary-content {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    border-radius: 10px;
+    border-left: 4px solid #4a90e2;
+    line-height: 1.8;
+}
+
+.session-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.session-relationships {
+    margin-bottom: 2rem;
+}
+
+.session-relationships h3 {
+    color: #4a90e2;
+    margin-bottom: 1.5rem;
+}
+
+.session-navigation {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Session Form Styles */
+.session-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.session-form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.session-form-header h1 {
+    color: #4a90e2;
+    margin-bottom: 0.5rem;
+}
+
+.session-form-header p {
+    color: #b0b0b0;
+    font-size: 1.1rem;
+}
+
+.session-form-content {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.session-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.session-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.session-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #e8e8e8;
+    font-weight: 500;
+}
+
+.session-form input,
+.session-form select,
+.session-form textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #e8e8e8;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.session-form input:focus,
+.session-form select:focus,
+.session-form textarea:focus {
+    outline: none;
+    border-color: #4a90e2;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+}
+
+.session-form textarea {
+    resize: vertical;
+    min-height: 200px;
+}
+
+.session-form select {
+    cursor: pointer;
+}
+
+/* Campaign Sessions Styles */
+.campaign-sessions-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.campaign-sessions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.campaign-info h1 {
+    color: #4a90e2;
+    margin-bottom: 0.5rem;
+}
+
+.campaign-dm {
+    color: #d1d1d1;
+    margin-bottom: 0;
+}
+
+.campaign-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.sessions-summary {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.campaign-sessions-navigation {
+    text-align: center;
+    margin-top: 2rem;
+}
+
 /* Footer */
 .footer {
     background: rgba(26, 26, 46, 0.95);
@@ -1660,6 +2059,68 @@ p {
     }
     
     .campaign-characters-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    /* Game Session responsive styles */
+    .sessions-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .filter-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .filter-actions {
+        justify-content: center;
+    }
+    
+    .sessions-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .session-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .session-actions {
+        justify-content: flex-start;
+        width: 100%;
+    }
+    
+    .session-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .session-info-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .session-meta {
+        grid-template-columns: 1fr;
+    }
+    
+    .session-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .session-form .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .campaign-sessions-header {
         flex-direction: column;
         text-align: center;
         gap: 1rem;

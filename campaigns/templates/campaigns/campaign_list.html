@@ -25,6 +25,9 @@
                         <a href="{% url 'characters:campaign_characters' campaign.pk %}" class="btn btn-sm btn-outline">
                             <i class="fas fa-users"></i> Characters
                         </a>
+                        <a href="{% url 'game_sessions:campaign_sessions' campaign.pk %}" class="btn btn-sm btn-outline">
+                            <i class="fas fa-dice-d20"></i> Sessions
+                        </a>
                         <a href="{% url 'campaigns:campaign_edit' campaign.pk %}" class="btn btn-sm btn-outline">
                             <i class="fas fa-edit"></i> Edit
                         </a>

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'characters',
     'campaigns',
     'game_sessions',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -80,7 +81,7 @@ TEMPLATES = [
 
 # Login/Logout URLs
 LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/accounts/profile/'
+LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/login/'
 
 WSGI_APPLICATION = 'dnd_tracker.wsgi.application'

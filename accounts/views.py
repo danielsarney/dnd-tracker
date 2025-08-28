@@ -23,7 +23,7 @@ def signup(request):
             login(request, user)
             
             messages.success(request, 'Account created successfully!')
-            return redirect('accounts:profile')
+            return redirect('dashboard:dashboard')
     else:
         form = CustomUserCreationForm()
     

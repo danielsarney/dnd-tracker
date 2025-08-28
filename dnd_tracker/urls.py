@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='home'),
+    path('dashboard/', include('dashboard.urls')),
     path('accounts/', include('accounts.urls')),
     path('campaigns/', include('campaigns.urls')),
     path('characters/', include('characters.urls')),

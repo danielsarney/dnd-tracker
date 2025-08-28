@@ -301,6 +301,100 @@ function showFieldError(field, message) {
 
 
 
+// Dashboard functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Dashboard stat cards animation
+    const statCards = document.querySelectorAll('.stat-card');
+    if (statCards.length > 0) {
+        // Animate stat cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        statCards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            observer.observe(card);
+        });
+    }
+    
+    // Dashboard section animations
+    const dashboardSections = document.querySelectorAll('.dashboard-section');
+    if (dashboardSections.length > 0) {
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateX(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        dashboardSections.forEach((section, index) => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateX(-30px)';
+            section.style.transition = `all 0.6s ease ${index * 0.2}s`;
+            sectionObserver.observe(section);
+        });
+    }
+    
+    // Quick action buttons hover effects
+    const quickActionButtons = document.querySelectorAll('.quick-actions .btn');
+    quickActionButtons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-3px) scale(1.05)';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+    
+    // Today's sessions alert auto-hide
+    const todaySessionsAlert = document.querySelector('.today-sessions-alert');
+    if (todaySessionsAlert) {
+        setTimeout(() => {
+            todaySessionsAlert.style.opacity = '0.8';
+            todaySessionsAlert.style.transform = 'scale(0.98)';
+        }, 10000); // Start fading after 10 seconds
+    }
+    
+    // Character distribution cards hover effects
+    const distributionCards = document.querySelectorAll('.distribution-card');
+    distributionCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+    
+    // Quick navigation links hover effects
+    const navLinks = document.querySelectorAll('.nav-links a');
+    navLinks.forEach(link => {
+        link.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(8px)';
+        });
+        
+        link.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(0)';
+        });
+    });
+});
+
 // Smooth scrolling for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {

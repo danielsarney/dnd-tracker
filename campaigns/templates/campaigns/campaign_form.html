@@ -7,85 +7,96 @@
 
 {% block content %}
 <div class="campaign-form-container">
-    <div class="campaign-form-header">
-        <h1>
-            {% if form.instance.pk %}
-                <i class="fas fa-edit"></i> Edit Campaign
-            {% else %}
-                <i class="fas fa-plus"></i> New Campaign
-            {% endif %}
-        </h1>
-        <p>
-            {% if form.instance.pk %}
-                Update your campaign details below.
-            {% else %}
-                Create a new campaign to start your D&D adventure!
-            {% endif %}
-        </p>
+    <!-- Header -->
+    <div class="card fade-in mb-4">
+        <div class="card-body text-center">
+            <h1 class="mb-2">
+                {% if form.instance.pk %}
+                    <i class="fas fa-edit me-3 text-accent"></i> Edit Campaign
+                {% else %}
+                    <i class="fas fa-plus me-3 text-accent"></i> New Campaign
+                {% endif %}
+            </h1>
+            <p class="mb-0">
+                {% if form.instance.pk %}
+                    Update your campaign details below.
+                {% else %}
+                    Create a new campaign to start your D&D adventure!
+                {% endif %}
+            </p>
+        </div>
     </div>
 
-    <div class="campaign-form-content">
-        <form method="post" class="campaign-form">
-            {% csrf_token %}
-            
-            <div class="form-group">
-                <label for="{{ form.name.id_for_label }}">
-                    Campaign Name <span class="required">*</span>
-                </label>
-                {{ form.name }}
-                {% if form.name.errors %}
-                    <div class="error-message">
-                        {% for error in form.name.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
+    <!-- Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card fade-in">
+                <div class="card-body">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">
+                                <i class="fas fa-map me-2"></i>Campaign Name *
+                            </label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
 
-            <div class="form-group">
-                <label for="{{ form.dm.id_for_label }}">
-                    Dungeon Master <span class="required">*</span>
-                </label>
-                {{ form.dm }}
-                {% if form.dm.errors %}
-                    <div class="error-message">
-                        {% for error in form.dm.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
+                        <div class="mb-3">
+                            <label for="{{ form.dm.id_for_label }}" class="form-label">
+                                <i class="fas fa-crown me-2"></i>Dungeon Master *
+                            </label>
+                            {{ form.dm }}
+                            {% if form.dm.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.dm.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
 
-            <div class="form-group">
-                <label for="{{ form.description.id_for_label }}">
-                    Description
-                </label>
-                {{ form.description }}
-                {% if form.description.errors %}
-                    <div class="error-message">
-                        {% for error in form.description.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <div class="form-text">
-                    Describe your campaign setting, story, or any other details you'd like to include.
+                        <div class="mb-4">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">
+                                <i class="fas fa-book me-2"></i>Description
+                            </label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.description.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Describe your campaign setting, story, or any other details you'd like to include.
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% url 'campaigns:campaign_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                {% if form.instance.pk %}
+                                    <i class="fas fa-save me-1"></i> Update Campaign
+                                {% else %}
+                                    <i class="fas fa-plus me-1"></i> Create Campaign
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <div class="form-actions">
-                <a href="{% url 'campaigns:campaign_list' %}" class="btn btn-outline">
-                    <i class="fas fa-times"></i> Cancel
-                </a>
-                <button type="submit" class="btn btn-primary">
-                    {% if form.instance.pk %}
-                        <i class="fas fa-save"></i> Update Campaign
-                    {% else %}
-                        <i class="fas fa-plus"></i> Create Campaign
-                    {% endif %}
-                </button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock %}

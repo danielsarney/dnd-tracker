@@ -5,78 +5,139 @@
 
 {% block content %}
 <div class="campaigns-container">
-    <div class="campaigns-header">
-        <h1><i class="fas fa-map"></i> Campaigns</h1>
-        <a href="{% url 'campaigns:campaign_create' %}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> New Campaign
-        </a>
+    <!-- Header -->
+    <div class="card fade-in mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-map me-3 text-accent"></i>
+                        Campaigns
+                    </h1>
+                    <p class="mb-0">Manage your D&D campaigns and adventures</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="{% url 'campaigns:campaign_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i> New Campaign
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 
     {% if campaigns %}
-        <div class="campaigns-grid">
+        <div class="row">
             {% for campaign in campaigns %}
-                <div class="campaign-card">
-                    <div class="campaign-header">
-                        <h3>{{ campaign.name }}</h3>
-                                            <div class="campaign-actions">
-                        <a href="{% url 'campaigns:campaign_detail' campaign.pk %}" class="btn btn-sm btn-outline">
-                            <i class="fas fa-eye"></i> View
-                        </a>
-                        <a href="{% url 'characters:campaign_characters' campaign.pk %}" class="btn btn-sm btn-outline">
-                            <i class="fas fa-users"></i> Characters
-                        </a>
-                        <a href="{% url 'game_sessions:campaign_sessions' campaign.pk %}" class="btn btn-sm btn-outline">
-                            <i class="fas fa-dice-d20"></i> Sessions
-                        </a>
-                        <a href="{% url 'campaigns:campaign_edit' campaign.pk %}" class="btn btn-sm btn-outline">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
-                        <a href="{% url 'campaigns:campaign_delete' campaign.pk %}" class="btn btn-sm btn-danger">
-                            <i class="fas fa-trash"></i> Delete
-                        </a>
-                    </div>
-                    </div>
-                    
-                    <div class="campaign-info">
-                        <p class="campaign-dm">
-                            <i class="fas fa-crown"></i> <strong>DM:</strong> {{ campaign.dm }}
-                        </p>
-                        {% if campaign.description %}
-                            <p class="campaign-description">{{ campaign.description|truncatewords:30 }}</p>
-                        {% endif %}
-                        <p class="campaign-date">
-                            <i class="fas fa-calendar"></i> Created: {{ campaign.created_at|date:"M d, Y" }}
-                        </p>
+                <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="card fade-in h-100">
+                        <div class="card-header d-flex justify-content-between align-items-start">
+                            <h3 class="mb-0">{{ campaign.name }}</h3>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item" href="{% url 'campaigns:campaign_detail' campaign.pk %}">
+                                        <i class="fas fa-eye me-2"></i>View
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'characters:campaign_characters' campaign.pk %}">
+                                        <i class="fas fa-users me-2"></i>Characters
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'game_sessions:campaign_sessions' campaign.pk %}">
+                                        <i class="fas fa-dice-d20 me-2"></i>Sessions
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{% url 'campaigns:campaign_edit' campaign.pk %}">
+                                        <i class="fas fa-edit me-2"></i>Edit
+                                    </a></li>
+                                    <li><a class="dropdown-item text-danger" href="{% url 'campaigns:campaign_delete' campaign.pk %}">
+                                        <i class="fas fa-trash me-2"></i>Delete
+                                    </a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <p class="mb-2">
+                                    <i class="fas fa-crown me-2 text-accent"></i>
+                                    <strong>DM:</strong> {{ campaign.dm }}
+                                </p>
+                                {% if campaign.description %}
+                                    <p class="card-text">{{ campaign.description|truncatewords:30 }}</p>
+                                {% endif %}
+                                <p class="mb-0">
+                                    <i class="fas fa-calendar me-2"></i>
+                                    Created: {{ campaign.created_at|date:"M d, Y" }}
+                                </p>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'campaigns:campaign_detail' campaign.pk %}" class="btn btn-primary">
+                                    <i class="fas fa-eye me-1"></i> View Campaign
+                                </a>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <a href="{% url 'characters:campaign_characters' campaign.pk %}" class="btn btn-outline-primary btn-sm w-100">
+                                            <i class="fas fa-users me-1"></i> Characters
+                                        </a>
+                                    </div>
+                                    <div class="col-6">
+                                        <a href="{% url 'game_sessions:campaign_sessions' campaign.pk %}" class="btn btn-outline-primary btn-sm w-100">
+                                            <i class="fas fa-dice-d20 me-1"></i> Sessions
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
 
         {% if is_paginated %}
-            <div class="pagination">
-                {% if page_obj.has_previous %}
-                    <a href="?page=1" class="btn btn-outline">&laquo; First</a>
-                    <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline">Previous</a>
-                {% endif %}
-                
-                <span class="current-page">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                </span>
-                
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline">Next</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline">Last &raquo;</a>
-                {% endif %}
+            <div class="card fade-in">
+                <div class="card-body">
+                    <nav aria-label="Campaign pagination">
+                        <ul class="pagination justify-content-center mb-0">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1">&laquo; First</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                                </li>
+                            {% endif %}
+                            
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                                </span>
+                            </li>
+                            
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
             </div>
         {% endif %}
     {% else %}
-        <div class="empty-state">
-            <i class="fas fa-map fa-3x"></i>
-            <h3>No campaigns yet</h3>
-            <p>Create your first campaign to get started on your D&D adventure!</p>
-            <a href="{% url 'campaigns:campaign_create' %}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Create Campaign
-            </a>
+        <div class="card fade-in">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-map fa-4x text-muted mb-4"></i>
+                <h3>No campaigns yet</h3>
+                <p class="mb-4">Create your first campaign to get started on your D&D adventure!</p>
+                <a href="{% url 'campaigns:campaign_create' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus me-2"></i> Create Campaign
+                </a>
+            </div>
         </div>
     {% endif %}
 </div>

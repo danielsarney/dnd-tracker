@@ -7,137 +7,150 @@
 
 {% block content %}
 <div class="character-form-container">
-    <div class="character-form-header">
-        <h1>
-            {% if form.instance.pk %}
-                <i class="fas fa-edit"></i> Edit Character
-            {% else %}
-                <i class="fas fa-plus"></i> New Character
-            {% endif %}
-        </h1>
-        <p>
-            {% if form.instance.pk %}
-                Update your character details below.
-            {% else %}
-                Create a new character for your D&D campaign!
-            {% endif %}
-        </p>
+    <!-- Header -->
+    <div class="card fade-in mb-4">
+        <div class="card-body text-center">
+            <h1 class="mb-2">
+                {% if form.instance.pk %}
+                    <i class="fas fa-edit me-3 text-accent"></i> Edit Character
+                {% else %}
+                    <i class="fas fa-plus me-3 text-accent"></i> New Character
+                {% endif %}
+            </h1>
+            <p class="mb-0">
+                {% if form.instance.pk %}
+                    Update your character details below.
+                {% else %}
+                    Create a new character for your D&D campaign!
+                {% endif %}
+            </p>
+        </div>
     </div>
 
-    <div class="character-form-content">
-        <form method="post" class="character-form">
-            {% csrf_token %}
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="{{ form.campaign.id_for_label }}">
-                        Campaign <span class="required">*</span>
-                    </label>
-                    {{ form.campaign }}
-                    {% if form.campaign.errors %}
-                        <div class="error-message">
-                            {% for error in form.campaign.errors %}
-                                {{ error }}
-                            {% endfor %}
+    <!-- Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card fade-in">
+                <div class="card-body">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.campaign.id_for_label }}" class="form-label">
+                                    <i class="fas fa-map me-2"></i>Campaign *
+                                </label>
+                                {{ form.campaign }}
+                                {% if form.campaign.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.campaign.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="{{ form.type.id_for_label }}" class="form-label">
+                                    <i class="fas fa-tag me-2"></i>Character Type *
+                                </label>
+                                {{ form.type }}
+                                {% if form.type.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.type.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
-                    {% endif %}
-                </div>
 
-                <div class="form-group">
-                    <label for="{{ form.type.id_for_label }}">
-                        Character Type <span class="required">*</span>
-                    </label>
-                    {{ form.type }}
-                    {% if form.type.errors %}
-                        <div class="error-message">
-                            {% for error in form.type.errors %}
-                                {{ error }}
-                            {% endfor %}
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">
+                                <i class="fas fa-user me-2"></i>Character Name *
+                            </label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                         </div>
-                    {% endif %}
-                </div>
-            </div>
 
-            <div class="form-group">
-                <label for="{{ form.name.id_for_label }}">
-                    Character Name <span class="required">*</span>
-                </label>
-                {{ form.name }}
-                {% if form.name.errors %}
-                    <div class="error-message">
-                        {% for error in form.name.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.race.id_for_label }}" class="form-label">
+                                    <i class="fas fa-dragon me-2"></i>Race
+                                </label>
+                                {{ form.race }}
+                                {% if form.race.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.race.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    e.g., Human, Elf, Dwarf, Dragonborn
+                                </div>
+                            </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="{{ form.race.id_for_label }}">
-                        Race
-                    </label>
-                    {{ form.race }}
-                    {% if form.race.errors %}
-                        <div class="error-message">
-                            {% for error in form.race.errors %}
-                                {{ error }}
-                            {% endfor %}
+                            <div class="col-md-6">
+                                <label for="{{ form.character_class.id_for_label }}" class="form-label">
+                                    <i class="fas fa-shield-alt me-2"></i>Class
+                                </label>
+                                {{ form.character_class }}
+                                {% if form.character_class.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.character_class.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    e.g., Fighter, Wizard, Cleric, Rogue
+                                </div>
+                            </div>
                         </div>
-                    {% endif %}
-                    <div class="form-text">
-                        e.g., Human, Elf, Dwarf, Dragonborn
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="{{ form.character_class.id_for_label }}">
-                        Class
-                    </label>
-                    {{ form.character_class }}
-                    {% if form.character_class.errors %}
-                        <div class="error-message">
-                            {% for error in form.character_class.errors %}
-                                {{ error }}
-                            {% endfor %}
+                        <div class="mb-4">
+                            <label for="{{ form.background.id_for_label }}" class="form-label">
+                                <i class="fas fa-scroll me-2"></i>Background
+                            </label>
+                            {{ form.background }}
+                            {% if form.background.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.background.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Describe your character's backstory, personality, or any other background information.
+                            </div>
                         </div>
-                    {% endif %}
-                    <div class="form-text">
-                        e.g., Fighter, Wizard, Cleric, Rogue
-                    </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% url 'characters:character_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                {% if form.instance.pk %}
+                                    <i class="fas fa-save me-1"></i> Update Character
+                                {% else %}
+                                    <i class="fas fa-plus me-1"></i> Create Character
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label for="{{ form.background.id_for_label }}">
-                    Background
-                </label>
-                {{ form.background }}
-                {% if form.background.errors %}
-                    <div class="error-message">
-                        {% for error in form.background.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <div class="form-text">
-                    Describe your character's backstory, personality, or any other background information.
-                </div>
-            </div>
-
-            <div class="form-actions">
-                <a href="{% url 'characters:character_list' %}" class="btn btn-outline">
-                    <i class="fas fa-times"></i> Cancel
-                </a>
-                <button type="submit" class="btn btn-primary">
-                    {% if form.instance.pk %}
-                        <i class="fas fa-save"></i> Update Character
-                    {% else %}
-                        <i class="fas fa-plus"></i> Create Character
-                    {% endif %}
-                </button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock %}

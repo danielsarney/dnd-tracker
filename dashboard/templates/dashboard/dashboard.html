@@ -5,39 +5,50 @@
 {% block content %}
 <div class="dashboard-container">
     <!-- Welcome Header -->
-    <div class="dashboard-header">
-        <div class="welcome-section">
-            <h1>Welcome back, {{ user.username }}!</h1>
-            <p class="welcome-subtitle">Here's what's happening in your D&D world today</p>
-        </div>
-        <div class="quick-actions">
-            <a href="{% url 'campaigns:campaign_create' %}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> New Campaign
-            </a>
-            <a href="{% url 'characters:character_create' %}" class="btn btn-outline">
-                <i class="fas fa-user-plus"></i> New Character
-            </a>
-            <a href="{% url 'game_sessions:session_create' %}" class="btn btn-outline">
-                <i class="fas fa-calendar-plus"></i> New Session
-            </a>
+    <div class="card fade-in mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-dice-d20 me-3 text-accent"></i>
+                        Welcome back, {{ user.username }}!
+                    </h1>
+                    <p class="mb-0">Here's what's happening in your D&D world today</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="d-flex flex-column flex-md-row gap-2 justify-content-md-end">
+                        <a href="{% url 'campaigns:campaign_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i> New Campaign
+                        </a>
+                        <a href="{% url 'characters:character_create' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-user-plus me-1"></i> New Character
+                        </a>
+                        <a href="{% url 'game_sessions:session_create' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-calendar-plus me-1"></i> New Session
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Today's Sessions Alert -->
     {% if today_sessions %}
-    <div class="today-sessions-alert">
-        <div class="alert-header">
-            <i class="fas fa-calendar-day"></i>
-            <h3>Today's Sessions</h3>
+    <div class="alert alert-info fade-in mb-4" role="alert">
+        <div class="d-flex align-items-center mb-3">
+            <i class="fas fa-calendar-day me-3 fa-2x"></i>
+            <h3 class="mb-0">Today's Sessions</h3>
         </div>
-        <div class="today-sessions-list">
+        <div class="row">
             {% for session in today_sessions %}
-            <div class="today-session-item">
-                <div class="session-info">
-                    <h4>{{ session.campaign.name }}</h4>
-                    <p class="session-summary">{{ session.summary|truncatewords:20 }}</p>
+            <div class="col-md-6 mb-3">
+                <div class="card bg-light-custom">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ session.campaign.name }}</h5>
+                        <p class="card-text">{{ session.summary|truncatewords:20 }}</p>
+                        <a href="{{ session.get_absolute_url }}" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
                 </div>
-                <a href="{{ session.get_absolute_url }}" class="btn btn-sm btn-primary">View Details</a>
             </div>
             {% endfor %}
         </div>
@@ -45,226 +56,284 @@
     {% endif %}
 
     <!-- Stats Overview -->
-    <div class="stats-overview">
-        <div class="stat-card primary">
-            <div class="stat-icon">
-                <i class="fas fa-dungeon"></i>
-            </div>
-            <div class="stat-content">
-                <h3 class="stat-number">{{ user_campaign_count }}</h3>
-                <p class="stat-label">Your Campaigns</p>
-            </div>
-        </div>
-        
-        <div class="stat-card success">
-            <div class="stat-icon">
-                <i class="fas fa-users"></i>
-            </div>
-            <div class="stat-content">
-                <h3 class="stat-number">{{ user_character_count }}</h3>
-                <p class="stat-label">Your Characters</p>
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card text-center fade-in">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-dungeon fa-3x text-accent"></i>
+                    </div>
+                    <h2 class="text-accent mb-1">{{ user_campaign_count }}</h2>
+                    <p class="mb-0">Your Campaigns</p>
+                </div>
             </div>
         </div>
         
-        <div class="stat-card info">
-            <div class="stat-icon">
-                <i class="fas fa-calendar-check"></i>
-            </div>
-            <div class="stat-content">
-                <h3 class="stat-number">{{ user_session_count }}</h3>
-                <p class="stat-label">Total Sessions</p>
+        <div class="col-md-3 mb-3">
+            <div class="card text-center fade-in">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-users fa-3x text-accent"></i>
+                    </div>
+                    <h2 class="text-accent mb-1">{{ user_character_count }}</h2>
+                    <p class="mb-0">Your Characters</p>
+                </div>
             </div>
         </div>
         
-        <div class="stat-card warning">
-            <div class="stat-icon">
-                <i class="fas fa-chart-line"></i>
+        <div class="col-md-3 mb-3">
+            <div class="card text-center fade-in">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-calendar-check fa-3x text-accent"></i>
+                    </div>
+                    <h2 class="text-accent mb-1">{{ user_session_count }}</h2>
+                    <p class="mb-0">Total Sessions</p>
+                </div>
             </div>
-            <div class="stat-content">
-                <h3 class="stat-number">{{ recent_activity }}</h3>
-                <p class="stat-label">Sessions (30 days)</p>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card text-center fade-in">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-chart-line fa-3x text-accent"></i>
+                    </div>
+                    <h2 class="text-accent mb-1">{{ recent_activity }}</h2>
+                    <p class="mb-0">Sessions (30 days)</p>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Main Dashboard Content -->
-    <div class="dashboard-content">
+    <div class="row">
         <!-- Recent Campaigns -->
-        <div class="dashboard-section">
-            <div class="section-header">
-                <h2><i class="fas fa-dungeon"></i> Recent Campaigns</h2>
-                <a href="{% url 'campaigns:campaign_list' %}" class="view-all-link">View All</a>
-            </div>
-            
-            {% if user_campaigns %}
-            <div class="campaigns-grid">
-                {% for campaign in user_campaigns %}
-                <div class="campaign-card dashboard-card">
-                    <div class="campaign-header">
-                        <h3>{{ campaign.name }}</h3>
-                        <span class="campaign-dm">{{ campaign.dm }}</span>
-                    </div>
-                    {% if campaign.description %}
-                    <p class="campaign-description">{{ campaign.description|truncatewords:15 }}</p>
-                    {% endif %}
-                    <div class="campaign-meta">
-                        <span class="campaign-date">Created {{ campaign.created_at|date:"M d, Y" }}</span>
-                    </div>
-                    <div class="campaign-actions">
-                        <a href="{{ campaign.get_absolute_url }}" class="btn btn-sm btn-primary">View</a>
-                        <a href="{% url 'characters:campaign_characters' campaign.pk %}" class="btn btn-sm btn-outline">Characters</a>
-                    </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card fade-in h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-dungeon me-2"></i> Recent Campaigns
+                    </h3>
+                    <a href="{% url 'campaigns:campaign_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
                 </div>
-                {% endfor %}
+                <div class="card-body">
+                    {% if user_campaigns %}
+                    <div class="row">
+                        {% for campaign in user_campaigns %}
+                        <div class="col-12 mb-3">
+                            <div class="card bg-light-custom">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title mb-0">{{ campaign.name }}</h5>
+                                        <span class="badge bg-secondary">{{ campaign.dm }}</span>
+                                    </div>
+                                    {% if campaign.description %}
+                                    <p class="card-text small">{{ campaign.description|truncatewords:15 }}</p>
+                                    {% endif %}
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">Created {{ campaign.created_at|date:"M d, Y" }}</small>
+                                        <div>
+                                            <a href="{{ campaign.get_absolute_url }}" class="btn btn-primary btn-sm me-1">View</a>
+                                            <a href="{% url 'characters:campaign_characters' campaign.pk %}" class="btn btn-outline-primary btn-sm">Characters</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-dungeon fa-3x text-muted mb-3"></i>
+                        <h5>No Campaigns Yet</h5>
+                        <p>Start your first D&D campaign to begin tracking your adventures!</p>
+                        <a href="{% url 'campaigns:campaign_create' %}" class="btn btn-primary">Create Campaign</a>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-            {% else %}
-            <div class="empty-state">
-                <i class="fas fa-dungeon"></i>
-                <h3>No Campaigns Yet</h3>
-                <p>Start your first D&D campaign to begin tracking your adventures!</p>
-                <a href="{% url 'campaigns:campaign_create' %}" class="btn btn-primary">Create Campaign</a>
-            </div>
-            {% endif %}
         </div>
 
         <!-- Recent Characters -->
-        <div class="dashboard-section">
-            <div class="section-header">
-                <h2><i class="fas fa-users"></i> Recent Characters</h2>
-                <a href="{% url 'characters:character_list' %}" class="view-all-link">View All</a>
-            </div>
-            
-            {% if recent_characters %}
-            <div class="characters-grid">
-                {% for character in recent_characters %}
-                <div class="character-card dashboard-card {% if character.is_player %}player-card{% else %}npc-card{% endif %}">
-                    <div class="character-header">
-                        <h3>{{ character.name }}</h3>
-                        <span class="character-type-badge">{{ character.get_type_display }}</span>
-                    </div>
-                    <div class="character-info">
-                        <p class="character-campaign">{{ character.campaign.name }}</p>
-                        {% if character.race %}
-                        <p class="character-race">{{ character.race }}</p>
-                        {% endif %}
-                        {% if character.character_class %}
-                        <p class="character-class">{{ character.character_class }}</p>
-                        {% endif %}
-                    </div>
-                    <div class="character-actions">
-                        <a href="{{ character.get_absolute_url }}" class="btn btn-sm btn-primary">View</a>
-                        <a href="{% url 'characters:character_edit' character.pk %}" class="btn btn-sm btn-outline">Edit</a>
-                    </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card fade-in h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-users me-2"></i> Recent Characters
+                    </h3>
+                    <a href="{% url 'characters:character_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
                 </div>
-                {% endfor %}
-            </div>
-            {% else %}
-            <div class="empty-state">
-                <i class="fas fa-users"></i>
-                <h3>No Characters Yet</h3>
-                <p>Create your first character to start your D&D journey!</p>
-                <a href="{% url 'characters:character_create' %}" class="btn btn-primary">Create Character</a>
-            </div>
-            {% endif %}
-        </div>
-
-        <!-- Upcoming Sessions -->
-        {% if upcoming_sessions %}
-        <div class="dashboard-section">
-            <div class="section-header">
-                <h2><i class="fas fa-calendar-alt"></i> Upcoming Sessions</h2>
-                <a href="{% url 'game_sessions:session_list' %}" class="view-all-link">View All</a>
-            </div>
-            
-            <div class="sessions-grid">
-                {% for session in upcoming_sessions %}
-                <div class="session-card dashboard-card">
-                    <div class="session-header">
-                        <div class="session-date">
-                            <i class="fas fa-calendar"></i>
-                            {{ session.date|date:"M d, Y" }}
+                <div class="card-body">
+                    {% if recent_characters %}
+                    <div class="row">
+                        {% for character in recent_characters %}
+                        <div class="col-12 mb-3">
+                            <div class="card bg-light-custom">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title mb-0">{{ character.name }}</h5>
+                                        <span class="badge {% if character.is_player %}bg-success{% else %}bg-info{% endif %}">
+                                            {{ character.get_type_display }}
+                                        </span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <p class="card-text small mb-1">
+                                            <i class="fas fa-map me-1"></i>{{ character.campaign.name }}
+                                        </p>
+                                        {% if character.race %}
+                                        <p class="card-text small mb-1">
+                                            <i class="fas fa-user me-1"></i>{{ character.race }}
+                                        </p>
+                                        {% endif %}
+                                        {% if character.character_class %}
+                                        <p class="card-text small mb-1">
+                                            <i class="fas fa-sword me-1"></i>{{ character.character_class }}
+                                        </p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <a href="{{ character.get_absolute_url }}" class="btn btn-primary btn-sm me-1">View</a>
+                                        <a href="{% url 'characters:character_edit' character.pk %}" class="btn btn-outline-primary btn-sm">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        {% if session.date == today %}
-                        <span class="today-badge large">Today!</span>
-                        {% elif session.date <= tomorrow %}
-                        <span class="recent-badge large">Tomorrow</span>
-                        {% endif %}
+                        {% endfor %}
                     </div>
-                    <div class="session-info">
-                        <h3 class="session-campaign">{{ session.campaign.name }}</h3>
-                        <p class="session-summary">{{ session.summary|truncatewords:20 }}</p>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <h5>No Characters Yet</h5>
+                        <p>Create your first character to start your D&D journey!</p>
+                        <a href="{% url 'characters:character_create' %}" class="btn btn-primary">Create Character</a>
                     </div>
-                    <div class="session-actions">
-                        <a href="{{ session.get_absolute_url }}" class="btn btn-sm btn-primary">View</a>
-                        <a href="{% url 'game_sessions:session_edit' session.pk %}" class="btn btn-sm btn-outline">Edit</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Sessions -->
+    {% if upcoming_sessions %}
+    <div class="card fade-in mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">
+                <i class="fas fa-calendar-alt me-2"></i> Upcoming Sessions
+            </h3>
+            <a href="{% url 'game_sessions:session_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for session in upcoming_sessions %}
+                <div class="col-md-6 mb-3">
+                    <div class="card bg-light-custom">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <i class="fas fa-calendar me-1"></i>
+                                    {{ session.date|date:"M d, Y" }}
+                                </div>
+                                {% if session.date == today %}
+                                <span class="badge bg-warning">Today!</span>
+                                {% elif session.date <= tomorrow %}
+                                <span class="badge bg-info">Tomorrow</span>
+                                {% endif %}
+                            </div>
+                            <h5 class="card-title">{{ session.campaign.name }}</h5>
+                            <p class="card-text">{{ session.summary|truncatewords:20 }}</p>
+                            <div class="d-flex justify-content-end">
+                                <a href="{{ session.get_absolute_url }}" class="btn btn-primary btn-sm me-1">View</a>
+                                <a href="{% url 'game_sessions:session_edit' session.pk %}" class="btn btn-outline-primary btn-sm">Edit</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
         </div>
-        {% endif %}
+    </div>
+    {% endif %}
 
-        <!-- Character Distribution -->
-        <div class="dashboard-section">
-            <div class="section-header">
-                <h2><i class="fas fa-chart-pie"></i> Character Overview</h2>
-            </div>
-            
-            <div class="character-distribution">
-                <div class="distribution-card">
-                    <div class="distribution-icon player">
-                        <i class="fas fa-user"></i>
+    <!-- Character Distribution -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card fade-in text-center">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-user fa-3x text-success"></i>
                     </div>
-                    <div class="distribution-content">
-                        <h3 class="distribution-number">{{ player_characters }}</h3>
-                        <p class="distribution-label">Player Characters</p>
-                    </div>
+                    <h3 class="text-success mb-1">{{ player_characters }}</h3>
+                    <p class="mb-0">Player Characters</p>
                 </div>
-                
-                <div class="distribution-card">
-                    <div class="distribution-icon npc">
-                        <i class="fas fa-user-tie"></i>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card fade-in text-center">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-user-tie fa-3x text-info"></i>
                     </div>
-                    <div class="distribution-content">
-                        <h3 class="distribution-number">{{ npc_characters }}</h3>
-                        <p class="distribution-label">NPCs</p>
-                    </div>
+                    <h3 class="text-info mb-1">{{ npc_characters }}</h3>
+                    <p class="mb-0">NPCs</p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Quick Navigation -->
-    <div class="quick-navigation">
-        <div class="nav-section">
-            <h3>Campaigns</h3>
-            <div class="nav-links">
-                <a href="{% url 'campaigns:campaign_list' %}">View All</a>
-                <a href="{% url 'campaigns:campaign_create' %}">Create New</a>
-            </div>
+    <div class="card fade-in">
+        <div class="card-header">
+            <h3 class="mb-0">
+                <i class="fas fa-compass me-2"></i> Quick Navigation
+            </h3>
         </div>
-        
-        <div class="nav-section">
-            <h3>Characters</h3>
-            <div class="nav-links">
-                <a href="{% url 'characters:character_list' %}">View All</a>
-                <a href="{% url 'characters:character_create' %}">Create New</a>
-            </div>
-        </div>
-        
-        <div class="nav-section">
-            <h3>Sessions</h3>
-            <div class="nav-links">
-                <a href="{% url 'game_sessions:session_list' %}">View All</a>
-                <a href="{% url 'game_sessions:session_create' %}">Create New</a>
-            </div>
-        </div>
-        
-        <div class="nav-section">
-            <h3>Profile</h3>
-            <div class="nav-links">
-                <a href="{% url 'accounts:profile' %}">View Profile</a>
-                <a href="{% url 'logout' %}">Logout</a>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="text-center">
+                        <i class="fas fa-dungeon fa-2x text-accent mb-2"></i>
+                        <h5>Campaigns</h5>
+                        <div class="d-grid gap-1">
+                            <a href="{% url 'campaigns:campaign_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
+                            <a href="{% url 'campaigns:campaign_create' %}" class="btn btn-outline-primary btn-sm">Create New</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="text-center">
+                        <i class="fas fa-users fa-2x text-accent mb-2"></i>
+                        <h5>Characters</h5>
+                        <div class="d-grid gap-1">
+                            <a href="{% url 'characters:character_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
+                            <a href="{% url 'characters:character_create' %}" class="btn btn-outline-primary btn-sm">Create New</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="text-center">
+                        <i class="fas fa-calendar fa-2x text-accent mb-2"></i>
+                        <h5>Sessions</h5>
+                        <div class="d-grid gap-1">
+                            <a href="{% url 'game_sessions:session_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
+                            <a href="{% url 'game_sessions:session_create' %}" class="btn btn-outline-primary btn-sm">Create New</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="text-center">
+                        <i class="fas fa-user-circle fa-2x text-accent mb-2"></i>
+                        <h5>Profile</h5>
+                        <div class="d-grid gap-1">
+                            <a href="{% url 'accounts:profile' %}" class="btn btn-outline-primary btn-sm">View Profile</a>
+                            <a href="{% url 'logout' %}" class="btn btn-outline-primary btn-sm">Logout</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

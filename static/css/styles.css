@@ -102,6 +102,20 @@ p, label, span {
     width: 80%;
 }
 
+/* ===== DROPDOWN MENU STYLING ===== */
+.dropdown {
+    position: relative !important;
+}
+
+.dropdown-menu {
+    z-index: 9999 !important;
+    position: absolute !important;
+    top: 100% !important;
+    right: 0 !important;
+    left: auto !important;
+    min-width: 200px !important;
+}
+
 .dropdown-menu-dark {
     background-color: var(--dark-gray);
     border: 1px solid var(--light-gray);
@@ -116,6 +130,15 @@ p, label, span {
 .dropdown-item:hover {
     background-color: var(--light-gray);
     color: var(--white);
+}
+
+.dropdown-item.text-danger:hover {
+    background-color: var(--accent-red);
+    color: var(--white);
+}
+
+.dropdown-divider {
+    border-color: var(--light-gray);
 }
 
 /* ===== MAIN CONTENT ===== */
@@ -320,18 +343,39 @@ p, label, span {
 /* ===== ALERTS ===== */
 .alert {
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 8px;
     font-weight: 500;
+}
+
+/* High specificity selectors to override Bootstrap without !important */
+body .dnd-theme .alert-warning,
+body .dnd-theme .alert-warning .alert-heading,
+body .dnd-theme .alert-warning p,
+body .dnd-theme .alert-warning .mb-0,
+body .dnd-theme .alert-warning h1,
+body .dnd-theme .alert-warning h2,
+body .dnd-theme .alert-warning h3,
+body .dnd-theme .alert-warning h4,
+body .dnd-theme .alert-warning h5,
+body .dnd-theme .alert-warning h6,
+body .dnd-theme .alert-warning span,
+body .dnd-theme .alert-warning div,
+body .dnd-theme .alert-warning strong,
+body .dnd-theme .alert-warning em {
+    color: #8B4513;
+}
+
+.alert-warning {
+    background-color: var(--warning);
+}
+
+.alert-warning .alert-heading {
+    font-weight: 700;
 }
 
 .alert-success {
     background-color: var(--success);
     color: var(--white);
-}
-
-.alert-warning {
-    background-color: var(--warning);
-    color: var(--dark-bg);
 }
 
 .alert-danger {
@@ -467,6 +511,62 @@ p, label, span {
 
 .border-accent {
     border-color: var(--accent-red);
+}
+
+/* ===== PAGINATION STYLING ===== */
+.pagination {
+    margin-bottom: 0;
+}
+
+.page-item .page-link {
+    background-color: var(--dark-gray);
+    border-color: var(--light-gray);
+    color: var(--off-white);
+    transition: all 0.3s ease;
+}
+
+.page-item .page-link:hover {
+    background-color: var(--light-gray);
+    border-color: var(--accent-red);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(212, 54, 54, 0.3);
+}
+
+.page-item .page-link:focus {
+    background-color: var(--light-gray);
+    border-color: var(--accent-red);
+    color: var(--white);
+    box-shadow: 0 0 0 0.2rem rgba(212, 54, 54, 0.25);
+}
+
+.page-item.active .page-link {
+    background-color: var(--accent-red);
+    border-color: var(--accent-red);
+    color: var(--white);
+    font-weight: 600;
+}
+
+.page-item.active .page-link:hover {
+    background-color: var(--muted-red);
+    border-color: var(--muted-red);
+    transform: none;
+    box-shadow: none;
+}
+
+.page-item.disabled .page-link {
+    background-color: var(--dark-bg);
+    border-color: var(--light-gray);
+    color: var(--light-gray);
+    cursor: not-allowed;
+}
+
+.page-item.disabled .page-link:hover {
+    background-color: var(--dark-bg);
+    border-color: var(--light-gray);
+    color: var(--light-gray);
+    transform: none;
+    box-shadow: none;
 }
 
 /* ===== RESPONSIVE DESIGN ===== */

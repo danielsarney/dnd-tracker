@@ -5,20 +5,38 @@
 
 {% block content %}
 <div class="sessions-container">
-    <div class="sessions-header">
-        <h1><i class="fas fa-dice-d20"></i> Game Sessions</h1>
-        <a href="{% url 'game_sessions:session_create' %}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> New Session
-        </a>
+    <!-- Header -->
+    <div class="card fade-in mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-dice-d20 me-3 text-accent"></i>
+                        Game Sessions
+                    </h1>
+                    <p class="mb-0">Track and manage your D&D game sessions</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="{% url 'game_sessions:session_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i> New Session
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Filters and Search -->
-    <div class="sessions-filters">
-        <form method="get" class="filter-form">
-            <div class="filter-row">
-                <div class="filter-group">
-                    <label for="campaign">Campaign:</label>
-                    <select name="campaign" id="campaign" class="form-control">
+    <div class="card fade-in mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-filter me-2"></i>Filters & Search
+            </h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label for="campaign" class="form-label">Campaign</label>
+                    <select name="campaign" id="campaign" class="form-select">
                         <option value="">All Campaigns</option>
                         {% for campaign in campaigns %}
                             <option value="{{ campaign.pk }}" {% if selected_campaign == campaign.pk|stringformat:"s" %}selected{% endif %}>
@@ -28,112 +46,150 @@
                     </select>
                 </div>
                 
-                <div class="filter-group">
-                    <label for="date_from">From Date:</label>
+                <div class="col-md-2">
+                    <label for="date_from" class="form-label">From Date</label>
                     <input type="date" name="date_from" id="date_from" class="form-control" 
                            value="{{ date_from|default:'' }}">
                 </div>
                 
-                <div class="filter-group">
-                    <label for="date_to">To Date:</label>
+                <div class="col-md-2">
+                    <label for="date_to" class="form-label">To Date</label>
                     <input type="date" name="date_to" id="date_to" class="form-control" 
                            value="{{ date_to|default:'' }}">
                 </div>
                 
-                <div class="filter-group">
-                    <label for="search">Search:</label>
+                <div class="col-md-3">
+                    <label for="search" class="form-label">Search</label>
                     <input type="text" name="search" id="search" class="form-control" 
                            placeholder="Search sessions..." value="{{ search_query|default:'' }}">
                 </div>
                 
-                <div class="filter-actions">
-                    <button type="submit" class="btn btn-outline">
-                        <i class="fas fa-search"></i> Filter
-                    </button>
-                    <a href="{% url 'game_sessions:session_list' %}" class="btn btn-outline">
-                        <i class="fas fa-times"></i> Clear
-                    </a>
+                <div class="col-md-2 d-flex align-items-end">
+                    <div class="d-grid gap-2 w-100">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search me-1"></i> Filter
+                        </button>
+                        <a href="{% url 'game_sessions:session_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-1"></i> Clear
+                        </a>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 
     {% if sessions %}
-        <div class="sessions-grid">
+        <div class="row">
             {% for session in sessions %}
-                <div class="session-card {% if session.is_today %}today-session{% elif session.is_recent %}recent-session{% endif %}">
-                    <div class="session-header">
-                        <div class="session-date">
-                            <i class="fas fa-calendar"></i>
-                            {{ session.date|date:"M d, Y" }}
-                            {% if session.is_today %}
-                                <span class="today-badge">Today</span>
-                            {% elif session.is_recent %}
-                                <span class="recent-badge">Recent</span>
-                            {% endif %}
-                        </div>
-                        <div class="session-actions">
-                            <a href="{% url 'game_sessions:session_detail' session.pk %}" class="btn btn-sm btn-outline">
-                                <i class="fas fa-eye"></i> View
-                            </a>
-                            <a href="{% url 'game_sessions:session_edit' session.pk %}" class="btn btn-sm btn-outline">
-                                <i class="fas fa-edit"></i> Edit
-                            </a>
-                            <a href="{% url 'game_sessions:session_delete' session.pk %}" class="btn btn-sm btn-danger">
-                                <i class="fas fa-trash"></i> Delete
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="session-info">
-                        <h3 class="session-campaign">
-                            <i class="fas fa-map"></i> 
-                            <a href="{% url 'campaigns:campaign_detail' session.campaign.pk %}">
-                                {{ session.campaign.name }}
-                            </a>
-                        </h3>
-                        
-                        <p class="session-dm">
-                            <i class="fas fa-crown"></i> <strong>DM:</strong> {{ session.campaign.dm }}
-                        </p>
-                        
-                        <div class="session-summary">
-                            <p class="summary-text">{{ session.summary|truncatewords:50 }}</p>
+                <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="card fade-in h-100 {% if session.is_today %}border-warning{% elif session.is_recent %}border-info{% endif %}">
+                        <div class="card-header d-flex justify-content-between align-items-start">
+                            <div>
+                                <i class="fas fa-calendar me-2"></i>
+                                {{ session.date|date:"M d, Y" }}
+                                {% if session.is_today %}
+                                    <span class="badge bg-warning ms-2">Today</span>
+                                {% elif session.is_recent %}
+                                    <span class="badge bg-info ms-2">Recent</span>
+                                {% endif %}
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item" href="{% url 'game_sessions:session_detail' session.pk %}">
+                                        <i class="fas fa-eye me-2"></i>View
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'game_sessions:session_edit' session.pk %}">
+                                        <i class="fas fa-edit me-2"></i>Edit
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="{% url 'game_sessions:session_delete' session.pk %}">
+                                        <i class="fas fa-trash me-2"></i>Delete
+                                    </a></li>
+                                </ul>
+                            </div>
                         </div>
                         
-                        <p class="session-date-created">
-                            <i class="fas fa-clock"></i> Logged: {{ session.created_at|date:"M d, Y" }}
-                        </p>
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-map me-2"></i> 
+                                <a href="{% url 'campaigns:campaign_detail' session.campaign.pk %}" class="text-accent">
+                                    {{ session.campaign.name }}
+                                </a>
+                            </h5>
+                            
+                            <div class="mb-3">
+                                <p class="mb-2">
+                                    <i class="fas fa-crown me-2"></i>
+                                    <strong>DM:</strong> {{ session.campaign.dm }}
+                                </p>
+                                
+                                <div class="mb-2">
+                                    <p class="card-text">{{ session.summary|truncatewords:50 }}</p>
+                                </div>
+                                
+                                <p class="mb-0">
+                                    <i class="fas fa-clock me-2"></i>
+                                    Logged: {{ session.created_at|date:"M d, Y" }}
+                                </p>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <a href="{% url 'game_sessions:session_detail' session.pk %}" class="btn btn-primary">
+                                    <i class="fas fa-eye me-1"></i> View Session
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
 
         {% if is_paginated %}
-            <div class="pagination">
-                {% if page_obj.has_previous %}
-                    <a href="?page=1{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" class="btn btn-outline">&laquo; First</a>
-                    <a href="?page={{ page_obj.previous_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" class="btn btn-outline">Previous</a>
-                {% endif %}
-                
-                <span class="current-page">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                </span>
-                
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" class="btn btn-outline">Next</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" class="btn btn-outline">Last &raquo;</a>
-                {% endif %}
+            <div class="card fade-in">
+                <div class="card-body">
+                    <nav aria-label="Session pagination">
+                        <ul class="pagination justify-content-center mb-0">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; First</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+                                </li>
+                            {% endif %}
+                            
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                                </span>
+                            </li>
+                            
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last &raquo;</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
             </div>
         {% endif %}
     {% else %}
-        <div class="empty-state">
-            <i class="fas fa-dice-d20 fa-3x"></i>
-            <h3>No game sessions found</h3>
-            <p>{% if search_query or selected_campaign or date_from or date_to %}Try adjusting your filters or search terms.{% else %}Log your first game session to get started!{% endif %}</p>
-            <a href="{% url 'game_sessions:session_create' %}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Log Session
-            </a>
+        <div class="card fade-in">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-dice-d20 fa-4x text-muted mb-4"></i>
+                <h3>No game sessions found</h3>
+                <p class="mb-4">{% if search_query or selected_campaign or date_from or date_to %}Try adjusting your filters or search terms.{% else %}Log your first game session to get started!{% endif %}</p>
+                <a href="{% url 'game_sessions:session_create' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus me-2"></i> Log Session
+                </a>
+            </div>
         </div>
     {% endif %}
 </div>

@@ -5,131 +5,188 @@
 
 {% block content %}
 <div class="character-detail-container">
-    <div class="character-detail-header">
-        <div class="character-title">
-            <div class="character-name-section">
-                <h1>
-                    {% if character.type == 'NPC' %}
-                        <i class="fas fa-ghost"></i>
-                    {% else %}
-                        <i class="fas fa-user"></i>
+    <!-- Character Header -->
+    <div class="card fade-in mb-4">
+        <div class="card-body">
+            <div class="row align-items-start">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center mb-3">
+                        <h1 class="mb-0 me-3">
+                            {% if character.type == 'NPC' %}
+                                <i class="fas fa-ghost me-3 text-accent"></i>
+                            {% else %}
+                                <i class="fas fa-user me-3 text-accent"></i>
+                            {% endif %}
+                            {{ character.name }}
+                        </h1>
+                        <span class="badge {% if character.type == 'NPC' %}bg-info{% else %}bg-success{% endif %} fs-6">
+                            <i class="fas fa-{% if character.type == 'NPC' %}ghost{% else %}user{% endif %} me-1"></i>
+                            {{ character.get_type_display }}
+                        </span>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <i class="fas fa-map me-2"></i>
+                            <strong>Campaign:</strong> 
+                            <a href="{% url 'campaigns:campaign_detail' character.campaign.pk %}" class="text-accent">
+                                {{ character.campaign.name }}
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <i class="fas fa-crown me-2"></i>
+                            <strong>DM:</strong> {{ character.campaign.dm }}
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <i class="fas fa-calendar me-2"></i>
+                            <strong>Created:</strong> {{ character.created_at|date:"F d, Y" }}
+                        </div>
+                    </div>
+                    
+                    {% if character.updated_at != character.created_at %}
+                    <div class="row">
+                        <div class="col-md-4">
+                            <i class="fas fa-clock me-2"></i>
+                            <strong>Last Updated:</strong> {{ character.updated_at|date:"F d, Y" }}
+                        </div>
+                    </div>
                     {% endif %}
-                    {{ character.name }}
-                </h1>
-                <div class="character-type-badge large">
-                    <i class="fas fa-{% if character.type == 'NPC' %}ghost{% else %}user{% endif %}"></i>
-                    {{ character.get_type_display }}
+                </div>
+                
+                <div class="col-md-4 text-md-end">
+                    <div class="d-grid gap-2 d-md-block">
+                        <a href="{% url 'characters:character_edit' character.pk %}" class="btn btn-outline-primary me-2">
+                            <i class="fas fa-edit me-1"></i> Edit Character
+                        </a>
+                        <a href="{% url 'characters:character_delete' character.pk %}" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i> Delete Character
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="character-actions">
-                <a href="{% url 'characters:character_edit' character.pk %}" class="btn btn-outline">
-                    <i class="fas fa-edit"></i> Edit Character
-                </a>
-                <a href="{% url 'characters:character_delete' character.pk %}" class="btn btn-danger">
-                    <i class="fas fa-trash"></i> Delete Character
-                </a>
-            </div>
-        </div>
-        
-        <div class="character-meta">
-            <div class="meta-item">
-                <i class="fas fa-map"></i>
-                <strong>Campaign:</strong> 
-                <a href="{% url 'campaigns:campaign_detail' character.campaign.pk %}">
-                    {{ character.campaign.name }}
-                </a>
-            </div>
-            <div class="meta-item">
-                <i class="fas fa-crown"></i>
-                <strong>DM:</strong> {{ character.campaign.dm }}
-            </div>
-            <div class="meta-item">
-                <i class="fas fa-calendar"></i>
-                <strong>Created:</strong> {{ character.created_at|date:"F d, Y" }}
-            </div>
-            {% if character.updated_at != character.created_at %}
-                <div class="meta-item">
-                    <i class="fas fa-clock"></i>
-                    <strong>Last Updated:</strong> {{ character.updated_at|date:"F d, Y" }}
-                </div>
-            {% endif %}
         </div>
     </div>
 
-    <div class="character-content">
-        <div class="character-stats-grid">
-            {% if character.race %}
-                <div class="stat-card">
-                    <i class="fas fa-dragon"></i>
+    <!-- Character Stats -->
+    <div class="row mb-4">
+        {% if character.race %}
+        <div class="col-md-4 mb-3">
+            <div class="card text-center fade-in h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-dragon fa-3x text-accent"></i>
+                    </div>
                     <h4>Race</h4>
-                    <p class="stat-value">{{ character.race }}</p>
+                    <p class="stat-value fs-5">{{ character.race }}</p>
                 </div>
-            {% endif %}
-            
-            {% if character.character_class %}
-                <div class="stat-card">
-                    <i class="fas fa-shield-alt"></i>
-                    <h4>Class</h4>
-                    <p class="stat-value">{{ character.character_class }}</p>
-                </div>
-            {% endif %}
-            
-            <div class="stat-card">
-                <i class="fas fa-calendar-alt"></i>
-                <h4>Campaign Age</h4>
-                <p class="stat-value">{{ character.campaign.created_at|timesince }}</p>
             </div>
         </div>
+        {% endif %}
+        
+        {% if character.character_class %}
+        <div class="col-md-4 mb-3">
+            <div class="card text-center fade-in h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-shield-alt fa-3x text-accent"></i>
+                    </div>
+                    <h4>Class</h4>
+                    <p class="stat-value fs-5">{{ character.character_class }}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="col-md-4 mb-3">
+            <div class="card text-center fade-in h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-calendar-alt fa-3x text-accent"></i>
+                    </div>
+                    <h4>Campaign Age</h4>
+                    <p class="stat-value fs-5">{{ character.campaign.created_at|timesince }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        {% if character.background %}
-            <div class="character-background-section">
-                <h3><i class="fas fa-scroll"></i> Character Background</h3>
+    <!-- Character Background -->
+    <div class="card fade-in mb-4">
+        <div class="card-header">
+            <h3 class="mb-0">
+                <i class="fas fa-scroll me-2"></i> Character Background
+            </h3>
+        </div>
+        <div class="card-body">
+            {% if character.background %}
                 <div class="background-content">
                     {{ character.background|linebreaks }}
                 </div>
-            </div>
-        {% else %}
-            <div class="character-background-section">
-                <h3><i class="fas fa-scroll"></i> Character Background</h3>
-                <div class="background-content">
-                    <p class="no-background">No background information provided yet.</p>
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-scroll fa-3x text-muted mb-3"></i>
+                    <p class="mb-0">No background information provided yet.</p>
                 </div>
-            </div>
-        {% endif %}
+            {% endif %}
+        </div>
+    </div>
 
-        <div class="character-relationships">
-            <h3><i class="fas fa-link"></i> Related Information</h3>
-            <div class="relationships-grid">
-                <div class="relationship-card">
-                    <i class="fas fa-users"></i>
-                    <h4>Campaign Characters</h4>
-                    <p class="relationship-count">{{ character.campaign.characters.count }}</p>
-                    <p class="relationship-label">Total Characters</p>
-                    <a href="{% url 'characters:campaign_characters' character.campaign.pk %}" class="btn btn-sm btn-outline">
-                        View All
-                    </a>
+    <!-- Related Information -->
+    <div class="card fade-in mb-4">
+        <div class="card-header">
+            <h3 class="mb-0">
+                <i class="fas fa-link me-2"></i> Related Information
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="card text-center bg-light-custom h-100">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-users fa-3x text-accent"></i>
+                            </div>
+                            <h4>Campaign Characters</h4>
+                            <h2 class="text-accent mb-2">{{ character.campaign.characters.count }}</h2>
+                            <p class="mb-3">Total Characters</p>
+                            <a href="{% url 'characters:campaign_characters' character.campaign.pk %}" class="btn btn-outline-primary">
+                                View All
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="relationship-card">
-                    <i class="fas fa-dice-d20"></i>
-                    <h4>Campaign Sessions</h4>
-                    <p class="relationship-count">{{ character.campaign.sessions.count }}</p>
-                    <p class="relationship-label">Total Sessions</p>
-                    <a href="{% url 'game_sessions:campaign_sessions' character.campaign.pk %}" class="btn btn-sm btn-outline">
-                        View All
-                    </a>
+                <div class="col-md-6 mb-3">
+                    <div class="card text-center bg-light-custom h-100">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-dice-d20 fa-3x text-accent"></i>
+                            </div>
+                            <h4>Campaign Sessions</h4>
+                            <h2 class="text-accent mb-2">{{ character.campaign.sessions.count }}</h2>
+                            <p class="mb-3">Total Sessions</p>
+                            <a href="{% url 'game_sessions:campaign_sessions' character.campaign.pk %}" class="btn btn-outline-primary">
+                                View All
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="character-navigation">
-        <a href="{% url 'characters:character_list' %}" class="btn btn-outline">
-            <i class="fas fa-arrow-left"></i> Back to Characters
-        </a>
-        <a href="{% url 'campaigns:campaign_detail' character.campaign.pk %}" class="btn btn-outline">
-            <i class="fas fa-map"></i> View Campaign
-        </a>
+    <!-- Navigation -->
+    <div class="card fade-in">
+        <div class="card-body text-center">
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'characters:character_list' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Characters
+                </a>
+                <a href="{% url 'campaigns:campaign_detail' character.campaign.pk %}" class="btn btn-outline-primary">
+                    <i class="fas fa-map me-1"></i> View Campaign
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

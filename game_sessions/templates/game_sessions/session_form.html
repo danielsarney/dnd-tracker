@@ -7,90 +7,102 @@
 
 {% block content %}
 <div class="session-form-container">
-    <div class="session-form-header">
-        <h1>
-            {% if form.instance.pk %}
-                <i class="fas fa-edit"></i> Edit Game Session
-            {% else %}
-                <i class="fas fa-plus"></i> New Game Session
-            {% endif %}
-        </h1>
-        <p>
-            {% if form.instance.pk %}
-                Update your game session details below.
-            {% else %}
-                Log a new game session to record what happened in your campaign!
-            {% endif %}
-        </p>
+    <!-- Header -->
+    <div class="card fade-in mb-4">
+        <div class="card-body text-center">
+            <h1 class="mb-2">
+                {% if form.instance.pk %}
+                    <i class="fas fa-edit me-3 text-accent"></i> Edit Game Session
+                {% else %}
+                    <i class="fas fa-plus me-3 text-accent"></i> New Game Session
+                {% endif %}
+            </h1>
+            <p class="mb-0">
+                {% if form.instance.pk %}
+                    Update your game session details below.
+                {% else %}
+                    Log a new game session to record what happened in your campaign!
+                {% endif %}
+            </p>
+        </div>
     </div>
 
-    <div class="session-form-content">
-        <form method="post" class="session-form">
-            {% csrf_token %}
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="{{ form.campaign.id_for_label }}">
-                        Campaign <span class="required">*</span>
-                    </label>
-                    {{ form.campaign }}
-                    {% if form.campaign.errors %}
-                        <div class="error-message">
-                            {% for error in form.campaign.errors %}
-                                {{ error }}
-                            {% endfor %}
+    <!-- Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card fade-in">
+                <div class="card-body">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.campaign.id_for_label }}" class="form-label">
+                                    <i class="fas fa-map me-2"></i>Campaign *
+                                </label>
+                                {{ form.campaign }}
+                                {% if form.campaign.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.campaign.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="{{ form.date.id_for_label }}" class="form-label">
+                                    <i class="fas fa-calendar me-2"></i>Session Date *
+                                </label>
+                                {{ form.date }}
+                                {% if form.date.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.date.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    When did this session take place?
+                                </div>
+                            </div>
                         </div>
-                    {% endif %}
-                </div>
 
-                <div class="form-group">
-                    <label for="{{ form.date.id_for_label }}">
-                        Session Date <span class="required">*</span>
-                    </label>
-                    {{ form.date }}
-                    {% if form.date.errors %}
-                        <div class="error-message">
-                            {% for error in form.date.errors %}
-                                {{ error }}
-                            {% endfor %}
+                        <div class="mb-4">
+                            <label for="{{ form.summary.id_for_label }}" class="form-label">
+                                <i class="fas fa-scroll me-2"></i>Session Summary *
+                            </label>
+                            {{ form.summary }}
+                            {% if form.summary.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.summary.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Describe what happened in this session. Include key events, character actions, NPC interactions, combat outcomes, and any important story developments.
+                            </div>
                         </div>
-                    {% endif %}
-                    <div class="form-text">
-                        When did this session take place?
-                    </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% url 'game_sessions:session_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                {% if form.instance.pk %}
+                                    <i class="fas fa-save me-1"></i> Update Session
+                                {% else %}
+                                    <i class="fas fa-plus me-1"></i> Log Session
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label for="{{ form.summary.id_for_label }}">
-                    Session Summary <span class="required">*</span>
-                </label>
-                {{ form.summary }}
-                {% if form.summary.errors %}
-                    <div class="error-message">
-                        {% for error in form.summary.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <div class="form-text">
-                    Describe what happened in this session. Include key events, character actions, NPC interactions, combat outcomes, and any important story developments.
-                </div>
-            </div>
-
-            <div class="form-actions">
-                <a href="{% url 'game_sessions:session_list' %}" class="btn btn-outline">
-                    <i class="fas fa-times"></i> Cancel
-                </a>
-                <button type="submit" class="btn btn-primary">
-                    {% if form.instance.pk %}
-                        <i class="fas fa-save"></i> Update Session
-                    {% else %}
-                        <i class="fas fa-plus"></i> Log Session
-                    {% endif %}
-                </button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -1,0 +1,519 @@
+/* D&D Tracker - Dark Fantasy Theme */
+/* Based on design.md specifications */
+
+/* ===== CSS VARIABLES ===== */
+:root {
+    --dark-bg: #121212;
+    --dark-gray: #1E1E1E;
+    --light-gray: #2D2D2D;
+    --accent-red: #D63636;
+    --muted-red: #8B2D2D;
+    --white: #FFFFFF;
+    --off-white: #CCCCCC;
+    --success: #2ECC71;
+    --warning: #F1C40F;
+    --danger: #E74C3C;
+    --info: #3498DB;
+}
+
+/* ===== BASE STYLES ===== */
+body.dnd-theme {
+    background-color: var(--dark-bg);
+    color: var(--white);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 1rem;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+
+p, label, span {
+    font-family: 'Roboto', sans-serif;
+    color: var(--off-white);
+}
+
+.brand-text {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* ===== NAVBAR ===== */
+.navbar.dnd-theme {
+    background-color: var(--dark-gray);
+    border-bottom: 1px solid var(--light-gray);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    padding: 0.75rem 0;
+}
+
+.navbar-brand.dnd-theme {
+    color: var(--white);
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+
+.navbar-brand.dnd-theme:hover {
+    color: var(--accent-red);
+}
+
+.navbar-nav .nav-link.dnd-theme {
+    color: var(--off-white);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.navbar-nav .nav-link.dnd-theme:hover {
+    color: var(--white);
+}
+
+.navbar-nav .nav-link.dnd-theme::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-red);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.navbar-nav .nav-link.dnd-theme:hover::after {
+    width: 80%;
+}
+
+.navbar-nav .nav-link.dnd-theme.active::after {
+    width: 80%;
+}
+
+.dropdown-menu-dark {
+    background-color: var(--dark-gray);
+    border: 1px solid var(--light-gray);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+}
+
+.dropdown-item {
+    color: var(--off-white);
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--light-gray);
+    color: var(--white);
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+    flex: 1;
+    padding-top: 80px; /* Account for fixed navbar */
+    min-height: calc(100vh - 80px);
+}
+
+/* ===== CARDS ===== */
+.card {
+    background-color: var(--dark-gray);
+    border: 1px solid var(--light-gray);
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background-color: var(--light-gray);
+    border-bottom: 1px solid var(--light-gray);
+    color: var(--white);
+    font-weight: 600;
+}
+
+.card-body {
+    color: var(--off-white);
+}
+
+.card-footer {
+    background-color: var(--light-gray);
+    border-top: 1px solid var(--light-gray);
+    color: var(--off-white);
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary {
+    background-color: var(--accent-red);
+    border: none;
+    color: var(--white);
+    font-weight: 500;
+    border-radius: 0.375rem;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1.5rem;
+}
+
+.btn-primary:hover {
+    background-color: var(--muted-red);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(212, 54, 54, 0.3);
+}
+
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary:focus-visible {
+    background-color: var(--muted-red);
+    border-color: var(--accent-red);
+    color: var(--white);
+    box-shadow: 0 0 0 0.2rem rgba(212, 54, 54, 0.25);
+}
+
+.btn-primary:focus-visible {
+    outline: 2px solid var(--accent-red);
+    outline-offset: 2px;
+}
+
+.btn-secondary {
+    background-color: var(--dark-gray);
+    border: 1px solid var(--light-gray);
+    color: var(--off-white);
+    font-weight: 500;
+    border-radius: 0.375rem;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: var(--light-gray);
+    color: var(--white);
+    border-color: var(--accent-red);
+}
+
+.btn-secondary:focus,
+.btn-secondary:active,
+.btn-secondary.active {
+    background-color: var(--light-gray);
+    color: var(--white);
+    border-color: var(--accent-red);
+    box-shadow: 0 0 0 0.2rem rgba(212, 54, 54, 0.25);
+}
+
+.btn-outline-primary {
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+    background-color: transparent;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--accent-red);
+    color: var(--white);
+}
+
+.btn-outline-primary:focus,
+.btn-outline-primary:active,
+.btn-outline-primary.active {
+    background-color: var(--accent-red);
+    color: var(--white);
+    border-color: var(--accent-red);
+    box-shadow: 0 0 0 0.2rem rgba(212, 54, 54, 0.25);
+}
+
+/* ===== FORMS ===== */
+.form-control, .form-select {
+    background-color: var(--dark-gray);
+    border: 1px solid var(--light-gray);
+    color: var(--white);
+    border-radius: 0.375rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--dark-gray);
+    border-color: var(--accent-red);
+    color: var(--white);
+    box-shadow: 0 0 0 0.2rem rgba(212, 54, 54, 0.25);
+}
+
+.form-control::placeholder {
+    color: var(--off-white);
+    opacity: 0.7;
+}
+
+.form-label {
+    color: var(--white);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.form-text {
+    color: var(--off-white);
+    opacity: 0.8;
+}
+
+/* Form validation styles */
+.form-control.is-valid {
+    border-color: var(--success);
+    box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.25);
+}
+
+.form-control.is-invalid {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25);
+}
+
+.invalid-feedback {
+    color: var(--danger);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.valid-feedback {
+    color: var(--success);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* ===== TABLES ===== */
+.table {
+    color: var(--off-white);
+}
+
+.table-dark {
+    background-color: var(--dark-gray);
+    color: var(--off-white);
+}
+
+.table-dark thead th {
+    background-color: var(--light-gray);
+    color: var(--white);
+    border-bottom: 2px solid var(--accent-red);
+    font-weight: 600;
+}
+
+.table-dark tbody tr {
+    background-color: var(--dark-gray);
+    transition: background-color 0.3s ease;
+}
+
+.table-dark tbody tr:nth-child(even) {
+    background-color: var(--light-gray);
+}
+
+.table-dark tbody tr:hover {
+    background-color: var(--light-gray);
+}
+
+/* ===== ALERTS ===== */
+.alert {
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+}
+
+.alert-success {
+    background-color: var(--success);
+    color: var(--white);
+}
+
+.alert-warning {
+    background-color: var(--warning);
+    color: var(--dark-bg);
+}
+
+.alert-danger {
+    background-color: var(--danger);
+    color: var(--white);
+}
+
+.alert-info {
+    background-color: var(--info);
+    color: var(--white);
+}
+
+/* ===== MODALS ===== */
+.modal-content {
+    background-color: var(--dark-gray);
+    border: 1px solid var(--light-gray);
+    border-radius: 0.5rem;
+}
+
+.modal-header {
+    background-color: var(--light-gray);
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.modal-title {
+    color: var(--white);
+    font-family: 'Cinzel', serif;
+}
+
+.modal-body {
+    color: var(--off-white);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--light-gray);
+}
+
+/* ===== FOOTER ===== */
+.footer {
+    background-color: var(--dark-gray);
+    border-top: 1px solid var(--light-gray);
+    color: var(--off-white);
+    margin-top: auto;
+}
+
+.footer p {
+    color: var(--off-white);
+}
+
+.footer .text-muted {
+    color: var(--off-white);
+}
+
+/* ===== PROFILE SPECIFIC STYLES ===== */
+.profile-avatar {
+    position: relative;
+}
+
+.avatar-placeholder {
+    border: 3px solid var(--light-gray);
+    transition: all 0.3s ease;
+}
+
+.avatar-placeholder:hover {
+    border-color: var(--accent-red);
+    transform: scale(1.05);
+}
+
+.profile-avatar img {
+    border: 3px solid var(--light-gray);
+    transition: all 0.3s ease;
+}
+
+.profile-avatar img:hover {
+    border-color: var(--accent-red);
+    transform: scale(1.05);
+}
+
+/* Profile text styling - override any Bootstrap defaults */
+.profile-avatar h2 {
+    color: var(--accent-red);
+}
+
+.profile-avatar p {
+    color: var(--off-white);
+}
+
+.card-body p {
+    color: var(--off-white);
+}
+
+.card-body .text-muted {
+    color: var(--off-white);
+}
+
+/* Additional text color overrides for better visibility */
+.dnd-theme .card-body,
+.dnd-theme .card-header,
+.dnd-theme .card-footer {
+    color: var(--off-white);
+}
+
+.dnd-theme .card-body p,
+.dnd-theme .card-body span,
+.dnd-theme .card-body label {
+    color: var(--off-white);
+}
+
+.dnd-theme .text-muted {
+    color: var(--off-white);
+}
+
+.dnd-theme .profile-avatar .text-muted {
+    color: var(--off-white);
+}
+
+/* ===== UTILITY CLASSES ===== */
+.text-accent {
+    color: var(--accent-red);
+}
+
+.text-muted {
+    color: var(--off-white);
+}
+
+.bg-dark-custom {
+    background-color: var(--dark-gray);
+}
+
+.bg-light-custom {
+    background-color: var(--light-gray);
+}
+
+.border-accent {
+    border-color: var(--accent-red);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .navbar-brand .brand-text {
+        font-size: 1.25rem;
+    }
+    
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.5rem; }
+    
+    .main-content {
+        padding-top: 70px;
+    }
+    
+    .profile-avatar img,
+    .avatar-placeholder {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--light-gray);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-red);
+}

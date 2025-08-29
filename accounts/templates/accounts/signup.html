@@ -1,76 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - D&D Tracker</title>
-    
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <!-- Custom CSS -->
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
-<body>
-    <div class="login-page">
-        <div class="auth-container">
-            <div class="auth-card">
-                <div class="auth-header">
-                    <h2>Join the Adventure</h2>
-                    <p>Create your account to start tracking your D&D campaigns</p>
-                </div>
-                
-                <form method="post" class="auth-form">
-                    {% csrf_token %}
-                    
-                    {% if form.errors %}
-                    <div class="alert alert-danger">
-                        {% if form.username.errors %}
-                            <p>Username is already taken. Please choose a different one.</p>
-                        {% elif form.email.errors %}
-                            <p>Email address is already registered. Please use a different one.</p>
-                        {% elif form.password1.errors %}
-                            <p>Password must be at least 8 characters long.</p>
-                        {% elif form.password2.errors %}
-                            <p>Passwords don't match. Please try again.</p>
-                        {% else %}
-                            <p>Please fix the errors above and try again.</p>
-                        {% endif %}
-                    </div>
-                    {% endif %}
-                    
-                    <div class="form-group">
-                        <label for="{{ form.username.id_for_label }}">Username <span class="required">*</span></label>
-                        {{ form.username }}
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="{{ form.email.id_for_label }}">Email <span class="required">*</span></label>
-                        {{ form.email }}
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="{{ form.password1.id_for_label }}">Password <span class="required">*</span></label>
-                        {{ form.password1 }}
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="{{ form.password2.id_for_label }}">Confirm Password <span class="required">*</span></label>
-                        {{ form.password2 }}
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
-                </form>
-                
-                <div class="auth-footer">
-                    <p>Already have an account? <a href="{% url 'login' %}">Sign In</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Custom JavaScript -->
-    <script src="{% static 'js/main.js' %}"></script>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - D&D Tracker{% endblock %}
+
+{% block content %}
+<h1>Sign Up</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    {% if form.errors %}
+        {% if form.username.errors %}
+            <p>Username is already taken. Please choose a different one.</p>
+        {% elif form.email.errors %}
+            <p>Email address is already registered. Please use a different one.</p>
+        {% elif form.password1.errors %}
+            <p>Password must be at least 8 characters long.</p>
+        {% elif form.password2.errors %}
+            <p>Passwords don't match. Please try again.</p>
+        {% else %}
+            <p>Please fix the errors above and try again.</p>
+        {% endif %}
+    {% endif %}
+
+    <p>
+        <label for="{{ form.username.id_for_label }}">Username *</label>
+        {{ form.username }}
+    </p>
+
+    <p>
+        <label for="{{ form.email.id_for_label }}">Email *</label>
+        {{ form.email }}
+    </p>
+
+    <p>
+        <label for="{{ form.password1.id_for_label }}">Password *</label>
+        {{ form.password1 }}
+    </p>
+
+    <p>
+        <label for="{{ form.password2.id_for_label }}">Confirm Password *</label>
+        {{ form.password2 }}
+    </p>
+
+    <p>
+        <button type="submit">Create Account</button>
+    </p>
+</form>
+
+<p>Already have an account? <a href="{% url 'login' %}">Sign In</a></p>
+{% endblock %}

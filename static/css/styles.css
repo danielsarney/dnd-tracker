@@ -104,16 +104,16 @@ p, label, span {
 
 /* ===== DROPDOWN MENU STYLING ===== */
 .dropdown {
-    position: relative !important;
+    position: relative;
 }
 
 .dropdown-menu {
-    z-index: 9999 !important;
-    position: absolute !important;
-    top: 100% !important;
-    right: 0 !important;
-    left: auto !important;
-    min-width: 200px !important;
+    z-index: 9999;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: auto;
+    min-width: 200px;
 }
 
 .dropdown-menu-dark {
@@ -463,14 +463,6 @@ body .dnd-theme .alert-warning em {
     color: var(--off-white);
 }
 
-.card-body p {
-    color: var(--off-white);
-}
-
-.card-body .text-muted {
-    color: var(--off-white);
-}
-
 /* Additional text color overrides for better visibility */
 .dnd-theme .card-body,
 .dnd-theme .card-header,
@@ -478,17 +470,7 @@ body .dnd-theme .alert-warning em {
     color: var(--off-white);
 }
 
-.dnd-theme .card-body p,
-.dnd-theme .card-body span,
-.dnd-theme .card-body label {
-    color: var(--off-white);
-}
-
 .dnd-theme .text-muted {
-    color: var(--off-white);
-}
-
-.dnd-theme .profile-avatar .text-muted {
     color: var(--off-white);
 }
 

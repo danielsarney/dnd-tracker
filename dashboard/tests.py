@@ -249,7 +249,7 @@ class DashboardViewTest(TestCase):
         self.assertContains(response, 'Welcome back')
         self.assertContains(response, 'Recent Campaigns')
         self.assertContains(response, 'Recent Characters')
-        self.assertContains(response, 'Character Overview')
+        self.assertContains(response, 'Character Distribution')
         self.assertContains(response, 'Quick Navigation')
 
     def test_dashboard_quick_actions_links(self):

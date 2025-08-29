@@ -6,7 +6,7 @@ from accounts.models import Profile
 from campaigns.models import Campaign
 from characters.models import Character
 from game_sessions.models import GameSession
-from datetime import date, timedelta
+from datetime import timedelta
 import random
 
 

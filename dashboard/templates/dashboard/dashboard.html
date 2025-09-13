@@ -20,8 +20,8 @@
                         <a href="{% url 'campaigns:campaign_create' %}" class="btn btn-primary">
                             <i class="fas fa-plus me-1"></i> New Campaign
                         </a>
-                        <a href="{% url 'characters:character_create' %}" class="btn btn-outline-primary">
-                            <i class="fas fa-user-plus me-1"></i> New Character
+                        <a href="{% url 'players:player_create' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-user-plus me-1"></i> New Player
                         </a>
                         <a href="{% url 'game_sessions:session_create' %}" class="btn btn-outline-primary">
                             <i class="fas fa-calendar-plus me-1"></i> New Session
@@ -81,7 +81,7 @@
                     <div class="mb-3">
                         <i class="fas fa-users fa-3x text-accent"></i>
                     </div>
-                    <h2 class="text-accent mb-1">{{ user_character_count }}</h2>
+                    <h2 class="text-accent mb-1">{{ user_player_count|add:user_npc_count|add:user_monster_count }}</h2>
                     <p class="mb-0">Your Characters</p>
                 </div>
             </div>
@@ -141,7 +141,7 @@
                                         <small class="text-muted">Created {{ campaign.created_at|date:"M d, Y" }}</small>
                                         <div>
                                             <a href="{{ campaign.get_absolute_url }}" class="btn btn-primary btn-sm me-1">View</a>
-                                            <a href="{% url 'characters:campaign_characters' campaign.pk %}" class="btn btn-outline-primary btn-sm">Characters</a>
+                                            <a href="{% url 'players:player_list' %}" class="btn btn-outline-primary btn-sm">Players</a>
                                         </div>
                                     </div>
                                 </div>
@@ -161,46 +161,40 @@
             </div>
         </div>
 
-        <!-- Recent Characters -->
+        <!-- Recent Players -->
         <div class="col-lg-6 mb-4">
             <div class="card fade-in h-100">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="mb-0">
-                        <i class="fas fa-users me-2"></i> Recent Characters
+                        <i class="fas fa-users me-2"></i> Recent Players
                     </h3>
-                    <a href="{% url 'characters:character_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
+                    <a href="{% url 'players:player_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
                 </div>
                 <div class="card-body">
-                    {% if recent_characters %}
+                    {% if recent_players %}
                     <div class="row">
-                        {% for character in recent_characters %}
+                        {% for player in recent_players %}
                         <div class="col-12 mb-3">
                             <div class="card bg-light-custom">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <h5 class="card-title mb-0">{{ character.name }}</h5>
-                                        <span class="badge {% if character.is_player %}bg-success{% else %}bg-info{% endif %}">
-                                            {{ character.get_type_display }}
-                                        </span>
+                                        <h5 class="card-title mb-0">{{ player.character_name }}</h5>
+                                        <span class="badge bg-success">Player</span>
                                     </div>
                                     <div class="mb-2">
                                         <p class="card-text small mb-1">
-                                            <i class="fas fa-map me-1"></i>{{ character.campaign.name }}
+                                            <i class="fas fa-map me-1"></i>{{ player.campaign.name }}
                                         </p>
-                                        {% if character.race %}
                                         <p class="card-text small mb-1">
-                                            <i class="fas fa-user me-1"></i>{{ character.race }}
+                                            <i class="fas fa-user me-1"></i>{{ player.player_name }}
                                         </p>
-                                        {% endif %}
-                                        {% if character.character_class %}
                                         <p class="card-text small mb-1">
-                                            <i class="fas fa-sword me-1"></i>{{ character.character_class }}
+                                            <i class="fas fa-level-up-alt me-1"></i>Level {{ player.level }}
                                         </p>
-                                        {% endif %}
                                     </div>
                                     <div class="d-flex justify-content-end">
-                                        <a href="{{ character.get_absolute_url }}" class="btn btn-primary btn-sm me-1">View</a>
-                                        <a href="{% url 'characters:character_edit' character.pk %}" class="btn btn-outline-primary btn-sm">Edit</a>
+                                        <a href="{{ player.get_absolute_url }}" class="btn btn-primary btn-sm me-1">View</a>
+                                        <a href="{% url 'players:player_edit' player.pk %}" class="btn btn-outline-primary btn-sm">Edit</a>
                                     </div>
                                 </div>
                             </div>
@@ -210,9 +204,9 @@
                     {% else %}
                     <div class="text-center py-4">
                         <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                        <h5>No Characters Yet</h5>
-                        <p>Create your first character to start your D&D journey!</p>
-                        <a href="{% url 'characters:character_create' %}" class="btn btn-primary">Create Character</a>
+                        <h5>No Players Yet</h5>
+                        <p>Create your first player character to start your D&D journey!</p>
+                        <a href="{% url 'players:player_create' %}" class="btn btn-primary">Create Player</a>
                     </div>
                     {% endif %}
                 </div>
@@ -263,26 +257,38 @@
 
     <!-- Character Distribution -->
     <div class="row mb-4">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card fade-in text-center">
                 <div class="card-body">
                     <div class="mb-3">
                         <i class="fas fa-user fa-3x text-success"></i>
                     </div>
-                    <h3 class="text-success mb-1">{{ player_characters }}</h3>
-                    <p class="mb-0">Player Characters</p>
+                    <h3 class="text-success mb-1">{{ user_player_count }}</h3>
+                    <p class="mb-0">Players</p>
                 </div>
             </div>
         </div>
         
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card fade-in text-center">
                 <div class="card-body">
                     <div class="mb-3">
                         <i class="fas fa-user-tie fa-3x text-info"></i>
                     </div>
-                    <h3 class="text-info mb-1">{{ npc_characters }}</h3>
+                    <h3 class="text-info mb-1">{{ user_npc_count }}</h3>
                     <p class="mb-0">NPCs</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card fade-in text-center">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-dragon fa-3x text-danger"></i>
+                    </div>
+                    <h3 class="text-danger mb-1">{{ user_monster_count }}</h3>
+                    <p class="mb-0">Monsters</p>
                 </div>
             </div>
         </div>
@@ -311,10 +317,32 @@
                 <div class="col-md-3 mb-3">
                     <div class="text-center">
                         <i class="fas fa-users fa-2x text-accent mb-2"></i>
-                        <h5>Characters</h5>
+                        <h5>Players</h5>
                         <div class="d-grid gap-1">
-                            <a href="{% url 'characters:character_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
-                            <a href="{% url 'characters:character_create' %}" class="btn btn-outline-primary btn-sm">Create New</a>
+                            <a href="{% url 'players:player_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
+                            <a href="{% url 'players:player_create' %}" class="btn btn-outline-primary btn-sm">Create New</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="text-center">
+                        <i class="fas fa-user-tie fa-2x text-accent mb-2"></i>
+                        <h5>NPCs</h5>
+                        <div class="d-grid gap-1">
+                            <a href="{% url 'npcs:npc_list' %}" class="btn btn-outline-info btn-sm">View All</a>
+                            <a href="{% url 'npcs:npc_create' %}" class="btn btn-outline-info btn-sm">Create New</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="text-center">
+                        <i class="fas fa-dragon fa-2x text-accent mb-2"></i>
+                        <h5>Monsters</h5>
+                        <div class="d-grid gap-1">
+                            <a href="{% url 'monsters:monster_list' %}" class="btn btn-outline-danger btn-sm">View All</a>
+                            <a href="{% url 'monsters:monster_create' %}" class="btn btn-outline-danger btn-sm">Create New</a>
                         </div>
                     </div>
                 </div>

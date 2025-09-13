@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if object %}Edit {{ object.name }}{% else %}New NPC{% endif %} - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="npc-form-container">
+    <!-- Header -->
+    <div class="card fade-in mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-ghost me-3 text-accent"></i>
+                        {% if object %}Edit {{ object.name }}{% else %}New NPC{% endif %}
+                    </h1>
+                    <p class="mb-0">{% if object %}Update NPC information{% else %}Create a new NPC{% endif %}</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="{% url 'npcs:npc_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to NPCs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" class="fade-in">
+        {% csrf_token %}
+        
+        <div class="row">
+            <!-- Basic Information -->
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Basic Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="{{ form.campaign.id_for_label }}" class="form-label">Campaign *</label>
+                            {{ form.campaign }}
+                            {% if form.campaign.errors %}
+                                <div class="text-danger">{{ form.campaign.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">NPC Name *</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="text-danger">{{ form.name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.npc_type.id_for_label }}" class="form-label">NPC Type</label>
+                                    {{ form.npc_type }}
+                                    {% if form.npc_type.errors %}
+                                        <div class="text-danger">{{ form.npc_type.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.occupation.id_for_label }}" class="form-label">Occupation</label>
+                                    {{ form.occupation }}
+                                    {% if form.occupation.errors %}
+                                        <div class="text-danger">{{ form.occupation.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.location.id_for_label }}" class="form-label">Location</label>
+                            {{ form.location }}
+                            {% if form.location.errors %}
+                                <div class="text-danger">{{ form.location.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.url.id_for_label }}" class="form-label">Reference URL</label>
+                            {{ form.url }}
+                            {% if form.url.errors %}
+                                <div class="text-danger">{{ form.url.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.background.id_for_label }}" class="form-label">Background</label>
+                            {{ form.background }}
+                            {% if form.background.errors %}
+                                <div class="text-danger">{{ form.background.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Information -->
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-users me-2"></i>Social Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="{{ form.disposition.id_for_label }}" class="form-label">Disposition</label>
+                            {{ form.disposition }}
+                            {% if form.disposition.errors %}
+                                <div class="text-danger">{{ form.disposition.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.motivation.id_for_label }}" class="form-label">Motivation</label>
+                            {{ form.motivation }}
+                            {% if form.motivation.errors %}
+                                <div class="text-danger">{{ form.motivation.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.secrets.id_for_label }}" class="form-label">Secrets</label>
+                            {{ form.secrets }}
+                            {% if form.secrets.errors %}
+                                <div class="text-danger">{{ form.secrets.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.notes.id_for_label }}" class="form-label">DM Notes</label>
+                            {{ form.notes }}
+                            {% if form.notes.errors %}
+                                <div class="text-danger">{{ form.notes.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Combat Stats (Optional) -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-sword me-2"></i>Combat Statistics (Optional)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="{{ form.armor_class.id_for_label }}" class="form-label">Armor Class</label>
+                            {{ form.armor_class }}
+                            {% if form.armor_class.errors %}
+                                <div class="text-danger">{{ form.armor_class.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="{{ form.hit_points.id_for_label }}" class="form-label">Hit Points</label>
+                            {{ form.hit_points }}
+                            {% if form.hit_points.errors %}
+                                <div class="text-danger">{{ form.hit_points.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="{{ form.speed.id_for_label }}" class="form-label">Speed (ft.)</label>
+                            {{ form.speed }}
+                            {% if form.speed.errors %}
+                                <div class="text-danger">{{ form.speed.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="card fade-in">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'npcs:npc_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> 
+                        {% if object %}Update NPC{% else %}Create NPC{% endif %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

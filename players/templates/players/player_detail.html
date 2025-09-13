@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ player.character_name }} - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="player-detail-container">
+    <!-- Header -->
+    <div class="card fade-in mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-user me-3 text-accent"></i>
+                        {{ player.character_name }}
+                    </h1>
+                    <p class="mb-0">
+                        Level {{ player.level }} • Played by {{ player.player_name }}
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="{% url 'players:player_edit' player.pk %}" class="btn btn-primary me-2">
+                        <i class="fas fa-edit me-1"></i> Edit Player
+                    </a>
+                    <a href="{% url 'players:player_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Players
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Basic Info -->
+        <div class="col-lg-8">
+            <div class="card fade-in mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Character Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Character Name:</strong> {{ player.character_name }}</p>
+                            <p><strong>Player Name:</strong> {{ player.player_name }}</p>
+                            <p><strong>Campaign:</strong> 
+                                <a href="{% url 'campaigns:campaign_detail' player.campaign.pk %}" class="text-accent">
+                                    {{ player.campaign.name }}
+                                </a>
+                            </p>
+                            <p><strong>Level:</strong> {{ player.level }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Armor Class:</strong> {{ player.armor_class }}</p>
+                            <p><strong>Created:</strong> {{ player.created_at|date:"F d, Y" }}</p>
+                            <p><strong>Last Updated:</strong> {{ player.updated_at|date:"F d, Y" }}</p>
+                        </div>
+                    </div>
+                    
+                    {% if player.background %}
+                        <hr>
+                        <h6>Background</h6>
+                        <p>{{ player.background|linebreaks }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="col-lg-4">
+            <div class="card fade-in mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-shield me-2"></i>Quick Stats
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <h2 class="text-primary">{{ player.level }}</h2>
+                        <small class="text-muted">Character Level</small>
+                    </div>
+                    
+                    <div class="text-center mb-3">
+                        <h2 class="text-success">{{ player.armor_class }}</h2>
+                        <small class="text-muted">Armor Class</small>
+                    </div>
+                    
+                    <div class="text-center">
+                        <h6>Campaign</h6>
+                        <p class="mb-0">
+                            <a href="{% url 'campaigns:campaign_detail' player.campaign.pk %}" class="text-accent">
+                                {{ player.campaign.name }}
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

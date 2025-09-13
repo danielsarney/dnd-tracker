@@ -14,4 +14,9 @@ urlpatterns = [
     path('reset/<int:encounter_id>/', views.reset_encounter, name='reset_encounter'),
     path('remove-participant/<int:encounter_id>/<int:participant_id>/', views.remove_participant, name='remove_participant'),
     path('delete/<int:encounter_id>/', views.encounter_delete, name='encounter_delete'),
+    # Combat modification endpoints
+    path('modify-hp/<int:encounter_id>/<int:participant_id>/', views.modify_hit_points, name='modify_hit_points'),
+    path('modify-ac/<int:encounter_id>/<int:participant_id>/', views.modify_armor_class, name='modify_armor_class'),
+    path('apply-damage/<int:encounter_id>/<int:participant_id>/', views.apply_damage, name='apply_damage'),
+    path('apply-healing/<int:encounter_id>/<int:participant_id>/', views.apply_healing, name='apply_healing'),
 ]

@@ -10,7 +10,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('campaigns', '0001_initial'),
-        ('characters', '0001_initial'),
     ]
 
     operations = [
@@ -38,7 +37,6 @@ class Migration(migrations.Migration):
                 ('initiative_roll', models.PositiveIntegerField(help_text='Total initiative value')),
                 ('is_turn_complete', models.BooleanField(default=False, help_text='Whether this participant has completed their turn')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('character', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='characters.character')),
                 ('encounter', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='participants', to='combat_tracker.combatencounter')),
             ],
             options={

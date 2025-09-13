@@ -165,37 +165,63 @@
                 <table class="table initiative-table table-hover mb-0">
                     <thead class="table-dark">
                         <tr>
-                            <th width="10%">#</th>
-                            <th width="30%">Name</th>
-                            <th width="20%">Type</th>
-                            <th width="20%">Initiative</th>
-                            <th width="20%">Status</th>
+                            <th width="8%">#</th>
+                            <th width="20%">Name</th>
+                            <th width="12%">Type</th>
+                            <th width="10%">Initiative</th>
+                            <th width="10%">AC</th>
+                            <th width="15%">HP</th>
+                            <th width="10%">Speed</th>
+                            <th width="15%">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for participant in participants %}
-                            <tr class="{% if forloop.counter0 == encounter.current_turn and encounter.is_active %}table-active{% elif participant.is_turn_complete %}table-secondary{% endif %}" data-turn-index="{{ forloop.counter0 }}" data-current-turn="{{ encounter.current_turn }}">
+                            <tr class="{% if forloop.counter0 == encounter.current_turn and encounter.is_active %}table-active{% elif participant.is_turn_complete %}table-secondary{% elif participant.is_dead %}table-danger{% endif %}" 
+                                data-turn-index="{{ forloop.counter0 }}" 
+                                data-current-turn="{{ encounter.current_turn }}"
+                                data-participant-id="{{ participant.id }}">
                                 <td>
                                     <strong>{{ forloop.counter }}</strong>
                                 </td>
                                 <td>
-                                    <strong>{{ participant.name }}</strong>
-                                    {% if participant.character %}
-                                        <br><small class="text-muted">{{ participant.character.get_type_display }}</small>
-                                    {% endif %}
+                                    <strong>{{ participant.get_display_name }}</strong>
+                                    <br><small class="text-muted">{{ participant.get_character_type_display }}</small>
                                 </td>
                                 <td>
-                                    {% if participant.character %}
-                                        <span class="badge bg-info">{{ participant.character.get_type_display }}</span>
-                                    {% else %}
-                                        <span class="badge bg-secondary">Custom</span>
-                                    {% endif %}
+                                    <span class="badge bg-info">{{ participant.get_character_type_display }}</span>
                                 </td>
                                 <td>
                                     <strong>{{ participant.total_initiative }}</strong>
                                 </td>
                                 <td>
-                                    {% if forloop.counter0 == encounter.current_turn and encounter.is_active %}
+                                    <div class="d-flex align-items-center">
+                                        <input type="number" 
+                                               class="form-control form-control-sm ac-input" 
+                                               value="{{ participant.get_armor_class }}" 
+                                               min="0" 
+                                               max="30"
+                                               data-participant-id="{{ participant.id }}"
+                                               style="width: 60px;">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <input type="number" 
+                                               class="form-control form-control-sm hp-input" 
+                                               value="{{ participant.get_hit_points }}" 
+                                               data-participant-id="{{ participant.id }}"
+                                               style="width: 60px;">
+                                        <span class="ms-1">/ {{ participant.get_max_hit_points }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <small>{{ participant.speed|default:"30 ft." }}</small>
+                                </td>
+                                <td>
+                                    {% if participant.is_dead %}
+                                        <span class="badge bg-danger">Dead</span>
+                                    {% elif forloop.counter0 == encounter.current_turn and encounter.is_active %}
                                         <span class="badge bg-success">Current</span>
                                     {% elif participant.is_turn_complete %}
                                         <span class="badge bg-secondary">Complete</span>
@@ -219,6 +245,91 @@
             {% endif %}
         </div>
     </div>
+
+    <!-- Detailed Stats for Current Participant -->
+    {% if current_participant and encounter.is_active %}
+        <div class="card fade-in mb-4">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <i class="fas fa-user me-2"></i> {{ current_participant.get_display_name }} - Detailed Stats
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Basic Combat Stats -->
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-shield me-2"></i> Combat Stats</h6>
+                        <p><strong>AC:</strong> {{ current_participant.get_armor_class }}</p>
+                        <p><strong>HP:</strong> {{ current_participant.get_hit_points }} / {{ current_participant.get_max_hit_points }}</p>
+                        <p><strong>Speed:</strong> {{ current_participant.speed|default:"30 ft." }}</p>
+                        {% if current_participant.challenge_rating %}
+                            <p><strong>CR:</strong> {{ current_participant.challenge_rating_display }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Ability Scores -->
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-dice me-2"></i> Ability Scores</h6>
+                        {% if current_participant.strength %}
+                            <p><strong>STR:</strong> {{ current_participant.strength }} ({{ current_participant.get_strength_modifier|add:0|floatformat:0 }})</p>
+                        {% endif %}
+                        {% if current_participant.dexterity %}
+                            <p><strong>DEX:</strong> {{ current_participant.dexterity }} ({{ current_participant.get_dexterity_modifier|add:0|floatformat:0 }})</p>
+                        {% endif %}
+                        {% if current_participant.constitution %}
+                            <p><strong>CON:</strong> {{ current_participant.constitution }} ({{ current_participant.get_constitution_modifier|add:0|floatformat:0 }})</p>
+                        {% endif %}
+                        {% if current_participant.intelligence %}
+                            <p><strong>INT:</strong> {{ current_participant.intelligence }} ({{ current_participant.get_intelligence_modifier|add:0|floatformat:0 }})</p>
+                        {% endif %}
+                        {% if current_participant.wisdom %}
+                            <p><strong>WIS:</strong> {{ current_participant.wisdom }} ({{ current_participant.get_wisdom_modifier|add:0|floatformat:0 }})</p>
+                        {% endif %}
+                        {% if current_participant.charisma %}
+                            <p><strong>CHA:</strong> {{ current_participant.charisma }} ({{ current_participant.get_charisma_modifier|add:0|floatformat:0 }})</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Special Abilities -->
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-magic me-2"></i> Special Abilities</h6>
+                        {% if current_participant.damage_resistances %}
+                            <p><strong>Resistances:</strong> {{ current_participant.damage_resistances }}</p>
+                        {% endif %}
+                        {% if current_participant.damage_immunities %}
+                            <p><strong>Immunities:</strong> {{ current_participant.damage_immunities }}</p>
+                        {% endif %}
+                        {% if current_participant.condition_immunities %}
+                            <p><strong>Condition Immunities:</strong> {{ current_participant.condition_immunities }}</p>
+                        {% endif %}
+                        {% if current_participant.senses %}
+                            <p><strong>Senses:</strong> {{ current_participant.senses }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                {% if current_participant.actions %}
+                    <hr>
+                    <h6><i class="fas fa-sword me-2"></i> Actions</h6>
+                    <div class="row">
+                        {% if current_participant.multiattack %}
+                            <div class="col-md-6">
+                                <p><strong>Multiattack:</strong></p>
+                                <p class="text-muted">{{ current_participant.multiattack|linebreaks }}</p>
+                            </div>
+                        {% endif %}
+                        {% if current_participant.actions %}
+                            <div class="col-md-6">
+                                <p><strong>Actions:</strong></p>
+                                <p class="text-muted">{{ current_participant.actions|linebreaks }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
 
     <!-- Combat Actions -->
     {% if encounter.is_active %}
@@ -282,7 +393,7 @@
                             <h4>Campaign Characters</h4>
                             <h2 class="text-accent mb-2">{{ encounter.campaign.characters.count }}</h2>
                             <p class="mb-3">Total Characters</p>
-                            <a href="{% url 'characters:campaign_characters' encounter.campaign.pk %}" class="btn btn-outline-primary">
+                            <a href="{% url 'players:player_list' %}" class="btn btn-outline-primary">
                                 View Characters
                             </a>
                         </div>
@@ -362,6 +473,98 @@ function endTurn() {
         });
     }
 }
+
+// Real-time AC modification
+document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('ac-input')) {
+        const participantId = e.target.getAttribute('data-participant-id');
+        const newAC = parseInt(e.target.value);
+        
+        fetch(`{% url "combat_tracker:modify_armor_class" encounter.pk 0 %}`.replace('0', participantId), {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                armor_class: newAC
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('AC updated successfully');
+            } else {
+                alert('Error updating AC. Please try again.');
+                e.target.value = e.target.defaultValue; // Revert on error
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error updating AC. Please try again.');
+            e.target.value = e.target.defaultValue; // Revert on error
+        });
+    }
+});
+
+// Real-time HP modification
+document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('hp-input')) {
+        const participantId = e.target.getAttribute('data-participant-id');
+        const newHP = parseInt(e.target.value);
+        
+        fetch(`{% url "combat_tracker:modify_hit_points" encounter.pk 0 %}`.replace('0', participantId), {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                hit_points: newHP
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('HP updated successfully');
+                
+                // Update row appearance based on death status
+                const row = e.target.closest('tr');
+                if (data.is_dead) {
+                    row.classList.add('table-danger');
+                    row.classList.remove('table-active', 'table-secondary');
+                    
+                    // Update status badge
+                    const statusCell = row.querySelector('td:last-child');
+                    statusCell.innerHTML = '<span class="badge bg-danger">Dead</span>';
+                } else {
+                    row.classList.remove('table-danger');
+                    
+                    // Update status badge back to normal
+                    const statusCell = row.querySelector('td:last-child');
+                    const turnIndex = parseInt(row.getAttribute('data-turn-index'));
+                    const currentTurn = parseInt(row.getAttribute('data-current-turn'));
+                    
+                    if (turnIndex === currentTurn && {{ encounter.is_active|yesno:"true,false" }}) {
+                        statusCell.innerHTML = '<span class="badge bg-success">Current</span>';
+                    } else if (row.classList.contains('table-secondary')) {
+                        statusCell.innerHTML = '<span class="badge bg-secondary">Complete</span>';
+                    } else {
+                        statusCell.innerHTML = '<span class="badge bg-warning">Waiting</span>';
+                    }
+                }
+            } else {
+                alert('Error updating HP. Please try again.');
+                e.target.value = e.target.defaultValue; // Revert on error
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error updating HP. Please try again.');
+            e.target.value = e.target.defaultValue; // Revert on error
+        });
+    }
+});
 
 // Spacebar shortcut for ending turns
 document.addEventListener('keydown', function(e) {

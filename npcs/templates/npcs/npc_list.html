@@ -1,24 +1,24 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Characters - D&D Tracker{% endblock %}
+{% block title %}NPCs - D&D Tracker{% endblock %}
 
 {% block content %}
-<div class="characters-container">
+<div class="npcs-container">
     <!-- Header -->
     <div class="card fade-in mb-4">
         <div class="card-body">
             <div class="row align-items-center">
                 <div class="col-md-8">
                     <h1 class="mb-2">
-                        <i class="fas fa-users me-3 text-accent"></i>
-                        Characters
+                        <i class="fas fa-ghost me-3 text-accent"></i>
+                        NPCs
                     </h1>
-                    <p class="mb-0">Manage your D&D characters and NPCs</p>
+                    <p class="mb-0">Manage your Non-Player Characters</p>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <a href="{% url 'characters:character_create' %}" class="btn btn-primary">
-                        <i class="fas fa-plus me-1"></i> New Character
+                    <a href="{% url 'npcs:npc_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i> New NPC
                     </a>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                     <label for="type" class="form-label">Type</label>
                     <select name="type" id="type" class="form-select">
                         <option value="">All Types</option>
-                        {% for type_code, type_name in character_types %}
+                        {% for type_code, type_name in npc_types %}
                             <option value="{{ type_code }}" {% if selected_type == type_code %}selected{% endif %}>
                                 {{ type_name }}
                             </option>
@@ -61,7 +61,7 @@
                 <div class="col-md-4">
                     <label for="search" class="form-label">Search</label>
                     <input type="text" name="search" id="search" class="form-control" 
-                           placeholder="Search characters..." value="{{ search_query|default:'' }}">
+                           placeholder="Search NPCs..." value="{{ search_query|default:'' }}">
                 </div>
                 
                 <div class="col-md-2 d-flex align-items-end">
@@ -69,7 +69,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-search me-1"></i> Filter
                         </button>
-                        <a href="{% url 'characters:character_list' %}" class="btn btn-outline-secondary">
+                        <a href="{% url 'npcs:npc_list' %}" class="btn btn-outline-secondary">
                             <i class="fas fa-times me-1"></i> Clear
                         </a>
                     </div>
@@ -78,29 +78,29 @@
         </div>
     </div>
 
-    {% if characters %}
+    {% if npcs %}
         <div class="row">
-            {% for character in characters %}
+            {% for npc in npcs %}
                 <div class="col-lg-6 col-xl-4 mb-4">
-                    <div class="card fade-in h-100 {% if character.type == 'NPC' %}border-info{% elif character.type == 'MONSTER' %}border-danger{% else %}border-success{% endif %}">
+                    <div class="card fade-in h-100 {% if npc.npc_type == 'ENEMY' %}border-danger{% elif npc.npc_type == 'ALLY' %}border-success{% elif npc.npc_type == 'MERCHANT' %}border-warning{% else %}border-info{% endif %}">
                         <div class="card-header d-flex justify-content-between align-items-start">
-                            <span class="badge {% if character.type == 'NPC' %}bg-info{% elif character.type == 'MONSTER' %}bg-danger{% else %}bg-success{% endif %}">
-                                <i class="fas fa-{% if character.type == 'NPC' %}ghost{% elif character.type == 'MONSTER' %}dragon{% else %}user{% endif %} me-1"></i>
-                                {{ character.get_type_display }}
+                            <span class="badge {% if npc.npc_type == 'ENEMY' %}bg-danger{% elif npc.npc_type == 'ALLY' %}bg-success{% elif npc.npc_type == 'MERCHANT' %}bg-warning{% else %}bg-info{% endif %}">
+                                <i class="fas fa-{% if npc.npc_type == 'ENEMY' %}skull{% elif npc.npc_type == 'ALLY' %}heart{% elif npc.npc_type == 'MERCHANT' %}coins{% else %}ghost{% endif %} me-1"></i>
+                                {{ npc.get_npc_type_display }}
                             </span>
                             <div class="dropdown">
                                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                     <i class="fas fa-ellipsis-v"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-dark">
-                                    <li><a class="dropdown-item" href="{% url 'characters:character_detail' character.pk %}">
+                                    <li><a class="dropdown-item" href="{% url 'npcs:npc_detail' npc.pk %}">
                                         <i class="fas fa-eye me-2"></i>View
                                     </a></li>
-                                    <li><a class="dropdown-item" href="{% url 'characters:character_edit' character.pk %}">
+                                    <li><a class="dropdown-item" href="{% url 'npcs:npc_edit' npc.pk %}">
                                         <i class="fas fa-edit me-2"></i>Edit
                                     </a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-danger" href="{% url 'characters:character_delete' character.pk %}">
+                                    <li><a class="dropdown-item text-danger" href="{% url 'npcs:npc_delete' npc.pk %}">
                                         <i class="fas fa-trash me-2"></i>Delete
                                     </a></li>
                                 </ul>
@@ -108,56 +108,70 @@
                         </div>
                         
                         <div class="card-body">
-                            <h5 class="card-title mb-3">{{ character.name }}</h5>
+                            <h5 class="card-title mb-3">{{ npc.name }}</h5>
                             
                             <div class="mb-3">
                                 <p class="mb-2">
                                     <i class="fas fa-map me-2 text-accent"></i>
                                     <strong>Campaign:</strong> 
-                                    <a href="{% url 'campaigns:campaign_detail' character.campaign.pk %}" class="text-accent">
-                                        {{ character.campaign.name }}
+                                    <a href="{% url 'campaigns:campaign_detail' npc.campaign.pk %}" class="text-accent">
+                                        {{ npc.campaign.name }}
                                     </a>
                                 </p>
                                 
-                                {% if character.race %}
+                                {% if npc.occupation %}
                                     <p class="mb-2">
-                                        <i class="fas fa-dragon me-2"></i>
-                                        <strong>Race:</strong> {{ character.race }}
+                                        <i class="fas fa-briefcase me-2"></i>
+                                        <strong>Occupation:</strong> {{ npc.occupation }}
                                     </p>
                                 {% endif %}
                                 
-                                {% if character.character_class %}
+                                {% if npc.location %}
                                     <p class="mb-2">
-                                        <i class="fas fa-shield-alt me-2"></i>
-                                        <strong>Class:</strong> {{ character.character_class }}
+                                        <i class="fas fa-map-marker-alt me-2"></i>
+                                        <strong>Location:</strong> {{ npc.location }}
                                     </p>
                                 {% endif %}
                                 
-                                {% if character.type == 'MONSTER' and character.url %}
+                                {% if npc.disposition %}
                                     <p class="mb-2">
-                                        <i class="fas fa-link me-2"></i>
-                                        <strong>Reference:</strong> 
-                                        <a href="{{ character.url }}" target="_blank" class="text-accent">
-                                            View Stats <i class="fas fa-external-link-alt"></i>
-                                        </a>
+                                        <i class="fas fa-smile me-2"></i>
+                                        <strong>Disposition:</strong> {{ npc.disposition }}
                                     </p>
-                                {% elif character.background %}
+                                {% endif %}
+                                
+                                {% if npc.is_combat_ready %}
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <small class="text-muted">
+                                                <i class="fas fa-shield me-1"></i>AC: {{ npc.armor_class }}
+                                            </small>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">
+                                                <i class="fas fa-heart me-1"></i>HP: {{ npc.hit_points }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                {% if npc.motivation %}
                                     <p class="mb-2">
-                                        <i class="fas fa-scroll me-2"></i>
-                                        <strong>Background:</strong> 
-                                        {{ character.background|truncatewords:20 }}
+                                        <i class="fas fa-lightbulb me-2"></i>
+                                        <strong>Motivation:</strong> 
+                                        {{ npc.motivation|truncatewords:10 }}
                                     </p>
                                 {% endif %}
                                 
                                 <p class="mb-0">
                                     <i class="fas fa-calendar me-2"></i>
-                                    Created: {{ character.created_at|date:"M d, Y" }}
+                                    Created: {{ npc.created_at|date:"M d, Y" }}
                                 </p>
                             </div>
                             
                             <div class="d-grid">
-                                <a href="{% url 'characters:character_detail' character.pk %}" class="btn btn-primary">
-                                    <i class="fas fa-eye me-1"></i> View Character
+                                <a href="{% url 'npcs:npc_detail' npc.pk %}" class="btn btn-primary">
+                                    <i class="fas fa-eye me-1"></i> View NPC
                                 </a>
                             </div>
                         </div>
@@ -169,7 +183,7 @@
         {% if is_paginated %}
             <div class="card fade-in">
                 <div class="card-body">
-                    <nav aria-label="Character pagination">
+                    <nav aria-label="NPC pagination">
                         <ul class="pagination justify-content-center mb-0">
                             {% if page_obj.has_previous %}
                                 <li class="page-item">
@@ -202,11 +216,11 @@
     {% else %}
         <div class="card fade-in">
             <div class="card-body text-center py-5">
-                <i class="fas fa-users fa-4x text-muted mb-4"></i>
-                <h3>No characters found</h3>
-                <p class="mb-4">{% if search_query or selected_campaign or selected_type %}Try adjusting your filters or search terms.{% else %}Create your first character to get started!{% endif %}</p>
-                <a href="{% url 'characters:character_create' %}" class="btn btn-primary btn-lg">
-                    <i class="fas fa-plus me-2"></i> Create Character
+                <i class="fas fa-ghost fa-4x text-muted mb-4"></i>
+                <h3>No NPCs found</h3>
+                <p class="mb-4">{% if search_query or selected_campaign or selected_type %}Try adjusting your filters or search terms.{% else %}Create your first NPC to get started!{% endif %}</p>
+                <a href="{% url 'npcs:npc_create' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus me-2"></i> Create NPC
                 </a>
             </div>
         </div>

@@ -40,7 +40,7 @@
                                     <li><a class="dropdown-item" href="{% url 'campaigns:campaign_detail' campaign.pk %}">
                                         <i class="fas fa-eye me-2"></i>View
                                     </a></li>
-                                    <li><a class="dropdown-item" href="{% url 'characters:campaign_characters' campaign.pk %}">
+                                    <li><a class="dropdown-item" href="{% url 'players:player_list' %}">
                                         <i class="fas fa-users me-2"></i>Characters
                                     </a></li>
                                     <li><a class="dropdown-item" href="{% url 'game_sessions:campaign_sessions' campaign.pk %}">
@@ -78,7 +78,7 @@
                                 </a>
                                 <div class="row">
                                     <div class="col-6">
-                                        <a href="{% url 'characters:campaign_characters' campaign.pk %}" class="btn btn-outline-primary btn-sm w-100">
+                                        <a href="{% url 'players:player_list' %}" class="btn btn-outline-primary btn-sm w-100">
                                             <i class="fas fa-users me-1"></i> Characters
                                         </a>
                                     </div>

@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ npc.name }} - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="npc-detail-container">
+    <!-- Header -->
+    <div class="card fade-in mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-ghost me-3 text-accent"></i>
+                        {{ npc.name }}
+                    </h1>
+                    <p class="mb-0">
+                        {{ npc.get_npc_type_display }}
+                        {% if npc.occupation %} • {{ npc.occupation }}{% endif %}
+                        {% if npc.location %} • {{ npc.location }}{% endif %}
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="{% url 'npcs:npc_edit' npc.pk %}" class="btn btn-primary me-2">
+                        <i class="fas fa-edit me-1"></i> Edit NPC
+                    </a>
+                    <a href="{% url 'npcs:npc_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to NPCs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Basic Info -->
+        <div class="col-lg-8">
+            <div class="card fade-in mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>NPC Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Campaign:</strong> 
+                                <a href="{% url 'campaigns:campaign_detail' npc.campaign.pk %}" class="text-accent">
+                                    {{ npc.campaign.name }}
+                                </a>
+                            </p>
+                            {% if npc.occupation %}
+                                <p><strong>Occupation:</strong> {{ npc.occupation }}</p>
+                            {% endif %}
+                            {% if npc.location %}
+                                <p><strong>Location:</strong> {{ npc.location }}</p>
+                            {% endif %}
+                            <p><strong>Type:</strong> {{ npc.get_npc_type_display }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            {% if npc.url %}
+                                <p><strong>Reference:</strong> 
+                                    <a href="{{ npc.url }}" target="_blank" class="text-accent">
+                                        View Reference <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                </p>
+                            {% endif %}
+                            <p><strong>Created:</strong> {{ npc.created_at|date:"F d, Y" }}</p>
+                            <p><strong>Last Updated:</strong> {{ npc.updated_at|date:"F d, Y" }}</p>
+                        </div>
+                    </div>
+                    
+                    {% if npc.background %}
+                        <hr>
+                        <h6>Background</h6>
+                        <p>{{ npc.background|linebreaks }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Social Information -->
+            <div class="card fade-in mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users me-2"></i>Social Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if npc.disposition %}
+                        <p><strong>Disposition:</strong> {{ npc.disposition }}</p>
+                    {% endif %}
+                    
+                    {% if npc.motivation %}
+                        <p><strong>Motivation:</strong> {{ npc.motivation|linebreaks }}</p>
+                    {% endif %}
+                    
+                    {% if npc.secrets %}
+                        <p><strong>Secrets:</strong> {{ npc.secrets|linebreaks }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if npc.notes %}
+                <div class="card fade-in mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-sticky-note me-2"></i>DM Notes
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ npc.notes|linebreaks }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Combat Stats (if available) -->
+        <div class="col-lg-4">
+            {% if npc.is_combat_ready %}
+                <div class="card fade-in mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-sword me-2"></i>Combat Statistics
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <h4 class="text-primary">{{ npc.armor_class }}</h4>
+                                    <small class="text-muted">Armor Class</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <h4 class="text-success">{{ npc.hit_points }}</h4>
+                                    <small class="text-muted">Hit Points</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if npc.speed %}
+                            <div class="text-center mt-3">
+                                <h5 class="text-info">{{ npc.speed }}</h5>
+                                <small class="text-muted">Speed (ft.)</small>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- NPC Type Badge -->
+            <div class="card fade-in mb-4">
+                <div class="card-body text-center">
+                    <span class="badge {% if npc.npc_type == 'ENEMY' %}bg-danger{% elif npc.npc_type == 'ALLY' %}bg-success{% elif npc.npc_type == 'MERCHANT' %}bg-warning{% else %}bg-info{% endif %} fs-6">
+                        <i class="fas fa-{% if npc.npc_type == 'ENEMY' %}skull{% elif npc.npc_type == 'ALLY' %}heart{% elif npc.npc_type == 'MERCHANT' %}coins{% else %}ghost{% endif %} me-2"></i>
+                        {{ npc.get_npc_type_display }}
+                    </span>
+                    
+                    {% if npc.is_friendly %}
+                        <p class="mt-2 text-success">
+                            <i class="fas fa-smile me-1"></i> Friendly NPC
+                        </p>
+                    {% elif npc.is_hostile %}
+                        <p class="mt-2 text-danger">
+                            <i class="fas fa-skull me-1"></i> Hostile NPC
+                        </p>
+                    {% else %}
+                        <p class="mt-2 text-muted">
+                            <i class="fas fa-question me-1"></i> Neutral NPC
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

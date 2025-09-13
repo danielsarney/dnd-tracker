@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ monster.name }} - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="monster-detail-container">
+    <!-- Header -->
+    <div class="card fade-in mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-dragon me-3 text-accent"></i>
+                        {{ monster.name }}
+                    </h1>
+                    <p class="mb-0">
+                        {{ monster.get_monster_type_display }} • {{ monster.get_size_display }} • Challenge Rating {{ monster.challenge_rating }}
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="{% url 'monsters:monster_edit' monster.pk %}" class="btn btn-primary me-2">
+                        <i class="fas fa-edit me-1"></i> Edit Monster
+                    </a>
+                    <a href="{% url 'monsters:monster_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Monsters
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Basic Info -->
+        <div class="col-lg-8">
+            <div class="card fade-in mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Monster Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Campaign:</strong> 
+                                <a href="{% url 'campaigns:campaign_detail' monster.campaign.pk %}" class="text-accent">
+                                    {{ monster.campaign.name }}
+                                </a>
+                            </p>
+                            <p><strong>Type:</strong> {{ monster.get_monster_type_display }}</p>
+                            <p><strong>Size:</strong> {{ monster.get_size_display }}</p>
+                            <p><strong>Challenge Rating:</strong> {{ monster.challenge_rating }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            {% if monster.alignment %}
+                                <p><strong>Alignment:</strong> {{ monster.alignment }}</p>
+                            {% endif %}
+                            <p><strong>Created:</strong> {{ monster.created_at|date:"F d, Y" }}</p>
+                            <p><strong>Last Updated:</strong> {{ monster.updated_at|date:"F d, Y" }}</p>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <!-- Combat Stats -->
+            <div class="card fade-in mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-sword me-2"></i>Combat Statistics
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h4 class="text-primary">{{ monster.armor_class }}</h4>
+                                <small class="text-muted">Armor Class</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h4 class="text-success">{{ monster.hit_points }}</h4>
+                                <small class="text-muted">Hit Points</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h4 class="text-info">{{ monster.speed }}</h4>
+                                <small class="text-muted">Speed</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h4 class="text-warning">{{ monster.challenge_rating }}</h4>
+                                <small class="text-muted">Challenge Rating</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resistances and Immunities -->
+            {% if monster.damage_resistances or monster.damage_immunities or monster.condition_immunities %}
+                <div class="card fade-in mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-shield-alt me-2"></i>Resistances & Immunities
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if monster.damage_resistances %}
+                            <p><strong>Damage Resistances:</strong> {{ monster.damage_resistances }}</p>
+                        {% endif %}
+                        {% if monster.damage_immunities %}
+                            <p><strong>Damage Immunities:</strong> {{ monster.damage_immunities }}</p>
+                        {% endif %}
+                        {% if monster.condition_immunities %}
+                            <p><strong>Condition Immunities:</strong> {{ monster.condition_immunities }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Senses and Languages -->
+            {% if monster.senses or monster.languages %}
+                <div class="card fade-in mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-eye me-2"></i>Senses & Languages
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if monster.senses %}
+                            <p><strong>Senses:</strong> {{ monster.senses }}</p>
+                        {% endif %}
+                        {% if monster.languages %}
+                            <p><strong>Languages:</strong> {{ monster.languages }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Special Abilities -->
+            {% if monster.special_abilities %}
+                <div class="card fade-in mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-magic me-2"></i>Special Abilities
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ monster.special_abilities|linebreaks }}</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Actions -->
+            {% if monster.actions %}
+                <div class="card fade-in mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-fist-raised me-2"></i>Actions
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ monster.actions|linebreaks }}</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Legendary Actions -->
+            {% if monster.legendary_actions %}
+                <div class="card fade-in mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-crown me-2"></i>Legendary Actions
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ monster.legendary_actions|linebreaks }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Ability Scores -->
+        <div class="col-lg-4">
+            <div class="card fade-in mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-dice me-2"></i>Ability Scores
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h5>{{ monster.strength }}</h5>
+                                <small class="text-muted">STR</small>
+                                <br>
+                                <small class="text-primary">{% if monster.strength_modifier >= 0 %}+{% endif %}{{ monster.strength_modifier }}</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h5>{{ monster.dexterity }}</h5>
+                                <small class="text-muted">DEX</small>
+                                <br>
+                                <small class="text-primary">{% if monster.dexterity_modifier >= 0 %}+{% endif %}{{ monster.dexterity_modifier }}</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h5>{{ monster.constitution }}</h5>
+                                <small class="text-muted">CON</small>
+                                <br>
+                                <small class="text-primary">{% if monster.constitution_modifier >= 0 %}+{% endif %}{{ monster.constitution_modifier }}</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h5>{{ monster.intelligence }}</h5>
+                                <small class="text-muted">INT</small>
+                                <br>
+                                <small class="text-primary">{% if monster.intelligence_modifier >= 0 %}+{% endif %}{{ monster.intelligence_modifier }}</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h5>{{ monster.wisdom }}</h5>
+                                <small class="text-muted">WIS</small>
+                                <br>
+                                <small class="text-primary">{% if monster.wisdom_modifier >= 0 %}+{% endif %}{{ monster.wisdom_modifier }}</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h5>{{ monster.charisma }}</h5>
+                                <small class="text-muted">CHA</small>
+                                <br>
+                                <small class="text-primary">{% if monster.charisma_modifier >= 0 %}+{% endif %}{{ monster.charisma_modifier }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monster Type Badge -->
+            <div class="card fade-in mb-4">
+                <div class="card-body text-center">
+                    <span class="badge bg-danger fs-6 mb-2">
+                        <i class="fas fa-dragon me-2"></i>
+                        {{ monster.get_monster_type_display }}
+                    </span>
+                    
+                    <p class="mb-2">
+                        <strong>Size:</strong> {{ monster.get_size_display }}
+                    </p>
+                    
+                    <p class="mb-2">
+                        <strong>Challenge Rating:</strong> {{ monster.challenge_rating }}
+                    </p>
+                    
+                    {% if monster.is_legendary %}
+                        <p class="text-warning">
+                            <i class="fas fa-crown me-1"></i> Legendary Creature
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

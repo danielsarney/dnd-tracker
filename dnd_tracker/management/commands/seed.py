@@ -4,7 +4,9 @@ from django.utils import timezone
 from django.db import transaction
 from accounts.models import Profile
 from campaigns.models import Campaign
-from characters.models import Character
+from players.models import Player
+from npcs.models import NPC
+from monsters.models import Monster
 from game_sessions.models import GameSession
 from planning.models import PlanningSession
 from datetime import timedelta
@@ -28,10 +30,16 @@ class Command(BaseCommand):
             help='Number of campaigns to create (default: 5)'
         )
         parser.add_argument(
-            '--characters',
+            '--players',
             type=int,
-            default=25,
-            help='Number of characters to create (default: 25)'
+            default=15,
+            help='Number of player characters to create (default: 15)'
+        )
+        parser.add_argument(
+            '--npcs',
+            type=int,
+            default=20,
+            help='Number of NPCs to create (default: 20)'
         )
         parser.add_argument(
             '--sessions',
@@ -59,7 +67,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        if not options.get('no-clear', False):
+        if not options.get('no_clear', False):
             self.stdout.write('Clearing existing data...')
             self.clear_data()
         
@@ -68,7 +76,8 @@ class Command(BaseCommand):
         with transaction.atomic():
             users = self.create_users(options['users'])
             campaigns = self.create_campaigns(options['campaigns'], users)
-            characters = self.create_characters(options['characters'], campaigns)
+            players = self.create_players(options['players'], campaigns)
+            npcs = self.create_npcs(options['npcs'], campaigns)
             monsters = self.create_monsters(options['monsters'], campaigns)
             sessions = self.create_game_sessions(options['sessions'], campaigns)
             planning_sessions = self.create_planning_sessions(options['planning'], campaigns)
@@ -78,7 +87,8 @@ class Command(BaseCommand):
                 f'Successfully seeded database with:\n'
                 f'- {len(users)} users\n'
                 f'- {len(campaigns)} campaigns\n'
-                f'- {len(characters)} characters\n'
+                f'- {len(players)} player characters\n'
+                f'- {len(npcs)} NPCs\n'
                 f'- {len(monsters)} monsters\n'
                 f'- {len(sessions)} game sessions\n'
                 f'- {len(planning_sessions)} planning sessions'
@@ -88,9 +98,20 @@ class Command(BaseCommand):
     def clear_data(self):
         """Clear all existing data"""
         # Clear in reverse dependency order to avoid foreign key constraints
+        from combat_tracker.models import CombatParticipant, CombatEncounter
+        
+        # Clear combat participants first (they reference characters)
+        CombatParticipant.objects.all().delete()
+        CombatEncounter.objects.all().delete()
+        
+        # Clear other dependent data
         PlanningSession.objects.all().delete()
         GameSession.objects.all().delete()
-        Character.objects.all().delete()
+        
+        # Clear character data
+        Player.objects.all().delete()
+        NPC.objects.all().delete()
+        Monster.objects.all().delete()
         Campaign.objects.all().delete()
         
         # Clear profiles and users
@@ -103,9 +124,13 @@ class Command(BaseCommand):
             cursor.execute("SELECT setval(pg_get_serial_sequence('accounts_profile', 'id'), 1, false);")
             cursor.execute("SELECT setval(pg_get_serial_sequence('auth_user', 'id'), 1, false);")
             cursor.execute("SELECT setval(pg_get_serial_sequence('campaigns_campaign', 'id'), 1, false);")
-            cursor.execute("SELECT setval(pg_get_serial_sequence('characters_character', 'id'), 1, false);")
+            cursor.execute("SELECT setval(pg_get_serial_sequence('players_player', 'id'), 1, false);")
+            cursor.execute("SELECT setval(pg_get_serial_sequence('npcs_npc', 'id'), 1, false);")
+            cursor.execute("SELECT setval(pg_get_serial_sequence('monsters_monster', 'id'), 1, false);")
             cursor.execute("SELECT setval(pg_get_serial_sequence('game_sessions_gamesession', 'id'), 1, false);")
             cursor.execute("SELECT setval(pg_get_serial_sequence('planning_planningsession', 'id'), 1, false);")
+            cursor.execute("SELECT setval(pg_get_serial_sequence('combat_tracker_combatencounter', 'id'), 1, false);")
+            cursor.execute("SELECT setval(pg_get_serial_sequence('combat_tracker_combatparticipant', 'id'), 1, false);")
         
         self.stdout.write('Existing data cleared.')
 
@@ -210,26 +235,10 @@ class Command(BaseCommand):
         self.stdout.write(f'Created {len(campaigns)} campaigns')
         return campaigns
 
-    def create_characters(self, count, campaigns):
-        """Create dummy characters"""
-        characters = []
-        races = [
-            'Human', 'Elf', 'Dwarf', 'Halfling', 'Dragonborn', 'Gnome',
-            'Half-Elf', 'Half-Orc', 'Tiefling', 'Aasimar', 'Goliath',
-            'Firbolg', 'Kenku', 'Lizardfolk', 'Tabaxi', 'Triton'
-        ]
-        
-        classes = [
-            'Fighter', 'Wizard', 'Cleric', 'Rogue', 'Ranger', 'Paladin',
-            'Barbarian', 'Bard', 'Druid', 'Monk', 'Sorcerer', 'Warlock',
-            'Artificer', 'Blood Hunter'
-        ]
-        
-        backgrounds = [
-            'Acolyte', 'Criminal', 'Folk Hero', 'Noble', 'Sage', 'Soldier',
-            'Urchin', 'Entertainer', 'Guild Artisan', 'Hermit', 'Outlander',
-            'Charlatan', 'City Watch', 'Clan Crafter', 'Courtier', 'Faction Agent'
-        ]
+
+    def create_players(self, count, campaigns):
+        """Create dummy player characters"""
+        players = []
         
         character_names = [
             'Thorin Ironfist', 'Lyra Silverwind', 'Grimtooth', 'Zephyr Swift',
@@ -242,26 +251,184 @@ class Command(BaseCommand):
             'Iris Petal', 'Orion Star', 'Phoenix Ash'
         ]
         
+        player_names = [
+            'Alex Johnson', 'Sarah Chen', 'Mike Rodriguez', 'Emma Thompson',
+            'David Kim', 'Lisa Anderson', 'Chris Wilson', 'Maria Garcia',
+            'James Brown', 'Jennifer Davis', 'Robert Taylor', 'Amanda White',
+            'Michael Jackson', 'Jessica Martinez', 'Daniel Lee', 'Ashley Thomas',
+            'Matthew Harris', 'Stephanie Clark', 'Andrew Lewis', 'Nicole Walker',
+            'Joshua Hall', 'Rachel Allen', 'Kevin Young', 'Samantha King',
+            'Ryan Wright', 'Megan Lopez', 'Tyler Hill', 'Brittany Scott',
+            'Brandon Green', 'Lauren Adams', 'Justin Baker', 'Kayla Nelson'
+        ]
+        
+        backgrounds = [
+            'A former soldier seeking redemption for past mistakes.',
+            'A scholar who left the academy to explore the world.',
+            'A street urchin who learned to survive through cunning.',
+            'A noble who abandoned their title to seek adventure.',
+            'A criminal trying to turn over a new leaf.',
+            'A folk hero who saved their village from bandits.',
+            'A guild artisan who crafts magical items.',
+            'A hermit who discovered ancient knowledge in the wilderness.',
+            'An outlander from a distant land with strange customs.',
+            'A charlatan who uses deception to help others.',
+            'A city watch member who investigates supernatural crimes.',
+            'A clan crafter who maintains ancient traditions.',
+            'A courtier skilled in political intrigue.',
+            'A faction agent working for a secret organization.',
+            'A sailor who has seen wonders across the seas.',
+            'A soldier who fought in the last great war.'
+        ]
+        
         for i in range(count):
             campaign = random.choice(campaigns)
-            character_type = random.choices(['PLAYER', 'NPC'], weights=[0.7, 0.3])[0]
-            name = random.choice(character_names)
-            race = random.choice(races)
-            character_class = random.choice(classes)
+            character_name = random.choice(character_names)
+            player_name = random.choice(player_names)
+            level = random.randint(1, 10)
             background = random.choice(backgrounds)
             
-            character = Character.objects.create(
-                campaign=campaign,
-                type=character_type,
-                name=name,
-                race=race,
-                character_class=character_class,
-                background=f"A {race} {character_class} with a {background} background."
-            )
-            characters.append(character)
+            # Simple AC calculation based on level
+            armor_class = random.randint(12, 18)  # Reasonable AC range
             
-        self.stdout.write(f'Created {len(characters)} characters')
-        return characters
+            player = Player.objects.create(
+                campaign=campaign,
+                character_name=character_name,
+                player_name=player_name,
+                level=level,
+                background=background,
+                armor_class=armor_class
+            )
+            players.append(player)
+            
+        self.stdout.write(f'Created {len(players)} player characters')
+        return players
+
+    def create_npcs(self, count, campaigns):
+        """Create dummy NPCs"""
+        npcs = []
+        npc_types = ['ALLY', 'NEUTRAL', 'ENEMY', 'MERCHANT', 'QUESTGIVER', 'INFORMATION']
+        
+        npc_names = [
+            'Gareth the Guard', 'Mira the Merchant', 'Thorin the Blacksmith', 'Luna the Librarian',
+            'Grim the Guide', 'Elena the Enchantress', 'Marcus the Mage', 'Sara the Scout',
+            'Derek the Diplomat', 'Zara the Zealot', 'Captain Blackbeard', 'The Oracle',
+            'The Hermit', 'The Jester', 'The Sage', 'Bella the Baker', 'Cedric the Carpenter',
+            'Fiona the Farmer', 'Hugo the Hunter', 'Iris the Innkeeper', 'Jasper the Jeweler',
+            'Kira the Knight', 'Liam the Lumberjack', 'Maya the Miller', 'Nora the Noble',
+            'Oscar the Outlaw', 'Penny the Priest', 'Quinn the Quartermaster', 'Rita the Rogue',
+            'Sam the Sailor', 'Tara the Tailor', 'Ulysses the Undertaker', 'Vera the Vintner',
+            'Wade the Watchman', 'Xara the Xenophile', 'Yara the Yogi', 'Zane the Zealot'
+        ]
+        
+        races = [
+            'Human', 'Elf', 'Dwarf', 'Halfling', 'Dragonborn', 'Gnome',
+            'Half-Elf', 'Half-Orc', 'Tiefling', 'Aasimar', 'Goliath',
+            'Firbolg', 'Kenku', 'Lizardfolk', 'Tabaxi', 'Triton'
+        ]
+        
+        occupations = [
+            'Blacksmith', 'Merchant', 'Guard', 'Priest', 'Noble', 'Farmer', 'Hunter',
+            'Baker', 'Carpenter', 'Innkeeper', 'Jeweler', 'Knight', 'Lumberjack',
+            'Miller', 'Outlaw', 'Sailor', 'Tailor', 'Undertaker', 'Vintner', 'Watchman',
+            'Librarian', 'Guide', 'Mage', 'Scout', 'Diplomat', 'Oracle', 'Hermit',
+            'Jester', 'Sage', 'Captain', 'Quartermaster', 'Rogue', 'Xenophile', 'Yogi'
+        ]
+        
+        dispositions = [
+            'Friendly', 'Neutral', 'Suspicious', 'Hostile', 'Helpful',
+            'Indifferent', 'Wary', 'Enthusiastic', 'Cautious', 'Welcoming', 'Guarded'
+        ]
+        
+        motivations = [
+            'Seeking wealth and prosperity', 'Protecting the innocent', 'Gaining knowledge',
+            'Spreading their faith', 'Building a legacy', 'Finding redemption',
+            'Seeking revenge', 'Maintaining order', 'Pursuing power', 'Helping others',
+            'Discovering secrets', 'Preserving tradition', 'Creating change',
+            'Seeking adventure', 'Finding love', 'Escaping the past'
+        ]
+        
+        locations = [
+            'The Golden Dragon Tavern', 'The Market Square', 'The Temple of Light',
+            'The Royal Castle', 'The Village Center', 'The Forest Edge',
+            'The Mountain Pass', 'The City Gates', 'The Harbor', 'The Library'
+        ]
+        
+        for i in range(count):
+            campaign = random.choice(campaigns)
+            name = random.choice(npc_names)
+            npc_type = random.choice(npc_types)
+            race = random.choice(races)
+            occupation = random.choice(occupations)
+            disposition = random.choice(dispositions)
+            motivation = random.choice(motivations)
+            location = random.choice(locations)
+            
+            # Some NPCs might have combat stats (guards, knights, etc.)
+            has_combat_stats = npc_type in ['ALLY', 'ENEMY'] or occupation in ['Guard', 'Knight', 'Captain', 'Scout']
+            
+            # Generate secrets
+            secrets = None
+            if random.random() < 0.4:  # 40% chance
+                secret_types = [
+                    f"Knows about a hidden treasure in the {random.choice(['dungeon', 'cave', 'ruins'])}",
+                    f"Has information about the {random.choice(['bandit leader', 'corrupt noble', 'mysterious stranger'])}",
+                    f"Was involved in the {random.choice(['recent theft', 'political scandal', 'magical accident'])}",
+                    f"Has a secret relationship with {random.choice(['the mayor', 'a criminal', 'a noble family'])}"
+                ]
+                secrets = random.choice(secret_types)
+            
+            # Generate combat stats if needed
+            armor_class = None
+            hit_points = None
+            challenge_rating = None
+            speed = None
+            damage_resistances = None
+            condition_immunities = None
+            senses = None
+            actions = None
+            
+            if has_combat_stats:
+                armor_class = random.randint(10, 16)
+                hit_points = random.randint(8, 50)
+                challenge_rating = random.choice([0.25, 0.5, 1, 2, 3, 4, 5])
+                speed = f"{random.randint(25, 35)} ft."
+                
+                if random.random() < 0.3:  # 30% chance for resistances
+                    damage_resistances = random.choice(['Fire', 'Cold', 'Lightning', 'Poison'])
+                
+                if random.random() < 0.2:  # 20% chance for immunities
+                    condition_immunities = random.choice(['Charmed', 'Frightened', 'Paralyzed'])
+                
+                senses = f"Darkvision {random.randint(30, 60)} ft., passive Perception {random.randint(8, 14)}"
+                
+                if random.random() < 0.5:  # 50% chance for actions
+                    actions = f"Melee Attack: +{random.randint(3, 6)} to hit, reach 5 ft., one target. Hit: {random.randint(4, 12)} (1d8 + {random.randint(1, 4)}) slashing damage."
+            
+            npc = NPC.objects.create(
+                campaign=campaign,
+                name=name,
+                npc_type=npc_type,
+                race=race,
+                occupation=occupation,
+                disposition=disposition,
+                motivation=motivation,
+                secrets=secrets,
+                location=location,
+                background=f"A {disposition.lower()} {race.lower()} {occupation.lower()} who is {motivation.lower()}.",
+                armor_class=armor_class,
+                hit_points=hit_points,
+                challenge_rating=challenge_rating,
+                speed=speed,
+                damage_resistances=damage_resistances,
+                condition_immunities=condition_immunities,
+                senses=senses,
+                actions=actions
+            )
+            npcs.append(npc)
+            
+        self.stdout.write(f'Created {len(npcs)} NPCs')
+        return npcs
 
     def create_monsters(self, count, campaigns):
         """Create dummy monsters"""
@@ -286,52 +453,106 @@ class Command(BaseCommand):
         ]
         
         monster_types = [
-            'Beast', 'Humanoid', 'Undead', 'Dragon', 'Giant', 'Elemental',
-            'Fiend', 'Celestial', 'Aberration', 'Construct', 'Monstrosity',
-            'Plant', 'Fey', 'Ooze', 'Swarm'
+            'Aberration', 'Beast', 'Celestial', 'Construct', 'Dragon', 'Elemental',
+            'Fey', 'Fiend', 'Giant', 'Humanoid', 'Monstrosity', 'Ooze',
+            'Plant', 'Undead', 'Swarm'
         ]
         
-        monster_descriptions = [
-            'A fearsome creature that lurks in the shadows.',
-            'A massive beast with incredible strength and ferocity.',
-            'An ancient creature of legend and myth.',
-            'A cunning predator that hunts in packs.',
-            'A magical creature with otherworldly powers.',
-            'A corrupted being twisted by dark magic.',
-            'A guardian spirit bound to protect ancient secrets.',
-            'A fallen creature seeking redemption or revenge.',
-            'A primordial force of nature given form.',
-            'A twisted experiment gone horribly wrong.',
-            'A noble creature corrupted by evil influences.',
-            'A mysterious entity from beyond the material plane.',
-            'A legendary beast that few have lived to tell about.',
-            'A guardian of ancient treasures and forgotten knowledge.',
-            'A creature of pure elemental energy.',
-            'A shapeshifting predator that adapts to its prey.',
-            'A massive creature that towers over the landscape.',
-            'A flying predator that rules the skies.',
-            'A subterranean horror that haunts the deep places.',
-            'A magical construct brought to life by ancient magic.'
+        sizes = ['T', 'S', 'M', 'L', 'H', 'G']
+        
+        challenge_ratings = [0.25, 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        
+        alignments = [
+            'Lawful Evil', 'Chaotic Evil', 'Neutral Evil', 'Lawful Neutral',
+            'True Neutral', 'Chaotic Neutral', 'Lawful Good', 'Neutral Good',
+            'Chaotic Good', 'Unaligned'
         ]
         
         for i in range(count):
             campaign = random.choice(campaigns)
             name = random.choice(monster_names)
             monster_type = random.choice(monster_types)
-            description = random.choice(monster_descriptions)
+            size = random.choice(sizes)
+            challenge_rating = random.choice(challenge_ratings)
+            alignment = random.choice(alignments)
             
             # Add some variety to monster names
             if random.random() < 0.3:  # 30% chance to add a descriptor
                 descriptors = ['Ancient', 'Giant', 'Dire', 'Shadow', 'Frost', 'Fire', 'Storm', 'Dark', 'Cursed', 'Blessed']
                 name = f"{random.choice(descriptors)} {name}"
             
-            monster = Character.objects.create(
+            # Generate ability scores
+            def roll_ability():
+                return random.randint(1, 20)  # Simple random for monsters
+            
+            # Generate combat stats based on CR
+            armor_class = max(10, int(10 + challenge_rating * 0.5))
+            hit_points = max(8, int(8 + challenge_rating * 8))
+            
+            # Generate saving throws
+            def roll_save():
+                return random.randint(-2, 8)  # Reasonable save range
+            
+            # Generate skills
+            skills = []
+            if random.random() < 0.7:
+                skills.append(f"Perception +{random.randint(2, 8)}")
+            if random.random() < 0.5:
+                skills.append(f"Stealth +{random.randint(2, 8)}")
+            if random.random() < 0.3:
+                skills.append(f"Intimidation +{random.randint(2, 8)}")
+            
+            # Generate actions
+            actions = []
+            if random.random() < 0.8:
+                actions.append("Melee Attack: +5 to hit, reach 5 ft., one target. Hit: 8 (1d8 + 4) slashing damage.")
+            if random.random() < 0.4:
+                actions.append("Ranged Attack: +4 to hit, range 30/120 ft., one target. Hit: 6 (1d6 + 3) piercing damage.")
+            if random.random() < 0.3:
+                actions.append("Spell Attack: +6 to hit, range 60 ft., one target. Hit: 10 (2d6 + 3) force damage.")
+            
+            # Generate multiattack for higher CR monsters
+            multiattack = ""
+            if challenge_rating >= 2 and random.random() < 0.6:
+                multiattack = f"The {name} makes {random.randint(2, 4)} attacks: one with its bite and the rest with its claws."
+            
+            # Generate legendary actions for high CR monsters
+            legendary_actions = ""
+            if challenge_rating >= 5 and random.random() < 0.4:
+                legendary_actions = f"The {name} can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The {name} regains spent legendary actions at the start of its turn."
+            
+            monster = Monster.objects.create(
                 campaign=campaign,
-                type='MONSTER',
                 name=name,
-                race=monster_type,
-                character_class='Monster',
-                background=description
+                monster_type=monster_type,
+                size=size,
+                alignment=alignment,
+                challenge_rating=challenge_rating,
+                armor_class=armor_class,
+                hit_points=hit_points,
+                speed=f"{random.randint(20, 40)} ft." + (f", fly {random.randint(30, 60)} ft." if random.random() < 0.3 else ""),
+                strength=roll_ability(),
+                dexterity=roll_ability(),
+                constitution=roll_ability(),
+                intelligence=roll_ability(),
+                wisdom=roll_ability(),
+                charisma=roll_ability(),
+                strength_save=roll_save(),
+                dexterity_save=roll_save(),
+                constitution_save=roll_save(),
+                intelligence_save=roll_save(),
+                wisdom_save=roll_save(),
+                charisma_save=roll_save(),
+                skills=', '.join(skills) if skills else None,
+                damage_resistances=random.choice(['', 'Bludgeoning', 'Fire', 'Cold', 'Lightning', 'Poison', 'Necrotic', 'Radiant']) if random.random() < 0.3 else None,
+                damage_immunities=random.choice(['', 'Fire', 'Cold', 'Lightning', 'Poison', 'Necrotic', 'Radiant']) if random.random() < 0.2 else None,
+                condition_immunities=random.choice(['', 'Charmed', 'Frightened', 'Paralyzed', 'Poisoned']) if random.random() < 0.2 else None,
+                senses=f"Darkvision {random.randint(30, 120)} ft., passive Perception {random.randint(8, 16)}",
+                multiattack=multiattack if multiattack else None,
+                actions='\n'.join(actions) if actions else None,
+                bonus_actions="Dash, Disengage, or Hide" if random.random() < 0.4 else None,
+                reactions="Opportunity Attack" if random.random() < 0.6 else None,
+                legendary_actions=legendary_actions if legendary_actions else None
             )
             monsters.append(monster)
             

@@ -46,10 +46,21 @@
                                 <i class="fas fa-map me-1"></i>Campaigns
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link dnd-theme" href="{% url 'characters:character_list' %}">
-                                <i class="fas fa-user me-1"></i>Characters
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle dnd-theme" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-users me-1"></i>Characters
                             </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" href="{% url 'players:player_list' %}">
+                                    <i class="fas fa-user me-2"></i>Players
+                                </a></li>
+                                <li><a class="dropdown-item" href="{% url 'npcs:npc_list' %}">
+                                    <i class="fas fa-ghost me-2"></i>NPCs
+                                </a></li>
+                                <li><a class="dropdown-item" href="{% url 'monsters:monster_list' %}">
+                                    <i class="fas fa-dragon me-2"></i>Monsters
+                                </a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link dnd-theme" href="{% url 'game_sessions:session_list' %}">

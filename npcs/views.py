@@ -4,19 +4,19 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from .models import Character
-from .forms import CharacterForm
+from .models import NPC
+from .forms import NPCForm
 from campaigns.models import Campaign
 
 
-class CharacterListView(LoginRequiredMixin, ListView):
-    model = Character
-    template_name = 'characters/character_list.html'
-    context_object_name = 'characters'
+class NPCListView(LoginRequiredMixin, ListView):
+    model = NPC
+    template_name = 'npcs/npc_list.html'
+    context_object_name = 'npcs'
     paginate_by = 12
     
     def get_queryset(self):
-        queryset = Character.objects.select_related('campaign').all()
+        queryset = NPC.objects.select_related('campaign').all()
         
         # Filter by campaign if specified
         campaign_id = self.request.GET.get('campaign')
@@ -24,9 +24,9 @@ class CharacterListView(LoginRequiredMixin, ListView):
             queryset = queryset.filter(campaign_id=campaign_id)
         
         # Filter by type if specified
-        character_type = self.request.GET.get('type')
-        if character_type:
-            queryset = queryset.filter(type=character_type)
+        npc_type = self.request.GET.get('type')
+        if npc_type:
+            queryset = queryset.filter(npc_type=npc_type)
         
         # Search functionality
         search_query = self.request.GET.get('search')
@@ -34,8 +34,9 @@ class CharacterListView(LoginRequiredMixin, ListView):
             queryset = queryset.filter(
                 Q(name__icontains=search_query) |
                 Q(race__icontains=search_query) |
-                Q(character_class__icontains=search_query) |
-                Q(background__icontains=search_query)
+                Q(occupation__icontains=search_query) |
+                Q(background__icontains=search_query) |
+                Q(location__icontains=search_query)
             )
         
         return queryset
@@ -43,17 +44,17 @@ class CharacterListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['campaigns'] = Campaign.objects.all()
-        context['character_types'] = Character.CHARACTER_TYPES
+        context['npc_types'] = NPC.NPC_TYPES
         context['selected_campaign'] = self.request.GET.get('campaign')
         context['selected_type'] = self.request.GET.get('type')
         context['search_query'] = self.request.GET.get('search')
         return context
 
 
-class CharacterDetailView(LoginRequiredMixin, DetailView):
-    model = Character
-    template_name = 'characters/character_detail.html'
-    context_object_name = 'character'
+class NPCDetailView(LoginRequiredMixin, DetailView):
+    model = NPC
+    template_name = 'npcs/npc_detail.html'
+    context_object_name = 'npc'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -61,14 +62,14 @@ class CharacterDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class CharacterCreateView(LoginRequiredMixin, CreateView):
-    model = Character
-    form_class = CharacterForm
-    template_name = 'characters/character_form.html'
-    success_url = reverse_lazy('characters:character_list')
+class NPCCreateView(LoginRequiredMixin, CreateView):
+    model = NPC
+    form_class = NPCForm
+    template_name = 'npcs/npc_form.html'
+    success_url = reverse_lazy('npcs:npc_list')
     
     def form_valid(self, form):
-        messages.success(self.request, 'Character created successfully!')
+        messages.success(self.request, 'NPC created successfully!')
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
@@ -77,16 +78,16 @@ class CharacterCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class CharacterUpdateView(LoginRequiredMixin, UpdateView):
-    model = Character
-    form_class = CharacterForm
-    template_name = 'characters/character_form.html'
+class NPCUpdateView(LoginRequiredMixin, UpdateView):
+    model = NPC
+    form_class = NPCForm
+    template_name = 'npcs/npc_form.html'
     
     def get_success_url(self):
-        return reverse_lazy('characters:character_detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy('npcs:npc_detail', kwargs={'pk': self.object.pk})
     
     def form_valid(self, form):
-        messages.success(self.request, 'Character updated successfully!')
+        messages.success(self.request, 'NPC updated successfully!')
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
@@ -95,25 +96,25 @@ class CharacterUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
 
-class CharacterDeleteView(LoginRequiredMixin, DeleteView):
-    model = Character
-    template_name = 'characters/character_confirm_delete.html'
-    success_url = reverse_lazy('characters:character_list')
+class NPCDeleteView(LoginRequiredMixin, DeleteView):
+    model = NPC
+    template_name = 'npcs/npc_confirm_delete.html'
+    success_url = reverse_lazy('npcs:npc_list')
     
     def form_valid(self, form):
-        messages.success(self.request, 'Character deleted successfully!')
+        messages.success(self.request, 'NPC deleted successfully!')
         return super().form_valid(form)
 
 
-class CampaignCharactersView(LoginRequiredMixin, ListView):
-    model = Character
-    template_name = 'characters/campaign_characters.html'
-    context_object_name = 'characters'
+class CampaignNPCsView(LoginRequiredMixin, ListView):
+    model = NPC
+    template_name = 'npcs/campaign_npcs.html'
+    context_object_name = 'npcs'
     paginate_by = 12
     
     def get_queryset(self):
         self.campaign = get_object_or_404(Campaign, pk=self.kwargs['campaign_pk'])
-        return Character.objects.filter(campaign=self.campaign)
+        return NPC.objects.filter(campaign=self.campaign)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

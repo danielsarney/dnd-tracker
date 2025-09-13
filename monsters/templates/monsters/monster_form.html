@@ -1,0 +1,323 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if object %}Edit {{ object.name }}{% else %}New Monster{% endif %} - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="monster-form-container">
+    <!-- Header -->
+    <div class="card fade-in mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-dragon me-3 text-accent"></i>
+                        {% if object %}Edit {{ object.name }}{% else %}New Monster{% endif %}
+                    </h1>
+                    <p class="mb-0">{% if object %}Update monster information{% else %}Create a new monster{% endif %}</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="{% url 'monsters:monster_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Monsters
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" class="fade-in">
+        {% csrf_token %}
+        
+        <div class="row">
+            <!-- Basic Information -->
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Basic Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="{{ form.campaign.id_for_label }}" class="form-label">Campaign *</label>
+                            {{ form.campaign }}
+                            {% if form.campaign.errors %}
+                                <div class="text-danger">{{ form.campaign.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">Monster Name *</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="text-danger">{{ form.name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.monster_type.id_for_label }}" class="form-label">Monster Type</label>
+                                    {{ form.monster_type }}
+                                    {% if form.monster_type.errors %}
+                                        <div class="text-danger">{{ form.monster_type.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.size.id_for_label }}" class="form-label">Size</label>
+                                    {{ form.size }}
+                                    {% if form.size.errors %}
+                                        <div class="text-danger">{{ form.size.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.challenge_rating.id_for_label }}" class="form-label">Challenge Rating</label>
+                                    {{ form.challenge_rating }}
+                                    {% if form.challenge_rating.errors %}
+                                        <div class="text-danger">{{ form.challenge_rating.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Combat Stats -->
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-sword me-2"></i>Combat Statistics
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.armor_class.id_for_label }}" class="form-label">Armor Class</label>
+                                    {{ form.armor_class }}
+                                    {% if form.armor_class.errors %}
+                                        <div class="text-danger">{{ form.armor_class.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.hit_points.id_for_label }}" class="form-label">Hit Points</label>
+                                    {{ form.hit_points }}
+                                    {% if form.hit_points.errors %}
+                                        <div class="text-danger">{{ form.hit_points.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.speed.id_for_label }}" class="form-label">Speed</label>
+                            {{ form.speed }}
+                            {% if form.speed.errors %}
+                                <div class="text-danger">{{ form.speed.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ability Scores -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-dice me-2"></i>Ability Scores
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.strength.id_for_label }}" class="form-label">Strength</label>
+                            {{ form.strength }}
+                            {% if form.strength.errors %}
+                                <div class="text-danger">{{ form.strength.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.dexterity.id_for_label }}" class="form-label">Dexterity</label>
+                            {{ form.dexterity }}
+                            {% if form.dexterity.errors %}
+                                <div class="text-danger">{{ form.dexterity.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.constitution.id_for_label }}" class="form-label">Constitution</label>
+                            {{ form.constitution }}
+                            {% if form.constitution.errors %}
+                                <div class="text-danger">{{ form.constitution.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.intelligence.id_for_label }}" class="form-label">Intelligence</label>
+                            {{ form.intelligence }}
+                            {% if form.intelligence.errors %}
+                                <div class="text-danger">{{ form.intelligence.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.wisdom.id_for_label }}" class="form-label">Wisdom</label>
+                            {{ form.wisdom }}
+                            {% if form.wisdom.errors %}
+                                <div class="text-danger">{{ form.wisdom.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.charisma.id_for_label }}" class="form-label">Charisma</label>
+                            {{ form.charisma }}
+                            {% if form.charisma.errors %}
+                                <div class="text-danger">{{ form.charisma.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resistances and Immunities -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-shield-alt me-2"></i>Resistances & Immunities
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="{{ form.damage_resistances.id_for_label }}" class="form-label">Damage Resistances</label>
+                            {{ form.damage_resistances }}
+                            {% if form.damage_resistances.errors %}
+                                <div class="text-danger">{{ form.damage_resistances.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="{{ form.damage_immunities.id_for_label }}" class="form-label">Damage Immunities</label>
+                            {{ form.damage_immunities }}
+                            {% if form.damage_immunities.errors %}
+                                <div class="text-danger">{{ form.damage_immunities.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="{{ form.condition_immunities.id_for_label }}" class="form-label">Condition Immunities</label>
+                            {{ form.condition_immunities }}
+                            {% if form.condition_immunities.errors %}
+                                <div class="text-danger">{{ form.condition_immunities.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Senses and Languages -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-eye me-2"></i>Senses & Languages
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="{{ form.senses.id_for_label }}" class="form-label">Senses</label>
+                            {{ form.senses }}
+                            {% if form.senses.errors %}
+                                <div class="text-danger">{{ form.senses.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="{{ form.languages.id_for_label }}" class="form-label">Languages</label>
+                            {{ form.languages }}
+                            {% if form.languages.errors %}
+                                <div class="text-danger">{{ form.languages.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Abilities and Actions -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-magic me-2"></i>Abilities & Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="{{ form.special_abilities.id_for_label }}" class="form-label">Special Abilities</label>
+                    {{ form.special_abilities }}
+                    {% if form.special_abilities.errors %}
+                        <div class="text-danger">{{ form.special_abilities.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.actions.id_for_label }}" class="form-label">Actions</label>
+                    {{ form.actions }}
+                    {% if form.actions.errors %}
+                        <div class="text-danger">{{ form.actions.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.legendary_actions.id_for_label }}" class="form-label">Legendary Actions</label>
+                    {{ form.legendary_actions }}
+                    {% if form.legendary_actions.errors %}
+                        <div class="text-danger">{{ form.legendary_actions.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="card fade-in">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'monsters:monster_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> 
+                        {% if object %}Update Monster{% else %}Create Monster{% endif %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,7 +1,9 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from campaigns.models import Campaign
-from characters.models import Character
+from players.models import Player
+from npcs.models import NPC
+from monsters.models import Monster
 from game_sessions.models import GameSession
 from dnd_tracker.factories import UserWithProfileFactory
 from datetime import date, timedelta
@@ -33,31 +35,31 @@ class DashboardViewTest(TestCase):
         )
         
         # Create test characters
-        self.character1 = Character.objects.create(
+        self.player1 = Player.objects.create(
             campaign=self.campaign1,
-            type='PLAYER',
-            name="Test Character 1",
-            race="Human",
-            character_class="Fighter",
-            background="A brave warrior"
+            character_name="Test Character 1",
+            player_name="Test Player 1",
+            level=3,
+            background="A brave warrior",
+            armor_class=16
         )
         
-        self.character2 = Character.objects.create(
+        self.npc1 = NPC.objects.create(
             campaign=self.campaign1,
-            type='NPC',
             name="Test NPC 1",
+            npc_type='NEUTRAL',
             race="Elf",
-            character_class="Wizard",
+            occupation="Wizard",
             background="A mysterious mage"
         )
         
-        self.character3 = Character.objects.create(
+        self.player2 = Player.objects.create(
             campaign=self.campaign2,
-            type='PLAYER',
-            name="Test Character 2",
-            race="Dwarf",
-            character_class="Cleric",
-            background="A holy healer"
+            character_name="Test Character 2",
+            player_name="Test Player 2",
+            level=2,
+            background="A holy healer",
+            armor_class=14
         )
         
         # Create test game sessions
@@ -227,8 +229,8 @@ class DashboardViewTest(TestCase):
         response = self.client.get(reverse('dashboard:dashboard'))
         
         # Characters should be found through campaign relationship
-        self.assertIn(self.character1, response.context['recent_characters'])
-        self.assertIn(self.character2, response.context['recent_characters'])
+        self.assertIn(self.player1, response.context['recent_players'])
+        self.assertIn(self.npc1, response.context['recent_npcs'])
 
     def test_dashboard_session_campaign_relationship(self):
         """Test that sessions are found through campaign relationships"""
@@ -248,7 +250,7 @@ class DashboardViewTest(TestCase):
         # Check that all expected sections are rendered
         self.assertContains(response, 'Welcome back')
         self.assertContains(response, 'Recent Campaigns')
-        self.assertContains(response, 'Recent Characters')
+        self.assertContains(response, 'Recent Players')
         self.assertContains(response, 'Character Distribution')
         self.assertContains(response, 'Quick Navigation')
 
@@ -259,7 +261,7 @@ class DashboardViewTest(TestCase):
         
         # Check that quick action buttons are present
         self.assertContains(response, 'New Campaign')
-        self.assertContains(response, 'New Character')
+        self.assertContains(response, 'New Player')
         self.assertContains(response, 'New Session')
 
     def test_dashboard_view_all_links(self):
@@ -334,12 +336,13 @@ class DashboardIntegrationTest(TestCase):
         )
         
         # Create a character
-        self.character = Character.objects.create(
+        self.player = Player.objects.create(
             campaign=self.campaign,
-            type='PLAYER',
-            name="Integration Test Character",
-            race="Human",
-            character_class="Rogue"
+            character_name="Integration Test Character",
+            player_name="Test Player",
+            level=1,
+            background="A sneaky rogue",
+            armor_class=12
         )
         
         # Create a session
@@ -365,7 +368,7 @@ class DashboardIntegrationTest(TestCase):
         
         # Check that quick actions work
         self.assertContains(response, 'New Campaign')
-        self.assertContains(response, 'New Character')
+        self.assertContains(response, 'New Player')
         self.assertContains(response, 'New Session')
 
     def test_dashboard_navigation_flow(self):
@@ -381,7 +384,7 @@ class DashboardIntegrationTest(TestCase):
         self.assertEqual(campaigns_response.status_code, 200)
         
         # Navigate to characters
-        characters_response = self.client.get(reverse('characters:character_list'))
+        characters_response = self.client.get(reverse('players:player_list'))
         self.assertEqual(characters_response.status_code, 200)
         
         # Navigate to sessions

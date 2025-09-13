@@ -9,7 +9,6 @@ import json
 from .models import CombatEncounter, CombatParticipant
 from .forms import CombatEncounterForm, CombatParticipantForm
 from campaigns.models import Campaign
-from characters.models import Character
 
 
 @login_required
@@ -93,13 +92,25 @@ def encounter_setup(request, encounter_id):
     """Setup participants for a combat encounter"""
     encounter = get_object_or_404(CombatEncounter, pk=encounter_id)
     participants = encounter.participants.all()
-    characters = Character.objects.filter(campaign=encounter.campaign)
+    # Get all available characters from the new apps
+    from players.models import Player
+    from npcs.models import NPC
+    from monsters.models import Monster
+    
+    players = Player.objects.filter(campaign=encounter.campaign)
+    npcs = NPC.objects.filter(campaign=encounter.campaign)
+    monsters = Monster.objects.filter(campaign=encounter.campaign)
     
     if request.method == 'POST':
         form = CombatParticipantForm(request.POST, campaign=encounter.campaign)
         if form.is_valid():
             participant = form.save(commit=False)
             participant.encounter = encounter
+            
+            # Populate stats from character if selected
+            if participant.player or participant.npc or participant.monster:
+                participant.populate_from_character()
+            
             participant.save()
             messages.success(request, f'{participant.name} added to encounter!')
             return redirect('combat_tracker:encounter_setup', encounter_id=encounter.pk)
@@ -109,7 +120,9 @@ def encounter_setup(request, encounter_id):
     return render(request, 'initiative/encounter_setup.html', {
         'encounter': encounter,
         'participants': participants,
-        'characters': characters,
+        'players': players,
+        'npcs': npcs,
+        'monsters': monsters,
         'form': form
     })
 
@@ -119,11 +132,13 @@ def encounter_detail(request, encounter_id):
     """View and manage an active combat encounter"""
     encounter = get_object_or_404(CombatEncounter, pk=encounter_id)
     participants = encounter.get_participants()
+    living_participants = encounter.get_living_participants()
     current_participant = encounter.get_current_participant()
     
     return render(request, 'initiative/encounter_detail.html', {
         'encounter': encounter,
         'participants': participants,
+        'living_participants': living_participants,
         'current_participant': current_participant
     })
 
@@ -211,3 +226,103 @@ def encounter_delete(request, encounter_id):
         return redirect('combat_tracker:encounter_list')
     
     return render(request, 'initiative/encounter_confirm_delete.html', {'encounter': encounter})
+
+
+@login_required
+@require_POST
+def modify_hit_points(request, encounter_id, participant_id):
+    """Modify a participant's hit points during combat"""
+    encounter = get_object_or_404(CombatEncounter, pk=encounter_id)
+    participant = get_object_or_404(CombatParticipant, pk=participant_id, encounter=encounter)
+    
+    try:
+        data = json.loads(request.body)
+        new_hp = int(data.get('hit_points', 0))
+        
+        participant.hit_points = new_hp
+        
+        # Check for death
+        if new_hp <= 0:
+            participant.is_dead = True
+        else:
+            participant.is_dead = False
+            
+        participant.save()
+        
+        return JsonResponse({
+            'success': True,
+            'hit_points': participant.hit_points,
+            'is_dead': participant.is_dead,
+            'is_alive': participant.is_alive()
+        })
+    except (ValueError, KeyError) as e:
+        return JsonResponse({'error': 'Invalid data'}, status=400)
+
+
+@login_required
+@require_POST
+def modify_armor_class(request, encounter_id, participant_id):
+    """Modify a participant's armor class during combat"""
+    encounter = get_object_or_404(CombatEncounter, pk=encounter_id)
+    participant = get_object_or_404(CombatParticipant, pk=participant_id, encounter=encounter)
+    
+    try:
+        data = json.loads(request.body)
+        new_ac = int(data.get('armor_class', 10))
+        
+        participant.armor_class = new_ac
+        participant.save()
+        
+        return JsonResponse({
+            'success': True,
+            'armor_class': participant.armor_class
+        })
+    except (ValueError, KeyError) as e:
+        return JsonResponse({'error': 'Invalid data'}, status=400)
+
+
+@login_required
+@require_POST
+def apply_damage(request, encounter_id, participant_id):
+    """Apply damage to a participant"""
+    encounter = get_object_or_404(CombatEncounter, pk=encounter_id)
+    participant = get_object_or_404(CombatParticipant, pk=participant_id, encounter=encounter)
+    
+    try:
+        data = json.loads(request.body)
+        damage = int(data.get('damage', 0))
+        
+        died = participant.take_damage(damage)
+        
+        return JsonResponse({
+            'success': True,
+            'hit_points': participant.hit_points,
+            'is_dead': participant.is_dead,
+            'is_alive': participant.is_alive(),
+            'died': died
+        })
+    except (ValueError, KeyError) as e:
+        return JsonResponse({'error': 'Invalid data'}, status=400)
+
+
+@login_required
+@require_POST
+def apply_healing(request, encounter_id, participant_id):
+    """Apply healing to a participant"""
+    encounter = get_object_or_404(CombatEncounter, pk=encounter_id)
+    participant = get_object_or_404(CombatParticipant, pk=participant_id, encounter=encounter)
+    
+    try:
+        data = json.loads(request.body)
+        healing = int(data.get('healing', 0))
+        
+        participant.heal(healing)
+        
+        return JsonResponse({
+            'success': True,
+            'hit_points': participant.hit_points,
+            'is_dead': participant.is_dead,
+            'is_alive': participant.is_alive()
+        })
+    except (ValueError, KeyError) as e:
+        return JsonResponse({'error': 'Invalid data'}, status=400)

@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Players - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="players-container">
+    <!-- Header -->
+    <div class="card fade-in mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-user me-3 text-accent"></i>
+                        Players
+                    </h1>
+                    <p class="mb-0">Manage your player characters</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="{% url 'players:player_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i> New Player
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="card fade-in mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-filter me-2"></i>Filters & Search
+            </h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="campaign" class="form-label">Campaign</label>
+                    <select name="campaign" id="campaign" class="form-select">
+                        <option value="">All Campaigns</option>
+                        {% for campaign in campaigns %}
+                            <option value="{{ campaign.pk }}" {% if selected_campaign == campaign.pk|stringformat:"s" %}selected{% endif %}>
+                                {{ campaign.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="col-md-6">
+                    <label for="search" class="form-label">Search</label>
+                    <input type="text" name="search" id="search" class="form-control" 
+                           placeholder="Search players..." value="{{ search_query|default:'' }}">
+                </div>
+                
+                <div class="col-md-2 d-flex align-items-end">
+                    <div class="d-grid gap-2 w-100">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search me-1"></i> Filter
+                        </button>
+                        <a href="{% url 'players:player_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-1"></i> Clear
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if players %}
+        <div class="row">
+            {% for player in players %}
+                <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="card fade-in h-100 border-success">
+                        <div class="card-header d-flex justify-content-between align-items-start">
+                            <span class="badge bg-success">
+                                <i class="fas fa-user me-1"></i>
+                                Level {{ player.level }}
+                            </span>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item" href="{% url 'players:player_detail' player.pk %}">
+                                        <i class="fas fa-eye me-2"></i>View
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'players:player_edit' player.pk %}">
+                                        <i class="fas fa-edit me-2"></i>Edit
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="{% url 'players:player_delete' player.pk %}">
+                                        <i class="fas fa-trash me-2"></i>Delete
+                                    </a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">{{ player.character_name }}</h5>
+                            
+                            <div class="mb-3">
+                                <p class="mb-2">
+                                    <i class="fas fa-user me-2 text-accent"></i>
+                                    <strong>Player:</strong> {{ player.player_name }}
+                                </p>
+                                
+                                <p class="mb-2">
+                                    <i class="fas fa-map me-2 text-accent"></i>
+                                    <strong>Campaign:</strong> 
+                                    <a href="{% url 'campaigns:campaign_detail' player.campaign.pk %}" class="text-accent">
+                                        {{ player.campaign.name }}
+                                    </a>
+                                </p>
+                                
+                                <div class="row mb-2">
+                                    <div class="col-6">
+                                        <small class="text-muted">
+                                            <i class="fas fa-level-up-alt me-1"></i>Level: {{ player.level }}
+                                        </small>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">
+                                            <i class="fas fa-shield me-1"></i>AC: {{ player.armor_class }}
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                {% if player.background %}
+                                    <p class="mb-2">
+                                        <i class="fas fa-book me-2"></i>
+                                        <strong>Background:</strong> 
+                                        <span class="text-muted">{{ player.background|truncatewords:15 }}</span>
+                                    </p>
+                                {% endif %}
+                                
+                                <p class="mb-0">
+                                    <i class="fas fa-calendar me-2"></i>
+                                    Created: {{ player.created_at|date:"M d, Y" }}
+                                </p>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <a href="{% url 'players:player_detail' player.pk %}" class="btn btn-primary">
+                                    <i class="fas fa-eye me-1"></i> View Player
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <div class="card fade-in">
+                <div class="card-body">
+                    <nav aria-label="Player pagination">
+                        <ul class="pagination justify-content-center mb-0">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; First</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+                                </li>
+                            {% endif %}
+                            
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                                </span>
+                            </li>
+                            
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last &raquo;</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="card fade-in">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-user fa-4x text-muted mb-4"></i>
+                <h3>No players found</h3>
+                <p class="mb-4">{% if search_query or selected_campaign %}Try adjusting your filters or search terms.{% else %}Create your first player character to get started!{% endif %}</p>
+                <a href="{% url 'players:player_create' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus me-2"></i> Create Player
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

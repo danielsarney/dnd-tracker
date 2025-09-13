@@ -39,6 +39,12 @@ class Command(BaseCommand):
             help='Number of game sessions to create (default: 30)'
         )
         parser.add_argument(
+            '--monsters',
+            type=int,
+            default=15,
+            help='Number of monsters to create (default: 15)'
+        )
+        parser.add_argument(
             '--no-clear',
             action='store_true',
             default=False,
@@ -56,6 +62,7 @@ class Command(BaseCommand):
             users = self.create_users(options['users'])
             campaigns = self.create_campaigns(options['campaigns'], users)
             characters = self.create_characters(options['characters'], campaigns)
+            monsters = self.create_monsters(options['monsters'], campaigns)
             sessions = self.create_game_sessions(options['sessions'], campaigns)
         
         self.stdout.write(
@@ -64,6 +71,7 @@ class Command(BaseCommand):
                 f'- {len(users)} users\n'
                 f'- {len(campaigns)} campaigns\n'
                 f'- {len(characters)} characters\n'
+                f'- {len(monsters)} monsters\n'
                 f'- {len(sessions)} game sessions'
             )
         )
@@ -222,6 +230,81 @@ class Command(BaseCommand):
             
         self.stdout.write(f'Created {len(characters)} characters')
         return characters
+
+    def create_monsters(self, count, campaigns):
+        """Create dummy monsters"""
+        monsters = []
+        monster_names = [
+            'Goblin', 'Orc', 'Troll', 'Dragon', 'Giant Spider', 'Skeleton',
+            'Zombie', 'Wraith', 'Vampire', 'Werewolf', 'Minotaur', 'Cyclops',
+            'Harpy', 'Medusa', 'Chimera', 'Griffon', 'Pegasus', 'Unicorn',
+            'Basilisk', 'Cockatrice', 'Manticore', 'Hydra', 'Kraken', 'Lich',
+            'Beholder', 'Mind Flayer', 'Githyanki', 'Drow', 'Duergar', 'Svirfneblin',
+            'Kobold', 'Gnoll', 'Bugbear', 'Hobgoblin', 'Ogre', 'Ettin',
+            'Hill Giant', 'Frost Giant', 'Fire Giant', 'Cloud Giant', 'Storm Giant',
+            'Red Dragon', 'Blue Dragon', 'Green Dragon', 'Black Dragon', 'White Dragon',
+            'Gold Dragon', 'Silver Dragon', 'Bronze Dragon', 'Copper Dragon', 'Brass Dragon',
+            'Demon', 'Devil', 'Angel', 'Elemental', 'Golem', 'Construct',
+            'Shadow', 'Ghost', 'Specter', 'Banshee', 'Wight', 'Mummy',
+            'Lich', 'Vampire Lord', 'Werewolf Alpha', 'Dragon Turtle', 'Roc',
+            'Purple Worm', 'Remorhaz', 'Bulette', 'Rust Monster', 'Displacer Beast',
+            'Owlbear', 'Dire Wolf', 'Dire Bear', 'Dire Tiger', 'Dire Lion',
+            'Giant Eagle', 'Giant Owl', 'Giant Bat', 'Giant Rat', 'Giant Scorpion',
+            'Giant Centipede', 'Giant Spider', 'Giant Wasp', 'Giant Ant', 'Giant Bee'
+        ]
+        
+        monster_types = [
+            'Beast', 'Humanoid', 'Undead', 'Dragon', 'Giant', 'Elemental',
+            'Fiend', 'Celestial', 'Aberration', 'Construct', 'Monstrosity',
+            'Plant', 'Fey', 'Ooze', 'Swarm'
+        ]
+        
+        monster_descriptions = [
+            'A fearsome creature that lurks in the shadows.',
+            'A massive beast with incredible strength and ferocity.',
+            'An ancient creature of legend and myth.',
+            'A cunning predator that hunts in packs.',
+            'A magical creature with otherworldly powers.',
+            'A corrupted being twisted by dark magic.',
+            'A guardian spirit bound to protect ancient secrets.',
+            'A fallen creature seeking redemption or revenge.',
+            'A primordial force of nature given form.',
+            'A twisted experiment gone horribly wrong.',
+            'A noble creature corrupted by evil influences.',
+            'A mysterious entity from beyond the material plane.',
+            'A legendary beast that few have lived to tell about.',
+            'A guardian of ancient treasures and forgotten knowledge.',
+            'A creature of pure elemental energy.',
+            'A shapeshifting predator that adapts to its prey.',
+            'A massive creature that towers over the landscape.',
+            'A flying predator that rules the skies.',
+            'A subterranean horror that haunts the deep places.',
+            'A magical construct brought to life by ancient magic.'
+        ]
+        
+        for i in range(count):
+            campaign = random.choice(campaigns)
+            name = random.choice(monster_names)
+            monster_type = random.choice(monster_types)
+            description = random.choice(monster_descriptions)
+            
+            # Add some variety to monster names
+            if random.random() < 0.3:  # 30% chance to add a descriptor
+                descriptors = ['Ancient', 'Giant', 'Dire', 'Shadow', 'Frost', 'Fire', 'Storm', 'Dark', 'Cursed', 'Blessed']
+                name = f"{random.choice(descriptors)} {name}"
+            
+            monster = Character.objects.create(
+                campaign=campaign,
+                type='MONSTER',
+                name=name,
+                race=monster_type,
+                character_class='Monster',
+                background=description
+            )
+            monsters.append(monster)
+            
+        self.stdout.write(f'Created {len(monsters)} monsters')
+        return monsters
 
     def create_game_sessions(self, count, campaigns):
         """Create dummy game sessions"""

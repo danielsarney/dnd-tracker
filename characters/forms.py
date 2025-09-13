@@ -5,7 +5,7 @@ from .models import Character
 class CharacterForm(forms.ModelForm):
     class Meta:
         model = Character
-        fields = ['campaign', 'type', 'name', 'race', 'character_class', 'background']
+        fields = ['campaign', 'type', 'name', 'race', 'character_class', 'background', 'url']
         widgets = {
             'campaign': forms.Select(attrs={
                 'class': 'form-control',
@@ -31,6 +31,10 @@ class CharacterForm(forms.ModelForm):
                 'class': 'form-control',
                 'rows': 4,
                 'placeholder': 'Describe your character\'s background...'
+            }),
+            'url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter D&D Beyond or reference URL'
             })
         }
     

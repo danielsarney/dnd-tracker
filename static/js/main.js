@@ -106,4 +106,37 @@ function addCardHoverEffects() {
 // Initialize card hover effects
 document.addEventListener('DOMContentLoaded', function() {
     addCardHoverEffects();
+    
+    // Initialize character form field toggling
+    initializeCharacterFormToggling();
 });
+
+// Character form field toggling functionality
+function initializeCharacterFormToggling() {
+    const typeSelect = document.getElementById('id_type');
+    const monsterFields = document.getElementById('monster-fields');
+    const playerNpcFields = document.getElementById('player-npc-fields');
+    
+    // Only initialize if we're on a character form page
+    if (!typeSelect || !monsterFields || !playerNpcFields) {
+        return;
+    }
+    
+    function toggleFields() {
+        const selectedType = typeSelect.value;
+        
+        if (selectedType === 'MONSTER') {
+            monsterFields.style.display = 'block';
+            playerNpcFields.style.display = 'none';
+        } else {
+            monsterFields.style.display = 'none';
+            playerNpcFields.style.display = 'block';
+        }
+    }
+    
+    // Initial toggle based on current value
+    toggleFields();
+    
+    // Toggle on change
+    typeSelect.addEventListener('change', toggleFields);
+}

@@ -16,6 +16,9 @@ class Profile(models.Model):
     def get_display_name(self):
         return self.display_name or self.user.username
     
+    def __str__(self):
+        return f"{self.get_display_name()}'s Profile"
+    
     @property
     def avatar(self):
         """Property to maintain backward compatibility with existing code"""

@@ -74,7 +74,19 @@
                                     </div>
                                 </div>
                                 {% endif %}
-                                {% if object.character_class %}
+                                {% if object.type == 'MONSTER' and object.url %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-link me-3 text-accent"></i>
+                                        <div>
+                                            <strong>Reference:</strong><br>
+                                            <a href="{{ object.url }}" target="_blank" class="text-accent">
+                                                View Stats <i class="fas fa-external-link-alt"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% elif object.character_class %}
                                 <div class="col-md-6 mb-3">
                                     <div class="d-flex align-items-center">
                                         <i class="fas fa-shield-alt me-3 text-accent"></i>

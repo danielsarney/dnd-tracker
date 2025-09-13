@@ -52,6 +52,22 @@ class CharacterModelTest(TestCase):
         self.assertIsNotNone(character.created_at)
         self.assertIsNotNone(character.updated_at)
 
+    def test_monster_creation(self):
+        """Test that a monster can be created with URL field"""
+        monster = Character.objects.create(
+            campaign=self.campaign,
+            type='MONSTER',
+            name="Test Dragon",
+            url="https://www.dndbeyond.com/monsters/adult-red-dragon"
+        )
+        self.assertEqual(monster.campaign, self.campaign)
+        self.assertEqual(monster.type, 'MONSTER')
+        self.assertEqual(monster.name, "Test Dragon")
+        self.assertEqual(monster.url, "https://www.dndbeyond.com/monsters/adult-red-dragon")
+        self.assertIsNone(monster.race)
+        self.assertIsNone(monster.character_class)
+        self.assertIsNone(monster.background)
+
     def test_character_string_representation(self):
         """Test the string representation of a character"""
         expected = f"{self.character.name} ({self.character.get_type_display()})"
@@ -86,11 +102,19 @@ class CharacterModelTest(TestCase):
         """Test character type properties"""
         player_char = CharacterFactory(campaign=self.campaign, type='PLAYER')
         npc_char = CharacterFactory(campaign=self.campaign, type='NPC')
+        monster_char = CharacterFactory(campaign=self.campaign, type='MONSTER')
         
         self.assertTrue(player_char.is_player)
         self.assertFalse(player_char.is_npc)
+        self.assertFalse(player_char.is_monster)
+        
         self.assertTrue(npc_char.is_npc)
         self.assertFalse(npc_char.is_player)
+        self.assertFalse(npc_char.is_monster)
+        
+        self.assertTrue(monster_char.is_monster)
+        self.assertFalse(monster_char.is_player)
+        self.assertFalse(monster_char.is_npc)
 
 
 class CharacterViewsTest(TestCase):
@@ -183,6 +207,25 @@ class CharacterViewsTest(TestCase):
         self.assertEqual(new_character.race, 'Elf')
         self.assertEqual(new_character.character_class, 'Wizard')
 
+    def test_monster_create_post_success(self):
+        """Test that monster creation works with valid data"""
+        self.client.force_login(self.user)
+        monster_data = {
+            'campaign': self.campaign.pk,
+            'type': 'MONSTER',
+            'name': 'Test Dragon',
+            'url': 'https://www.dndbeyond.com/monsters/adult-red-dragon'
+        }
+        response = self.client.post(reverse('characters:character_create'), monster_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('characters:character_list'))
+        
+        # Check that monster was created
+        new_monster = Character.objects.get(name='Test Dragon')
+        self.assertEqual(new_monster.campaign, self.campaign)
+        self.assertEqual(new_monster.type, 'MONSTER')
+        self.assertEqual(new_monster.url, 'https://www.dndbeyond.com/monsters/adult-red-dragon')
+
     def test_character_edit_view_requires_login(self):
         """Test that character edit view requires authentication"""
         response = self.client.get(reverse('characters:character_edit', kwargs={'pk': self.character.pk}))
@@ -268,6 +311,18 @@ class CharacterFormsTest(TestCase):
             'race': 'Human',
             'character_class': 'Fighter',
             'background': 'Test background'
+        }
+        form = CharacterForm(data=form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_monster_form_valid_data(self):
+        """Test that monster form works with valid data"""
+        from .forms import CharacterForm
+        form_data = {
+            'campaign': self.campaign.pk,
+            'type': 'MONSTER',
+            'name': 'Test Dragon',
+            'url': 'https://www.dndbeyond.com/monsters/adult-red-dragon'
         }
         form = CharacterForm(data=form_data)
         self.assertTrue(form.is_valid())

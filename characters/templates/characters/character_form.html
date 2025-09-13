@@ -79,59 +79,83 @@
                             {% endif %}
                         </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="{{ form.race.id_for_label }}" class="form-label">
-                                    <i class="fas fa-dragon me-2"></i>Race
+                        <!-- Monster-specific fields -->
+                        <div id="monster-fields" class="mb-4" style="display: none;">
+                            <div class="mb-3">
+                                <label for="{{ form.url.id_for_label }}" class="form-label">
+                                    <i class="fas fa-link me-2"></i>Reference URL
                                 </label>
-                                {{ form.race }}
-                                {% if form.race.errors %}
+                                {{ form.url }}
+                                {% if form.url.errors %}
                                     <div class="invalid-feedback">
-                                        {% for error in form.race.errors %}
+                                        {% for error in form.url.errors %}
                                             {{ error }}
                                         {% endfor %}
                                     </div>
                                 {% endif %}
                                 <div class="form-text">
                                     <i class="fas fa-info-circle me-1"></i>
-                                    e.g., Human, Elf, Dwarf, Dragonborn
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="{{ form.character_class.id_for_label }}" class="form-label">
-                                    <i class="fas fa-shield-alt me-2"></i>Class
-                                </label>
-                                {{ form.character_class }}
-                                {% if form.character_class.errors %}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.character_class.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                                <div class="form-text">
-                                    <i class="fas fa-info-circle me-1"></i>
-                                    e.g., Fighter, Wizard, Cleric, Rogue
+                                    Link to D&D Beyond or other reference page for monster stats.
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mb-4">
-                            <label for="{{ form.background.id_for_label }}" class="form-label">
-                                <i class="fas fa-scroll me-2"></i>Background
-                            </label>
-                            {{ form.background }}
-                            {% if form.background.errors %}
-                                <div class="invalid-feedback">
-                                    {% for error in form.background.errors %}
-                                        {{ error }}
-                                    {% endfor %}
+                        <!-- Player/NPC fields -->
+                        <div id="player-npc-fields">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="{{ form.race.id_for_label }}" class="form-label">
+                                        <i class="fas fa-dragon me-2"></i>Race
+                                    </label>
+                                    {{ form.race }}
+                                    {% if form.race.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.race.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        e.g., Human, Elf, Dwarf, Dragonborn
+                                    </div>
                                 </div>
-                            {% endif %}
-                            <div class="form-text">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Describe your character's backstory, personality, or any other background information.
+
+                                <div class="col-md-6">
+                                    <label for="{{ form.character_class.id_for_label }}" class="form-label">
+                                        <i class="fas fa-shield-alt me-2"></i>Class
+                                    </label>
+                                    {{ form.character_class }}
+                                    {% if form.character_class.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.character_class.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        e.g., Fighter, Wizard, Cleric, Rogue
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="{{ form.background.id_for_label }}" class="form-label">
+                                    <i class="fas fa-scroll me-2"></i>Background
+                                </label>
+                                {{ form.background }}
+                                {% if form.background.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.background.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Describe your character's backstory, personality, or any other background information.
+                                </div>
                             </div>
                         </div>
 

@@ -6,6 +6,7 @@ class Character(models.Model):
     CHARACTER_TYPES = [
         ('PLAYER', 'Player'),
         ('NPC', 'NPC'),
+        ('MONSTER', 'Monster'),
     ]
     
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, related_name='characters')
@@ -14,6 +15,7 @@ class Character(models.Model):
     race = models.CharField(max_length=80, blank=True, null=True)
     character_class = models.CharField(max_length=80, blank=True, null=True)
     background = models.TextField(blank=True, null=True)
+    url = models.URLField(blank=True, null=True, help_text="D&D Beyond or other reference URL")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -36,3 +38,7 @@ class Character(models.Model):
     @property
     def is_npc(self):
         return self.type == 'NPC'
+    
+    @property
+    def is_monster(self):
+        return self.type == 'MONSTER'

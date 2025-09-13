@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if form.instance.pk %}Edit Planning Session{% else %}New Planning Session{% endif %} - D&D Tracker
+{% endblock %}
+
+{% block content %}
+<div class="planning-form-container">
+    <!-- Header -->
+    <div class="card fade-in mb-4">
+        <div class="card-body text-center">
+            <h1 class="mb-2">
+                {% if form.instance.pk %}
+                    <i class="fas fa-edit me-3 text-accent"></i> Edit Planning Session
+                {% else %}
+                    <i class="fas fa-plus me-3 text-accent"></i> New Planning Session
+                {% endif %}
+            </h1>
+            <p class="mb-0">
+                {% if form.instance.pk %}
+                    Update your planning session details below.
+                {% else %}
+                    Create a new planning session to prepare for your D&D game!
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card fade-in">
+                <div class="card-body">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.campaign.id_for_label }}" class="form-label">
+                                    <i class="fas fa-map me-2"></i>Campaign *
+                                </label>
+                                {{ form.campaign }}
+                                {% if form.campaign.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.campaign.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="{{ form.session_date.id_for_label }}" class="form-label">
+                                    <i class="fas fa-calendar me-2"></i>Session Date *
+                                </label>
+                                {{ form.session_date }}
+                                {% if form.session_date.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.session_date.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    When is this session scheduled for?
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.title.id_for_label }}" class="form-label">
+                                <i class="fas fa-tag me-2"></i>Planning Title *
+                            </label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.title.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Give this planning session a descriptive title (e.g., "The Goblin Cave", "City of Shadows").
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.notes.id_for_label }}" class="form-label">
+                                <i class="fas fa-scroll me-2"></i>Planning Notes *
+                            </label>
+                            {{ form.notes }}
+                            {% if form.notes.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.notes.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Plan your session! Include encounters, NPCs, plot points, locations, combat scenarios, puzzles, and any other details you want to reference during gameplay.
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% url 'planning:planning_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                {% if form.instance.pk %}
+                                    <i class="fas fa-save me-1"></i> Update Planning
+                                {% else %}
+                                    <i class="fas fa-plus me-1"></i> Create Planning
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ campaign.name }} - Planning - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="campaign-planning-container">
+    <!-- Header -->
+    <div class="card fade-in mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-clipboard-list me-3 text-accent"></i>
+                        {{ campaign.name }} - Planning
+                    </h1>
+                    <p class="mb-0">
+                        <i class="fas fa-crown me-2"></i>
+                        <strong>DM:</strong> {{ campaign.dm }}
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="d-grid gap-2 d-md-block">
+                        <a href="{% url 'planning:planning_create' %}" class="btn btn-primary me-2">
+                            <i class="fas fa-plus me-1"></i> New Planning
+                        </a>
+                        <a href="{% url 'campaigns:campaign_detail' campaign.pk %}" class="btn btn-outline-primary">
+                            <i class="fas fa-map me-1"></i> View Campaign
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if planning_sessions %}
+        <!-- Summary Stats -->
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="card text-center fade-in">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="fas fa-clipboard-list fa-3x text-accent"></i>
+                        </div>
+                        <h3 class="text-accent mb-1">{{ planning_sessions|length }}</h3>
+                        <p class="mb-0">Planning Sessions</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card text-center fade-in">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="fas fa-calendar fa-3x text-success"></i>
+                        </div>
+                        <h3 class="text-success mb-1">{{ planning_sessions.0.session_date|date:"M d, Y" }}</h3>
+                        <p class="mb-0">Latest Planning</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card text-center fade-in">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="fas fa-dice-d20 fa-3x text-info"></i>
+                        </div>
+                        <h3 class="text-info mb-1">{{ campaign.sessions.count }}</h3>
+                        <p class="mb-0">Game Sessions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Planning Sessions Grid -->
+        <div class="row">
+            {% for planning_session in planning_sessions %}
+                <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="card fade-in h-100 {% if planning_session.is_today %}border-warning{% elif planning_session.is_upcoming %}border-success{% else %}border-secondary{% endif %}">
+                        <div class="card-header d-flex justify-content-between align-items-start">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-calendar me-2"></i>
+                                <span class="fw-bold">{{ planning_session.session_date|date:"M d, Y" }}</span>
+                                {% if planning_session.is_today %}
+                                    <span class="badge bg-warning text-dark ms-2">Today</span>
+                                {% elif planning_session.is_upcoming %}
+                                    <span class="badge bg-success ms-2">Upcoming</span>
+                                {% else %}
+                                    <span class="badge bg-secondary ms-2">Past</span>
+                                {% endif %}
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item" href="{% url 'planning:planning_detail' planning_session.pk %}">
+                                        <i class="fas fa-eye me-2"></i>View
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'planning:planning_edit' planning_session.pk %}">
+                                        <i class="fas fa-edit me-2"></i>Edit
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="{% url 'planning:planning_delete' planning_session.pk %}">
+                                        <i class="fas fa-trash me-2"></i>Delete
+                                    </a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <h5 class="card-title mb-3 text-accent">{{ planning_session.title }}</h5>
+                            
+                            <div class="mb-3">
+                                <p class="card-text">{{ planning_session.notes|truncatewords:40 }}</p>
+                            </div>
+                            
+                            <p class="mb-3">
+                                <i class="fas fa-clock me-2"></i>
+                                Created: {{ planning_session.created_at|date:"M d, Y" }}
+                            </p>
+                            
+                            <div class="d-grid">
+                                <a href="{% url 'planning:planning_detail' planning_session.pk %}" class="btn btn-primary">
+                                    <i class="fas fa-eye me-1"></i> View Planning
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <div class="card fade-in">
+                <div class="card-body">
+                    <nav aria-label="Planning pagination">
+                        <ul class="pagination justify-content-center mb-0">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1">&laquo; First</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                                </li>
+                            {% endif %}
+                            
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                                </span>
+                            </li>
+                            
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="card fade-in">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-clipboard-list fa-4x text-muted mb-4"></i>
+                <h3>No planning sessions for this campaign yet</h3>
+                <p class="mb-4">Start planning your campaign sessions by creating your first planning session!</p>
+                <a href="{% url 'planning:planning_create' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus me-2"></i> Create First Planning Session
+                </a>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Navigation -->
+    <div class="card fade-in mt-4">
+        <div class="card-body text-center">
+            <a href="{% url 'planning:planning_list' %}" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-1"></i> Back to All Planning
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

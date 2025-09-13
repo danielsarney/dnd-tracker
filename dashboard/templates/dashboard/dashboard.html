@@ -26,6 +26,9 @@
                         <a href="{% url 'game_sessions:session_create' %}" class="btn btn-outline-primary">
                             <i class="fas fa-calendar-plus me-1"></i> New Session
                         </a>
+                        <a href="{% url 'planning:planning_create' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-clipboard-list me-1"></i> New Planning
+                        </a>
                     </div>
                 </div>
             </div>
@@ -320,6 +323,17 @@
                         <div class="d-grid gap-1">
                             <a href="{% url 'game_sessions:session_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
                             <a href="{% url 'game_sessions:session_create' %}" class="btn btn-outline-primary btn-sm">Create New</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="text-center">
+                        <i class="fas fa-clipboard-list fa-2x text-accent mb-2"></i>
+                        <h5>Planning</h5>
+                        <div class="d-grid gap-1">
+                            <a href="{% url 'planning:planning_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
+                            <a href="{% url 'planning:planning_create' %}" class="btn btn-outline-primary btn-sm">Create New</a>
                         </div>
                     </div>
                 </div>

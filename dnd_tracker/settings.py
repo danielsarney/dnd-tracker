@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'characters',
     'campaigns',
     'game_sessions',
+    'planning',
     'dashboard',
 ]
 

@@ -4,19 +4,19 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from .models import GameSession
-from .forms import GameSessionForm
+from .models import PlanningSession
+from .forms import PlanningSessionForm
 from campaigns.models import Campaign
 
 
-class GameSessionListView(LoginRequiredMixin, ListView):
-    model = GameSession
-    template_name = 'game_sessions/session_list.html'
-    context_object_name = 'sessions'
+class PlanningSessionListView(LoginRequiredMixin, ListView):
+    model = PlanningSession
+    template_name = 'planning/planning_list.html'
+    context_object_name = 'planning_sessions'
     paginate_by = 12
     
     def get_queryset(self):
-        queryset = GameSession.objects.select_related('campaign').all()
+        queryset = PlanningSession.objects.select_related('campaign').all()
         
         # Filter by campaign if specified
         campaign_id = self.request.GET.get('campaign')
@@ -27,7 +27,8 @@ class GameSessionListView(LoginRequiredMixin, ListView):
         search_query = self.request.GET.get('search')
         if search_query:
             queryset = queryset.filter(
-                Q(summary__icontains=search_query) |
+                Q(title__icontains=search_query) |
+                Q(notes__icontains=search_query) |
                 Q(campaign__name__icontains=search_query)
             )
         
@@ -41,10 +42,10 @@ class GameSessionListView(LoginRequiredMixin, ListView):
         return context
 
 
-class GameSessionDetailView(LoginRequiredMixin, DetailView):
-    model = GameSession
-    template_name = 'game_sessions/session_detail.html'
-    context_object_name = 'session'
+class PlanningSessionDetailView(LoginRequiredMixin, DetailView):
+    model = PlanningSession
+    template_name = 'planning/planning_detail.html'
+    context_object_name = 'planning_session'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -52,14 +53,14 @@ class GameSessionDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class GameSessionCreateView(LoginRequiredMixin, CreateView):
-    model = GameSession
-    form_class = GameSessionForm
-    template_name = 'game_sessions/session_form.html'
-    success_url = reverse_lazy('game_sessions:session_list')
+class PlanningSessionCreateView(LoginRequiredMixin, CreateView):
+    model = PlanningSession
+    form_class = PlanningSessionForm
+    template_name = 'planning/planning_form.html'
+    success_url = reverse_lazy('planning:planning_list')
     
     def form_valid(self, form):
-        messages.success(self.request, 'Game session created successfully!')
+        messages.success(self.request, 'Planning session created successfully!')
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
@@ -68,16 +69,16 @@ class GameSessionCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class GameSessionUpdateView(LoginRequiredMixin, UpdateView):
-    model = GameSession
-    form_class = GameSessionForm
-    template_name = 'game_sessions/session_form.html'
+class PlanningSessionUpdateView(LoginRequiredMixin, UpdateView):
+    model = PlanningSession
+    form_class = PlanningSessionForm
+    template_name = 'planning/planning_form.html'
     
     def get_success_url(self):
-        return reverse_lazy('game_sessions:session_detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy('planning:planning_detail', kwargs={'pk': self.object.pk})
     
     def form_valid(self, form):
-        messages.success(self.request, 'Game session updated successfully!')
+        messages.success(self.request, 'Planning session updated successfully!')
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
@@ -86,25 +87,25 @@ class GameSessionUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
 
-class GameSessionDeleteView(LoginRequiredMixin, DeleteView):
-    model = GameSession
-    template_name = 'game_sessions/session_confirm_delete.html'
-    success_url = reverse_lazy('game_sessions:session_list')
+class PlanningSessionDeleteView(LoginRequiredMixin, DeleteView):
+    model = PlanningSession
+    template_name = 'planning/planning_confirm_delete.html'
+    success_url = reverse_lazy('planning:planning_list')
     
     def form_valid(self, form):
-        messages.success(self.request, 'Game session deleted successfully!')
+        messages.success(self.request, 'Planning session deleted successfully!')
         return super().form_valid(form)
 
 
-class CampaignSessionsView(LoginRequiredMixin, ListView):
-    model = GameSession
-    template_name = 'game_sessions/campaign_sessions.html'
-    context_object_name = 'sessions'
+class CampaignPlanningView(LoginRequiredMixin, ListView):
+    model = PlanningSession
+    template_name = 'planning/campaign_planning.html'
+    context_object_name = 'planning_sessions'
     paginate_by = 12
     
     def get_queryset(self):
         self.campaign = get_object_or_404(Campaign, pk=self.kwargs['campaign_pk'])
-        return GameSession.objects.filter(campaign=self.campaign)
+        return PlanningSession.objects.filter(campaign=self.campaign)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

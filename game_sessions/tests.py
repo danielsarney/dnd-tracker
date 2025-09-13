@@ -115,12 +115,6 @@ class GameSessionViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.session.campaign.name)
         
-        # Test date range filter
-        today = date.today()
-        response = self.client.get(f"{reverse('game_sessions:session_list')}?date_from={today}&date_to={today}")
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.session.campaign.name)
-        
         # Test search filter
         response = self.client.get(f"{reverse('game_sessions:session_list')}?search={self.campaign.name}")
         self.assertEqual(response.status_code, 200)

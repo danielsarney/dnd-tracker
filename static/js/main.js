@@ -140,3 +140,81 @@ function initializeCharacterFormToggling() {
     // Toggle on change
     typeSelect.addEventListener('change', toggleFields);
 }
+
+// Initiative tracking specific functions
+function initializeInitiativeTracking() {
+    // Auto-populate name field and focus on initiative input when character is selected
+    const characterSelect = document.getElementById('id_character');
+    const nameInput = document.getElementById('id_name');
+    const initiativeRollInput = document.getElementById('id_initiative_roll');
+    
+    if (characterSelect && nameInput && initiativeRollInput) {
+        characterSelect.addEventListener('change', function() {
+            if (this.value) {
+                // Get the selected option
+                const selectedOption = this.options[this.selectedIndex];
+                const characterName = selectedOption.text.split(' (')[0]; // Remove type from display name
+                const characterType = selectedOption.getAttribute('data-type');
+                
+                // Check if this is a monster or NPC
+                if (characterType === 'MONSTER' || characterType === 'NPC') {
+                    // For monsters and NPCs, use the DM name
+                    const dmName = document.querySelector('[data-dm-name]')?.getAttribute('data-dm-name') || 'DM';
+                    nameInput.value = dmName;
+                } else {
+                    // For player characters, use the character name
+                    nameInput.value = characterName;
+                }
+                
+                // Focus on initiative input for quick entry
+                initiativeRollInput.focus();
+            } else {
+                // Clear name field if no character selected
+                nameInput.value = '';
+            }
+        });
+    }
+}
+
+// Combat encounter management functions
+function initializeCombatEncounter() {
+    // Add keyboard shortcuts for combat
+    document.addEventListener('keydown', function(e) {
+        // Space bar to end turn (only on combat detail page)
+        if (e.code === 'Space' && window.location.pathname.includes('/combat/detail/')) {
+            e.preventDefault();
+            const endTurnBtn = document.querySelector('button[onclick="endTurn()"]');
+            if (endTurnBtn && !endTurnBtn.disabled) {
+                endTurnBtn.click();
+            }
+        }
+        
+        // Enter key to submit forms
+        if (e.code === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+            const form = e.target.closest('form');
+            if (form) {
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.click();
+                }
+            }
+        }
+    });
+    
+    // Add visual feedback for current turn
+    highlightCurrentTurn();
+}
+
+function highlightCurrentTurn() {
+    const currentTurnRow = document.querySelector('.table-active');
+    if (currentTurnRow) {
+        // Add pulsing animation to current turn
+        currentTurnRow.style.animation = 'pulse 2s infinite';
+    }
+}
+
+// Initialize initiative tracking when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initializeInitiativeTracking();
+    initializeCombatEncounter();
+});

@@ -1,0 +1,377 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ encounter.name }} - Combat Encounter - D&D Tracker{% endblock %}
+
+{% block content %}
+<div class="combat-encounter-container">
+    <!-- Combat Header -->
+    <div class="card fade-in mb-4">
+        <div class="card-body">
+            <div class="row align-items-start">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center mb-3">
+                        <h1 class="mb-0 me-3">
+                            <i class="fas fa-swords me-3 text-accent"></i>
+                            {{ encounter.name }}
+                        </h1>
+                        {% if encounter.is_active %}
+                            <span class="badge bg-success fs-6">Active</span>
+                        {% else %}
+                            <span class="badge bg-secondary fs-6">Inactive</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <i class="fas fa-map me-2"></i>
+                            <strong>Campaign:</strong> 
+                            <a href="{% url 'campaigns:campaign_detail' encounter.campaign.pk %}" class="text-accent">
+                                {{ encounter.campaign.name }}
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <i class="fas fa-crown me-2"></i>
+                            <strong>DM:</strong> {{ encounter.campaign.dm }}
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <i class="fas fa-users me-2"></i>
+                            <strong>Participants:</strong> {{ participants.count }}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <i class="fas fa-clock me-2"></i>
+                            <strong>Created:</strong> {{ encounter.created_at|date:"F d, Y" }}
+                        </div>
+                        {% if encounter.is_active %}
+                        <div class="col-md-4">
+                            <i class="fas fa-dice-d20 me-2"></i>
+                            <strong>Round:</strong> {{ encounter.current_round }}
+                        </div>
+                        <div class="col-md-4">
+                            <i class="fas fa-user me-2"></i>
+                            <strong>Turn:</strong> {{ encounter.current_turn|add:1 }} of {{ participants.count }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="col-md-4 text-md-end">
+                    <div class="d-grid gap-2 d-md-block">
+                        <form method="post" action="{% url 'combat_tracker:reset_encounter' encounter.pk %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-warning me-2" onclick="return confirm('Are you sure you want to reset the encounter? This will start over from round 1, turn 1.')">
+                                <i class="fas fa-undo me-1"></i> Reset
+                            </button>
+                        </form>
+                        <a href="{% url 'combat_tracker:encounter_edit' encounter.pk %}" class="btn btn-outline-primary me-2">
+                            <i class="fas fa-edit me-1"></i> Edit
+                        </a>
+                        <a href="{% url 'combat_tracker:encounter_setup' encounter.pk %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-cog me-1"></i> Setup
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Combat Status -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card text-center fade-in h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-dice-d20 fa-3x text-accent"></i>
+                    </div>
+                    <h4>Round</h4>
+                    <p class="stat-value fs-5">{{ encounter.current_round }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card text-center fade-in h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-user fa-3x text-accent"></i>
+                    </div>
+                    <h4>Turn</h4>
+                    <p class="stat-value fs-5">{{ encounter.current_turn|add:1 }} of {{ participants.count }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card text-center fade-in h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-users fa-3x text-accent"></i>
+                    </div>
+                    <h4>Participants</h4>
+                    <p class="stat-value fs-5">{{ participants.count }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card text-center fade-in h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-check-circle fa-3x text-accent"></i>
+                    </div>
+                    <h4>Status</h4>
+                    <p class="stat-value fs-5">
+                        {% if encounter.is_active %}
+                            <span class="badge bg-success">Active</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Inactive</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick End Turn Button -->
+    {% if encounter.is_active and current_participant %}
+        <div class="text-center mt-4 mb-4">
+            <button class="btn btn-success btn-lg" onclick="endTurn()">
+                <i class="fas fa-check"></i> End {{ current_participant.name }}'s Turn
+            </button>
+            <p class="text-muted mt-2">Or press <kbd>Space</kbd> to end turn quickly</p>
+        </div>
+    {% endif %}
+
+    <!-- Current Turn Info -->
+    {% if current_participant and encounter.is_active %}
+        <div class="alert current-turn-alert mt-4">
+            <h5><i class="fas fa-user"></i> Current Turn: {{ current_participant.name }}</h5>
+            <p class="mb-0">It's {{ current_participant.name }}'s turn! They have {{ current_participant.total_initiative }} initiative.</p>
+        </div>
+    {% endif %}
+
+    <!-- Initiative Order -->
+    <div class="card fade-in mb-4">
+        <div class="card-header">
+            <h3 class="mb-0">
+                <i class="fas fa-list-ol me-2"></i> Initiative Order
+            </h3>
+        </div>
+        <div class="card-body p-0">
+            {% if participants %}
+                <table class="table initiative-table table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th width="10%">#</th>
+                            <th width="30%">Name</th>
+                            <th width="20%">Type</th>
+                            <th width="20%">Initiative</th>
+                            <th width="20%">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for participant in participants %}
+                            <tr class="{% if forloop.counter0 == encounter.current_turn and encounter.is_active %}table-active{% elif participant.is_turn_complete %}table-secondary{% endif %}" data-turn-index="{{ forloop.counter0 }}" data-current-turn="{{ encounter.current_turn }}">
+                                <td>
+                                    <strong>{{ forloop.counter }}</strong>
+                                </td>
+                                <td>
+                                    <strong>{{ participant.name }}</strong>
+                                    {% if participant.character %}
+                                        <br><small class="text-muted">{{ participant.character.get_type_display }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if participant.character %}
+                                        <span class="badge bg-info">{{ participant.character.get_type_display }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Custom</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong>{{ participant.total_initiative }}</strong>
+                                </td>
+                                <td>
+                                    {% if forloop.counter0 == encounter.current_turn and encounter.is_active %}
+                                        <span class="badge bg-success">Current</span>
+                                    {% elif participant.is_turn_complete %}
+                                        <span class="badge bg-secondary">Complete</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Waiting</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No participants yet</h5>
+                    <p class="text-muted">Add participants to start tracking initiative!</p>
+                    <a href="{% url 'combat_tracker:encounter_setup' encounter.pk %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i> Add Participants
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Combat Actions -->
+    {% if encounter.is_active %}
+        <div class="card fade-in mb-4">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <i class="fas fa-cogs me-2"></i> Combat Actions
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-success btn-lg" onclick="endTurn()" {% if not current_participant %}disabled{% endif %}>
+                                <i class="fas fa-check me-2"></i> End Turn
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-grid">
+                            <a href="{% url 'combat_tracker:encounter_setup' encounter.pk %}" class="btn btn-outline-primary btn-lg">
+                                <i class="fas fa-cog me-2"></i> Manage Participants
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Related Information -->
+    <div class="card fade-in mb-4">
+        <div class="card-header">
+            <h3 class="mb-0">
+                <i class="fas fa-link me-2"></i> Related Information
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center bg-light-custom h-100">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-map fa-3x text-accent"></i>
+                            </div>
+                            <h4>Campaign Details</h4>
+                            <p class="mb-3">View campaign information</p>
+                            <a href="{% url 'campaigns:campaign_detail' encounter.campaign.pk %}" class="btn btn-outline-primary">
+                                View Campaign
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center bg-light-custom h-100">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-users fa-3x text-accent"></i>
+                            </div>
+                            <h4>Campaign Characters</h4>
+                            <h2 class="text-accent mb-2">{{ encounter.campaign.characters.count }}</h2>
+                            <p class="mb-3">Total Characters</p>
+                            <a href="{% url 'characters:campaign_characters' encounter.campaign.pk %}" class="btn btn-outline-primary">
+                                View Characters
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center bg-light-custom h-100">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-dice-d20 fa-3x text-accent"></i>
+                            </div>
+                            <h4>Game Sessions</h4>
+                            <h2 class="text-accent mb-2">{{ encounter.campaign.sessions.count }}</h2>
+                            <p class="mb-3">Total Sessions</p>
+                            <a href="{% url 'game_sessions:campaign_sessions' encounter.campaign.pk %}" class="btn btn-outline-primary">
+                                View Sessions
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center bg-light-custom h-100">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-swords fa-3x text-accent"></i>
+                            </div>
+                            <h4>All Encounters</h4>
+                            <h2 class="text-accent mb-2">{{ encounter.campaign.combatencounter_set.count }}</h2>
+                            <p class="mb-3">Combat Encounters</p>
+                            <a href="{% url 'combat_tracker:encounter_list' %}" class="btn btn-outline-primary">
+                                View Encounters
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="card fade-in">
+        <div class="card-body text-center">
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'combat_tracker:encounter_list' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Encounters
+                </a>
+                <a href="{% url 'campaigns:campaign_detail' encounter.campaign.pk %}" class="btn btn-outline-primary">
+                    <i class="fas fa-map me-1"></i> View Campaign
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function endTurn() {
+    if (confirm('End the current turn?')) {
+        fetch('{% url "combat_tracker:end_turn" encounter.pk %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Error ending turn. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error ending turn. Please try again.');
+        });
+    }
+}
+
+// Spacebar shortcut for ending turns
+document.addEventListener('keydown', function(e) {
+    if (e.code === 'Space' && window.location.pathname.includes('/combat/detail/')) {
+        e.preventDefault();
+        const endTurnBtn = document.querySelector('button[onclick="endTurn()"]');
+        if (endTurnBtn && !endTurnBtn.disabled) {
+            endTurnBtn.click();
+        }
+    }
+});
+</script>
+{% endblock %}

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'game_sessions',
     'planning',
     'dashboard',
+    'combat_tracker',
 ]
 
 MIDDLEWARE = [

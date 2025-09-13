@@ -596,3 +596,180 @@ body .dnd-theme .alert-warning em {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--accent-red);
 }
+
+/* ===== COMBAT TRACKER STYLES ===== */
+.combat-encounter-card {
+    border: 2px solid var(--light-gray);
+    transition: all 0.3s ease;
+}
+
+.combat-encounter-card:hover {
+    border-color: var(--accent-red);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 54, 54, 0.3);
+}
+
+.initiative-table {
+    background-color: var(--dark-gray);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.initiative-table th {
+    background-color: var(--accent-red);
+    color: var(--white);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    padding: 1rem;
+}
+
+.initiative-table td {
+    background-color: var(--dark-gray);
+    color: var(--off-white);
+    border-color: var(--light-gray);
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+.initiative-table .table-active {
+    background-color: rgba(212, 54, 54, 0.2);
+    border-left: 4px solid var(--accent-red);
+    animation: pulse 2s infinite;
+}
+
+.initiative-table .table-secondary {
+    background-color: rgba(45, 45, 45, 0.5);
+    color: var(--light-gray);
+}
+
+.initiative-badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.initiative-badge.current-turn {
+    background-color: var(--success);
+    color: var(--white);
+    animation: pulse 2s infinite;
+}
+
+.initiative-badge.completed {
+    background-color: var(--light-gray);
+    color: var(--dark-bg);
+}
+
+.initiative-badge.waiting {
+    background-color: var(--info);
+    color: var(--white);
+}
+
+.combat-status-card {
+    background: linear-gradient(135deg, var(--dark-gray) 0%, var(--light-gray) 100%);
+    border: 1px solid var(--accent-red);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.combat-status-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 54, 54, 0.2);
+}
+
+.combat-status-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent-red);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.current-turn-alert {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(46, 204, 113, 0.1) 100%);
+    border: 2px solid var(--info);
+    border-radius: 12px;
+    animation: pulse 2s infinite;
+}
+
+.quick-add-modal .modal-content {
+    background-color: var(--dark-gray);
+    border: 1px solid var(--light-gray);
+    border-radius: 12px;
+}
+
+.quick-add-modal .modal-header {
+    border-bottom: 1px solid var(--light-gray);
+    background-color: var(--dark-bg);
+}
+
+.quick-add-modal .modal-title {
+    color: var(--white);
+    font-family: 'Cinzel', serif;
+}
+
+.quick-add-modal .modal-body {
+    background-color: var(--dark-gray);
+}
+
+.quick-add-modal .form-control {
+    background-color: var(--dark-bg);
+    border: 1px solid var(--light-gray);
+    color: var(--white);
+}
+
+.quick-add-modal .form-control:focus {
+    background-color: var(--dark-bg);
+    border-color: var(--accent-red);
+    color: var(--white);
+    box-shadow: 0 0 0 0.2rem rgba(212, 54, 54, 0.25);
+}
+
+.quick-add-modal .btn-close {
+    filter: invert(1);
+}
+
+/* Combat animations */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes highlight {
+    0% { background-color: var(--dark-gray); }
+    50% { background-color: rgba(212, 54, 54, 0.3); }
+    100% { background-color: var(--dark-gray); }
+}
+
+.initiative-table tr {
+    transition: all 0.3s ease;
+}
+
+.initiative-table tr:hover {
+    background-color: rgba(212, 54, 54, 0.1);
+}
+
+/* Responsive combat styles */
+@media (max-width: 768px) {
+    .combat-status-number {
+        font-size: 2rem;
+    }
+    
+    .initiative-table th,
+    .initiative-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .initiative-badge {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
+}

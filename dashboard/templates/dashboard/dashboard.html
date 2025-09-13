@@ -29,6 +29,9 @@
                         <a href="{% url 'planning:planning_create' %}" class="btn btn-outline-primary">
                             <i class="fas fa-clipboard-list me-1"></i> New Planning
                         </a>
+                        <a href="{% url 'combat_tracker:encounter_list' %}" class="btn btn-outline-success">
+                            <i class="fas fa-swords me-1"></i> Combat Tracker
+                        </a>
                     </div>
                 </div>
             </div>
@@ -334,6 +337,17 @@
                         <div class="d-grid gap-1">
                             <a href="{% url 'planning:planning_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
                             <a href="{% url 'planning:planning_create' %}" class="btn btn-outline-primary btn-sm">Create New</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="text-center">
+                        <i class="fas fa-swords fa-2x text-accent mb-2"></i>
+                        <h5>Combat</h5>
+                        <div class="d-grid gap-1">
+                            <a href="{% url 'combat_tracker:encounter_list' %}" class="btn btn-outline-success btn-sm">View All</a>
+                            <a href="{% url 'campaigns:campaign_list' %}" class="btn btn-outline-success btn-sm">New Encounter</a>
                         </div>
                     </div>
                 </div>

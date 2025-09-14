@@ -15,25 +15,6 @@
                     </h1>
                     <p class="mb-0">Here's what's happening in your D&D world today</p>
                 </div>
-                <div class="col-md-4 text-md-end">
-                    <div class="d-flex flex-column flex-md-row gap-2 justify-content-md-end">
-                        <a href="{% url 'campaigns:campaign_create' %}" class="btn btn-primary">
-                            <i class="fas fa-plus me-1"></i> New Campaign
-                        </a>
-                        <a href="{% url 'players:player_create' %}" class="btn btn-outline-primary">
-                            <i class="fas fa-user-plus me-1"></i> New Player
-                        </a>
-                        <a href="{% url 'game_sessions:session_create' %}" class="btn btn-outline-primary">
-                            <i class="fas fa-calendar-plus me-1"></i> New Session
-                        </a>
-                        <a href="{% url 'planning:planning_create' %}" class="btn btn-outline-primary">
-                            <i class="fas fa-clipboard-list me-1"></i> New Planning
-                        </a>
-                        <a href="{% url 'combat_tracker:encounter_list' %}" class="btn btn-outline-success">
-                            <i class="fas fa-swords me-1"></i> Combat Tracker
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -61,56 +42,6 @@
     </div>
     {% endif %}
 
-    <!-- Stats Overview -->
-    <div class="row mb-4">
-        <div class="col-md-3 mb-3">
-            <div class="card text-center fade-in">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-dungeon fa-3x text-accent"></i>
-                    </div>
-                    <h2 class="text-accent mb-1">{{ user_campaign_count }}</h2>
-                    <p class="mb-0">Your Campaigns</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-3 mb-3">
-            <div class="card text-center fade-in">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-users fa-3x text-accent"></i>
-                    </div>
-                    <h2 class="text-accent mb-1">{{ user_player_count|add:user_npc_count|add:user_monster_count }}</h2>
-                    <p class="mb-0">Your Characters</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-3 mb-3">
-            <div class="card text-center fade-in">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-calendar-check fa-3x text-accent"></i>
-                    </div>
-                    <h2 class="text-accent mb-1">{{ user_session_count }}</h2>
-                    <p class="mb-0">Total Sessions</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-3 mb-3">
-            <div class="card text-center fade-in">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-chart-line fa-3x text-accent"></i>
-                    </div>
-                    <h2 class="text-accent mb-1">{{ recent_activity }}</h2>
-                    <p class="mb-0">Sessions (30 days)</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Main Dashboard Content -->
     <div class="row">
@@ -119,7 +50,7 @@
             <div class="card fade-in h-100">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="mb-0">
-                        <i class="fas fa-dungeon me-2"></i> Recent Campaigns
+                        <i class="fas fa-dungeon me-2 text-danger"></i> Recent Campaigns
                     </h3>
                     <a href="{% url 'campaigns:campaign_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
                 </div>
@@ -139,10 +70,7 @@
                                     {% endif %}
                                     <div class="d-flex justify-content-between align-items-center">
                                         <small class="text-muted">Created {{ campaign.created_at|date:"M d, Y" }}</small>
-                                        <div>
-                                            <a href="{{ campaign.get_absolute_url }}" class="btn btn-primary btn-sm me-1">View</a>
-                                            <a href="{% url 'players:player_list' %}" class="btn btn-outline-primary btn-sm">Players</a>
-                                        </div>
+                                        <small class="text-muted">{{ campaign.dm }}</small>
                                     </div>
                                 </div>
                             </div>
@@ -151,10 +79,9 @@
                     </div>
                     {% else %}
                     <div class="text-center py-4">
-                        <i class="fas fa-dungeon fa-3x text-muted mb-3"></i>
+                        <i class="fas fa-dungeon fa-3x text-white mb-3"></i>
                         <h5>No Campaigns Yet</h5>
                         <p>Start your first D&D campaign to begin tracking your adventures!</p>
-                        <a href="{% url 'campaigns:campaign_create' %}" class="btn btn-primary">Create Campaign</a>
                     </div>
                     {% endif %}
                 </div>
@@ -166,7 +93,7 @@
             <div class="card fade-in h-100">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="mb-0">
-                        <i class="fas fa-users me-2"></i> Recent Players
+                        <i class="fas fa-users me-2 text-danger"></i> Recent Players
                     </h3>
                     <a href="{% url 'players:player_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
                 </div>
@@ -183,18 +110,14 @@
                                     </div>
                                     <div class="mb-2">
                                         <p class="card-text small mb-1">
-                                            <i class="fas fa-map me-1"></i>{{ player.campaign.name }}
-                                        </p>
-                                        <p class="card-text small mb-1">
                                             <i class="fas fa-user me-1"></i>{{ player.player_name }}
                                         </p>
                                         <p class="card-text small mb-1">
                                             <i class="fas fa-level-up-alt me-1"></i>Level {{ player.level }}
                                         </p>
                                     </div>
-                                    <div class="d-flex justify-content-end">
-                                        <a href="{{ player.get_absolute_url }}" class="btn btn-primary btn-sm me-1">View</a>
-                                        <a href="{% url 'players:player_edit' player.pk %}" class="btn btn-outline-primary btn-sm">Edit</a>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">{{ player.campaign.name }}</small>
                                     </div>
                                 </div>
                             </div>
@@ -203,10 +126,249 @@
                     </div>
                     {% else %}
                     <div class="text-center py-4">
-                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <i class="fas fa-users fa-3x text-white mb-3"></i>
                         <h5>No Players Yet</h5>
                         <p>Create your first player character to start your D&D journey!</p>
-                        <a href="{% url 'players:player_create' %}" class="btn btn-primary">Create Player</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Row -->
+    <div class="row">
+        <!-- Recent NPCs -->
+        <div class="col-lg-6 mb-4">
+            <div class="card fade-in h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-ghost me-2 text-danger"></i> Recent NPCs
+                    </h3>
+                    <a href="{% url 'npcs:npc_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if recent_npcs %}
+                    <div class="row">
+                        {% for npc in recent_npcs %}
+                        <div class="col-12 mb-3">
+                            <div class="card bg-light-custom">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title mb-0">{{ npc.name }}</h5>
+                                        <span class="badge bg-info">NPC</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <p class="card-text small mb-1">
+                                            <i class="fas fa-map me-1"></i>{{ npc.campaign.name }}
+                                        </p>
+                                        <p class="card-text small mb-1">
+                                            <i class="fas fa-level-up-alt me-1"></i>Level {{ npc.level }}
+                                        </p>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">{{ npc.race }} {{ npc.character_class }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-ghost fa-3x text-white mb-3"></i>
+                        <h5>No NPCs Yet</h5>
+                        <p>Create your first NPC to populate your world!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Monsters -->
+        <div class="col-lg-6 mb-4">
+            <div class="card fade-in h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-dragon me-2 text-danger"></i> Recent Monsters
+                    </h3>
+                    <a href="{% url 'monsters:monster_list' %}" class="btn btn-outline-danger btn-sm">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if recent_monsters %}
+                    <div class="row">
+                        {% for monster in recent_monsters %}
+                        <div class="col-12 mb-3">
+                            <div class="card bg-light-custom">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title mb-0">{{ monster.name }}</h5>
+                                        <span class="badge bg-danger">Monster</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <p class="card-text small mb-1">
+                                            <i class="fas fa-map me-1"></i>{{ monster.campaign.name }}
+                                        </p>
+                                        <p class="card-text small mb-1">
+                                            <i class="fas fa-shield-alt me-1"></i>CR {{ monster.challenge_rating }}
+                                        </p>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">{{ monster.monster_type }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-dragon fa-3x text-white mb-3"></i>
+                        <h5>No Monsters Yet</h5>
+                        <p>Add monsters to challenge your players!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Third Row -->
+    <div class="row">
+        <!-- Recent Sessions -->
+        <div class="col-lg-6 mb-4">
+            <div class="card fade-in h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-calendar me-2 text-danger"></i> Recent Sessions
+                    </h3>
+                    <a href="{% url 'game_sessions:session_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if recent_sessions %}
+                    <div class="row">
+                        {% for session in recent_sessions %}
+                        <div class="col-12 mb-3">
+                            <div class="card bg-light-custom">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title mb-0">{{ session.campaign.name }}</h5>
+                                        <span class="badge bg-primary">Session</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <p class="card-text small mb-1">
+                                            <i class="fas fa-calendar me-1"></i>{{ session.date|date:"M d, Y" }}
+                                        </p>
+                                        <p class="card-text small">{{ session.summary|truncatewords:15 }}</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">Session {{ session.session_number }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-calendar fa-3x text-white mb-3"></i>
+                        <h5>No Sessions Yet</h5>
+                        <p>Start tracking your game sessions!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Planning -->
+        <div class="col-lg-6 mb-4">
+            <div class="card fade-in h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-clipboard-list me-2 text-danger"></i> Recent Planning
+                    </h3>
+                    <a href="{% url 'planning:planning_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if recent_planning %}
+                    <div class="row">
+                        {% for plan in recent_planning %}
+                        <div class="col-12 mb-3">
+                            <div class="card bg-light-custom">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title mb-0">{{ plan.title }}</h5>
+                                        <span class="badge bg-warning">Planning</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <p class="card-text small mb-1">
+                                            <i class="fas fa-map me-1"></i>{{ plan.campaign.name }}
+                                        </p>
+                                        <p class="card-text small">{{ plan.notes|truncatewords:15 }}</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">{{ plan.planning_type }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-clipboard-list fa-3x text-white mb-3"></i>
+                        <h5>No Planning Yet</h5>
+                        <p>Start planning your adventures!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fourth Row -->
+    <div class="row">
+        <!-- Recent Combat Encounters -->
+        <div class="col-lg-12 mb-4">
+            <div class="card fade-in">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-shield-alt me-2 text-danger"></i> Recent Combat Encounters
+                    </h3>
+                    <a href="{% url 'combat_tracker:encounter_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if recent_encounters %}
+                    <div class="row">
+                        {% for encounter in recent_encounters %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card bg-light-custom">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title mb-0">{{ encounter.name }}</h5>
+                                        <span class="badge bg-success">Encounter</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <p class="card-text small mb-1">
+                                            <i class="fas fa-map me-1"></i>{{ encounter.campaign.name }}
+                                        </p>
+                                        <p class="card-text small mb-1">
+                                            <i class="fas fa-calendar me-1"></i>{{ encounter.created_at|date:"M d, Y" }}
+                                        </p>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">{{ encounter.encounter_type }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-shield-alt fa-3x text-white mb-3"></i>
+                        <h5>No Combat Encounters Yet</h5>
+                        <p>Create your first encounter to track combat!</p>
                     </div>
                     {% endif %}
                 </div>
@@ -217,11 +379,10 @@
     <!-- Upcoming Sessions -->
     {% if upcoming_sessions %}
     <div class="card fade-in mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header">
             <h3 class="mb-0">
                 <i class="fas fa-calendar-alt me-2"></i> Upcoming Sessions
             </h3>
-            <a href="{% url 'game_sessions:session_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
         </div>
         <div class="card-body">
             <div class="row">
@@ -242,10 +403,6 @@
                             </div>
                             <h5 class="card-title">{{ session.campaign.name }}</h5>
                             <p class="card-text">{{ session.summary|truncatewords:20 }}</p>
-                            <div class="d-flex justify-content-end">
-                                <a href="{{ session.get_absolute_url }}" class="btn btn-primary btn-sm me-1">View</a>
-                                <a href="{% url 'game_sessions:session_edit' session.pk %}" class="btn btn-outline-primary btn-sm">Edit</a>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -255,143 +412,5 @@
     </div>
     {% endif %}
 
-    <!-- Character Distribution -->
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card fade-in text-center">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-user fa-3x text-success"></i>
-                    </div>
-                    <h3 class="text-success mb-1">{{ user_player_count }}</h3>
-                    <p class="mb-0">Players</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-4">
-            <div class="card fade-in text-center">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-user-tie fa-3x text-info"></i>
-                    </div>
-                    <h3 class="text-info mb-1">{{ user_npc_count }}</h3>
-                    <p class="mb-0">NPCs</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-4">
-            <div class="card fade-in text-center">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-dragon fa-3x text-danger"></i>
-                    </div>
-                    <h3 class="text-danger mb-1">{{ user_monster_count }}</h3>
-                    <p class="mb-0">Monsters</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quick Navigation -->
-    <div class="card fade-in">
-        <div class="card-header">
-            <h3 class="mb-0">
-                <i class="fas fa-compass me-2"></i> Quick Navigation
-            </h3>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-3 mb-3">
-                    <div class="text-center">
-                        <i class="fas fa-dungeon fa-2x text-accent mb-2"></i>
-                        <h5>Campaigns</h5>
-                        <div class="d-grid gap-1">
-                            <a href="{% url 'campaigns:campaign_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
-                            <a href="{% url 'campaigns:campaign_create' %}" class="btn btn-outline-primary btn-sm">Create New</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 mb-3">
-                    <div class="text-center">
-                        <i class="fas fa-users fa-2x text-accent mb-2"></i>
-                        <h5>Players</h5>
-                        <div class="d-grid gap-1">
-                            <a href="{% url 'players:player_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
-                            <a href="{% url 'players:player_create' %}" class="btn btn-outline-primary btn-sm">Create New</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 mb-3">
-                    <div class="text-center">
-                        <i class="fas fa-user-tie fa-2x text-accent mb-2"></i>
-                        <h5>NPCs</h5>
-                        <div class="d-grid gap-1">
-                            <a href="{% url 'npcs:npc_list' %}" class="btn btn-outline-info btn-sm">View All</a>
-                            <a href="{% url 'npcs:npc_create' %}" class="btn btn-outline-info btn-sm">Create New</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 mb-3">
-                    <div class="text-center">
-                        <i class="fas fa-dragon fa-2x text-accent mb-2"></i>
-                        <h5>Monsters</h5>
-                        <div class="d-grid gap-1">
-                            <a href="{% url 'monsters:monster_list' %}" class="btn btn-outline-danger btn-sm">View All</a>
-                            <a href="{% url 'monsters:monster_create' %}" class="btn btn-outline-danger btn-sm">Create New</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 mb-3">
-                    <div class="text-center">
-                        <i class="fas fa-calendar fa-2x text-accent mb-2"></i>
-                        <h5>Sessions</h5>
-                        <div class="d-grid gap-1">
-                            <a href="{% url 'game_sessions:session_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
-                            <a href="{% url 'game_sessions:session_create' %}" class="btn btn-outline-primary btn-sm">Create New</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 mb-3">
-                    <div class="text-center">
-                        <i class="fas fa-clipboard-list fa-2x text-accent mb-2"></i>
-                        <h5>Planning</h5>
-                        <div class="d-grid gap-1">
-                            <a href="{% url 'planning:planning_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
-                            <a href="{% url 'planning:planning_create' %}" class="btn btn-outline-primary btn-sm">Create New</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 mb-3">
-                    <div class="text-center">
-                        <i class="fas fa-swords fa-2x text-accent mb-2"></i>
-                        <h5>Combat</h5>
-                        <div class="d-grid gap-1">
-                            <a href="{% url 'combat_tracker:encounter_list' %}" class="btn btn-outline-success btn-sm">View All</a>
-                            <a href="{% url 'campaigns:campaign_list' %}" class="btn btn-outline-success btn-sm">New Encounter</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 mb-3">
-                    <div class="text-center">
-                        <i class="fas fa-user-circle fa-2x text-accent mb-2"></i>
-                        <h5>Profile</h5>
-                        <div class="d-grid gap-1">
-                            <a href="{% url 'accounts:profile' %}" class="btn btn-outline-primary btn-sm">View Profile</a>
-                            <a href="{% url 'logout' %}" class="btn btn-outline-primary btn-sm">Logout</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 {% endblock %}

@@ -22,6 +22,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add form validation styling
     addFormValidationStyling();
+    
+    // Auto-dismiss flash messages after 5 seconds
+    autoDismissFlashMessages();
 });
 
 // Highlight the current navigation item based on URL
@@ -218,3 +221,30 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeInitiativeTracking();
     initializeCombatEncounter();
 });
+
+// Auto-dismiss flash messages after 5 seconds
+function autoDismissFlashMessages() {
+    const alerts = document.querySelectorAll('.alert-dismissible');
+    
+    alerts.forEach(alert => {
+        // Set a timeout to dismiss the alert after 5 seconds
+        setTimeout(() => {
+            if (alert && alert.parentNode) {
+                // Use Bootstrap's alert dismiss method if available
+                if (typeof bootstrap !== 'undefined' && bootstrap.Alert) {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                } else {
+                    // Fallback: manually remove the alert
+                    alert.classList.remove('show');
+                    alert.classList.add('fade');
+                    setTimeout(() => {
+                        if (alert.parentNode) {
+                            alert.parentNode.removeChild(alert);
+                        }
+                    }, 150); // Match Bootstrap's fade duration
+                }
+            }
+        }, 5000); // 5 seconds
+    });
+}

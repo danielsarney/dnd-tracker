@@ -15,7 +15,7 @@
                         Setup: {{ encounter.name }}
                     </h1>
                     <p class="mb-0">
-                        <i class="fas fa-map me-2"></i>
+                        <i class="fas fa-dungeon me-2"></i>
                         <strong>Campaign:</strong> 
                         <a href="{% url 'campaigns:campaign_detail' encounter.campaign.pk %}" class="text-accent">
                             {{ encounter.campaign.name }}
@@ -47,7 +47,7 @@
             <form method="post">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="{{ form.character.id_for_label }}" class="form-label">Character</label>
                         <select name="{{ form.character.name }}" id="{{ form.character.id_for_label }}" class="form-control">
                             <option value="">Select a character (optional)</option>
@@ -60,13 +60,15 @@
                         <small class="form-text text-muted">Choose a character from the campaign</small>
                     </div>
                     
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="{{ form.name.id_for_label }}" class="form-label">Name</label>
                         {{ form.name }}
                         <small class="form-text text-muted">Leave blank to use character name</small>
                     </div>
-                    
-                    <div class="col-md-4 mb-3">
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
                         <label for="{{ form.initiative_roll.id_for_label }}" class="form-label">Initiative</label>
                         {{ form.initiative_roll }}
                         <small class="form-text text-muted">Enter the total initiative value (e.g., 18 for a roll of 15 + 3 modifier)</small>

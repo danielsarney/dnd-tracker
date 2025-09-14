@@ -73,18 +73,10 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle dnd-theme" href="#" role="button" data-bs-toggle="dropdown">
-{{ user.username }}
+                        <li class="nav-item">
+                            <a class="nav-link dnd-theme" href="{% url 'logout' %}">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">
-                                    <i class="fas fa-user me-2"></i>Profile
-                                </a></li>
-                                <li><a class="dropdown-item" href="{% url 'logout' %}">
-                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                </a></li>
-                            </ul>
                         </li>
                     </ul>
                 {% else %}

@@ -51,29 +51,3 @@ class CustomUserCreationForm(UserCreationForm):
         return username
 
 
-class ProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['display_name', 'email']
-        widgets = {
-            'display_name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter your display name'
-            }),
-            'email': forms.EmailInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter your email address'
-            })
-        }
-    
-    def clean_display_name(self):
-        display_name = self.cleaned_data['display_name']
-        if Profile.objects.filter(display_name=display_name).exclude(user=self.instance.user).exists():
-            raise forms.ValidationError('This display name is already taken.')
-        return display_name
-    
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        if Profile.objects.filter(email=email).exclude(user=self.instance.user).exists():
-            raise forms.ValidationError('This email address is already registered.')
-        return email

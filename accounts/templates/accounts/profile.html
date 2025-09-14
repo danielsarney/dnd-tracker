@@ -15,14 +15,10 @@
                 <p class="mb-0 mt-2">Customize your adventurer's identity</p>
             </div>
             <div class="card-body text-center">
-                <div class="profile-avatar mb-3">
-                    {% if user.profile.avatar_url %}
-                        <img src="{{ user.profile.avatar_url }}" alt="Profile Avatar" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
-                    {% else %}
-                        <div class="avatar-placeholder rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 120px; height: 120px; background-color: var(--light-gray);">
-                            <i class="fas fa-user fa-3x"></i>
-                        </div>
-                    {% endif %}
+                <div class="profile-icon mb-3">
+                    <div class="profile-placeholder rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 120px; height: 120px; background-color: var(--light-gray);">
+                        <i class="fas fa-user fa-3x"></i>
+                    </div>
                 </div>
                 
                 <h2 class="text-accent">{{ user.profile.get_display_name }}</h2>
@@ -81,23 +77,6 @@
                         </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label for="{{ form.avatar_url.id_for_label }}" class="form-label">
-                            <i class="fas fa-image me-2"></i>Profile Picture URL
-                        </label>
-                        <div class="input-group">
-                            {{ form.avatar_url }}
-                        </div>
-                        {% if form.avatar_url.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.avatar_url.errors.0 }}
-                            </div>
-                        {% endif %}
-                        <div class="form-text">
-                            <i class="fas fa-info-circle me-1"></i>
-                            Enter a URL to your profile picture (e.g., from Cloudinary, Imgur, etc.)
-                        </div>
-                    </div>
 
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <button type="submit" class="btn btn-primary btn-lg">

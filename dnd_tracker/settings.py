@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cloudinary_storage',
     'dnd_tracker',
     'accounts',
     'players',
@@ -165,25 +164,6 @@ if not DEBUG:
 else:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-# Media files (User uploads) - Configure based on environment
-if not DEBUG:
-    # Production: Use Cloudinary
-    CLOUDINARY_URL = os.getenv('CLOUDINARY_URL')
-    if CLOUDINARY_URL:
-        CLOUDINARY_STORAGE = {
-            'CLOUDINARY_URL': CLOUDINARY_URL,
-        }
-        MEDIA_URL = '/media/'
-        DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-        # Cloudinary doesn't need MEDIA_ROOT in production
-    else:
-        # Fallback to local storage if CLOUDINARY_URL not set
-        MEDIA_URL = '/media/'
-        MEDIA_ROOT = BASE_DIR / 'media'
-else:
-    # Development: Use local media folder
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = BASE_DIR / 'media'
 
 # Make sure Django knows it's behind Render's proxy and uses HTTPS
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

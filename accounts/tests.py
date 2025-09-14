@@ -116,7 +116,7 @@ class ProfileFormTest(TestCase):
     
     def test_form_has_correct_fields(self):
         form = ProfileForm(instance=self.profile)
-        expected_fields = ['display_name', 'email', 'avatar_url']
+        expected_fields = ['display_name', 'email']
         self.assertEqual(list(form.fields.keys()), expected_fields)
     
     def test_form_validation_with_valid_data(self):

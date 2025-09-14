@@ -54,7 +54,7 @@ class CustomUserCreationForm(UserCreationForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['display_name', 'email', 'avatar_url']
+        fields = ['display_name', 'email']
         widgets = {
             'display_name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -63,10 +63,6 @@ class ProfileForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Enter your email address'
-            }),
-            'avatar_url': forms.URLInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter avatar URL'
             })
         }
     

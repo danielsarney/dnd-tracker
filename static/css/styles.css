@@ -427,36 +427,26 @@ body .dnd-theme .alert-warning em {
 }
 
 /* ===== PROFILE SPECIFIC STYLES ===== */
-.profile-avatar {
+.profile-icon {
     position: relative;
 }
 
-.avatar-placeholder {
+.profile-placeholder {
     border: 3px solid var(--light-gray);
     transition: all 0.3s ease;
 }
 
-.avatar-placeholder:hover {
-    border-color: var(--accent-red);
-    transform: scale(1.05);
-}
-
-.profile-avatar img {
-    border: 3px solid var(--light-gray);
-    transition: all 0.3s ease;
-}
-
-.profile-avatar img:hover {
+.profile-placeholder:hover {
     border-color: var(--accent-red);
     transform: scale(1.05);
 }
 
 /* Profile text styling - override any Bootstrap defaults */
-.profile-avatar h2 {
+.profile-icon h2 {
     color: var(--accent-red);
 }
 
-.profile-avatar p {
+.profile-icon p {
     color: var(--off-white);
 }
 
@@ -562,8 +552,7 @@ body .dnd-theme .alert-warning em {
         padding-top: 70px;
     }
     
-    .profile-avatar img,
-    .avatar-placeholder {
+    .profile-placeholder {
         width: 100px;
         height: 100px;
     }

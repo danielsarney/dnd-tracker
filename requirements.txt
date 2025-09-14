@@ -4,9 +4,6 @@ Faker==22.6.0
 psycopg==3.2.9
 psycopg-binary==3.2.9
 python-dotenv==1.0.0
-pillow==11.3.0
 dj-database-url==3.0.1
 gunicorn==23.0.0
 whitenoise==6.9.0
-django-cloudinary-storage==0.3.0
-cloudinary==1.36.0

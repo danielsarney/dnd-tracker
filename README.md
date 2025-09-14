@@ -9,7 +9,7 @@ D&D Tracker is a comprehensive Dungeons & Dragons campaign management applicatio
 - **Character Tracking**: Comprehensive character management including player characters, NPCs, and monsters with race, class, and background details
 - **Game Session Logging**: Track game sessions with dates, summaries, and campaign association
 - **Dashboard Overview**: Visual summary of campaign data with statistics and recent activity
-- **Profile Management**: Custom user profiles with display names and avatar uploads
+- **Profile Management**: Custom user profiles with display names
 - **Responsive Design**: Mobile-friendly interface for on-the-go campaign management
 - **Data Organization**: Structured data management for campaigns, characters, and sessions
 - **Search & Filtering**: Advanced search and filtering capabilities for campaigns and characters
@@ -24,7 +24,6 @@ D&D Tracker is a comprehensive Dungeons & Dragons campaign management applicatio
 - **Styling**: Custom CSS with responsive design
 - **Environment Management**: python-dotenv for configuration
 - **Testing**: Factory Boy and Faker for test data generation
-- **Image Handling**: Pillow for avatar uploads and image processing
 - **Date Handling**: Advanced date operations for session tracking
 
 ## Getting Started

@@ -1,31 +1,114 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Delete {{ monster.name }} - D&D Tracker{% endblock %}
+{% block title %}Delete Monster - D&D Tracker{% endblock %}
 
 {% block content %}
-<div class="monster-delete-container">
-    <div class="card fade-in">
-        <div class="card-body text-center py-5">
-            <i class="fas fa-exclamation-triangle fa-4x text-warning mb-4"></i>
-            <h2>Delete Monster</h2>
-            <p class="lead mb-4">
-                Are you sure you want to delete <strong>{{ monster.name }}</strong>?
-            </p>
-            <p class="text-muted mb-4">
-                This action cannot be undone. All data associated with this monster will be permanently removed.
-            </p>
-            
-            <div class="d-flex justify-content-center gap-3">
-                <a href="{% url 'monsters:monster_detail' monster.pk %}" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-1"></i> Cancel
-                </a>
-                <form method="post" class="d-inline">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash me-1"></i> Delete Monster
-                    </button>
-                </form>
+<div class="delete-confirmation-container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card fade-in">
+                <div class="card-header text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-exclamation-triangle fa-4x text-warning"></i>
+                    </div>
+                    <h1 class="mb-0">Delete Monster</h1>
+                </div>
+                
+                <div class="card-body">
+                    <div class="alert alert-warning text-center mb-4" role="alert">
+                        <h5 class="alert-heading">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            Are you sure you want to delete the monster <strong>"{{ object.name }}"</strong>?
+                        </h5>
+                        <p class="mb-0 text-muted">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            This action cannot be undone. All monster data will be permanently lost.
+                        </p>
+                    </div>
+
+                    <!-- Monster Summary -->
+                    <div class="card bg-light-custom mb-4">
+                        <div class="card-header">
+                            <h3 class="mb-0">
+                                <i class="fas fa-dragon me-2"></i>Monster Details
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-dragon me-3 text-accent"></i>
+                                        <div>
+                                            <strong>Name:</strong><br>
+                                            {{ object.name }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-tag me-3 text-accent"></i>
+                                        <div>
+                                            <strong>Type:</strong><br>
+                                            {{ object.get_monster_type_display }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-expand-arrows-alt me-3 text-accent"></i>
+                                        <div>
+                                            <strong>Size:</strong><br>
+                                            {{ object.get_size_display }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-star me-3 text-accent"></i>
+                                        <div>
+                                            <strong>Challenge Rating:</strong><br>
+                                            {{ object.challenge_rating }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if object.alignment %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-balance-scale me-3 text-accent"></i>
+                                        <div>
+                                            <strong>Alignment:</strong><br>
+                                            {{ object.alignment }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-calendar me-3 text-accent"></i>
+                                        <div>
+                                            <strong>Created:</strong><br>
+                                            {{ object.created_at|date:"F d, Y" }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delete Form -->
+                    <form method="post" class="text-center">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{% url 'monsters:monster_detail' object.pk %}" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="fas fa-trash me-2"></i> Delete Monster
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

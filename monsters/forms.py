@@ -6,18 +6,14 @@ class MonsterForm(forms.ModelForm):
     class Meta:
         model = Monster
         fields = [
-            'campaign', 'name', 'monster_type', 'size', 'alignment', 'challenge_rating',
+            'name', 'monster_type', 'size', 'alignment', 'challenge_rating',
             'armor_class', 'hit_points', 'speed',
             'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma',
             'strength_save', 'dexterity_save', 'constitution_save', 'intelligence_save', 'wisdom_save', 'charisma_save',
-            'skills', 'damage_resistances', 'damage_immunities', 'condition_immunities', 'senses',
+            'skills', 'damage_resistances', 'damage_immunities', 'condition_immunities', 'senses', 'languages',
             'multiattack', 'actions', 'bonus_actions', 'reactions', 'legendary_actions'
         ]
         widgets = {
-            'campaign': forms.Select(attrs={
-                'class': 'form-control',
-                'placeholder': 'Select a campaign'
-            }),
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Enter monster name'
@@ -126,6 +122,10 @@ class MonsterForm(forms.ModelForm):
             'senses': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'e.g., darkvision 60 ft., passive Perception 12'
+            }),
+            'languages': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'e.g., Common, Orcish, Draconic'
             }),
             'multiattack': forms.Textarea(attrs={
                 'class': 'form-control',

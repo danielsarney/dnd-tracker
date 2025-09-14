@@ -9,5 +9,4 @@ urlpatterns = [
     path('<int:pk>/', views.MonsterDetailView.as_view(), name='monster_detail'),
     path('<int:pk>/edit/', views.MonsterUpdateView.as_view(), name='monster_edit'),
     path('<int:pk>/delete/', views.MonsterDeleteView.as_view(), name='monster_delete'),
-    path('campaign/<int:campaign_pk>/', views.CampaignMonstersView.as_view(), name='campaign_monsters'),
 ]

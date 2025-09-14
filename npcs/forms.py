@@ -6,16 +6,12 @@ class NPCForm(forms.ModelForm):
     class Meta:
         model = NPC
         fields = [
-            'campaign', 'name', 'npc_type', 'race', 'occupation',
+            'name', 'npc_type', 'race', 'occupation',
             'disposition', 'motivation', 'secrets', 'location', 'background',
             'armor_class', 'hit_points', 'challenge_rating', 'speed',
             'damage_resistances', 'condition_immunities', 'senses', 'actions'
         ]
         widgets = {
-            'campaign': forms.Select(attrs={
-                'class': 'form-control',
-                'placeholder': 'Select a campaign'
-            }),
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Enter NPC name'

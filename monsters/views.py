@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -6,7 +6,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from .models import Monster
 from .forms import MonsterForm
-from campaigns.models import Campaign
 
 
 class MonsterListView(LoginRequiredMixin, ListView):
@@ -16,12 +15,7 @@ class MonsterListView(LoginRequiredMixin, ListView):
     paginate_by = 12
     
     def get_queryset(self):
-        queryset = Monster.objects.select_related('campaign').all()
-        
-        # Filter by campaign if specified
-        campaign_id = self.request.GET.get('campaign')
-        if campaign_id:
-            queryset = queryset.filter(campaign_id=campaign_id)
+        queryset = Monster.objects.all()
         
         # Filter by type if specified
         monster_type = self.request.GET.get('type')
@@ -34,12 +28,9 @@ class MonsterListView(LoginRequiredMixin, ListView):
             queryset = queryset.filter(size=size)
         
         # Filter by challenge rating if specified
-        cr_min = self.request.GET.get('cr_min')
-        cr_max = self.request.GET.get('cr_max')
-        if cr_min:
-            queryset = queryset.filter(challenge_rating__gte=float(cr_min))
-        if cr_max:
-            queryset = queryset.filter(challenge_rating__lte=float(cr_max))
+        challenge_rating = self.request.GET.get('challenge_rating')
+        if challenge_rating:
+            queryset = queryset.filter(challenge_rating=float(challenge_rating))
         
         # Search functionality
         search_query = self.request.GET.get('search')
@@ -55,14 +46,14 @@ class MonsterListView(LoginRequiredMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['campaigns'] = Campaign.objects.all()
         context['monster_types'] = Monster.TYPE_CHOICES
         context['sizes'] = Monster.SIZE_CHOICES
-        context['selected_campaign'] = self.request.GET.get('campaign')
+        context['challenge_ratings'] = [
+            0.25, 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+        ]
         context['selected_type'] = self.request.GET.get('type')
         context['selected_size'] = self.request.GET.get('size')
-        context['cr_min'] = self.request.GET.get('cr_min')
-        context['cr_max'] = self.request.GET.get('cr_max')
+        context['selected_cr'] = self.request.GET.get('challenge_rating')
         context['search_query'] = self.request.GET.get('search')
         return context
 
@@ -74,7 +65,6 @@ class MonsterDetailView(LoginRequiredMixin, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['campaign'] = self.object.campaign
         return context
 
 
@@ -85,12 +75,16 @@ class MonsterCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('monsters:monster_list')
     
     def form_valid(self, form):
+        self.object = form.save()
         messages.success(self.request, 'Monster created successfully!')
-        return super().form_valid(form)
+        return redirect('monsters:monster_detail', pk=self.object.pk)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Please correct the errors below.')
+        return super().form_invalid(form)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['campaigns'] = Campaign.objects.all()
         return context
 
 
@@ -103,12 +97,16 @@ class MonsterUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('monsters:monster_detail', kwargs={'pk': self.object.pk})
     
     def form_valid(self, form):
+        self.object = form.save()
         messages.success(self.request, 'Monster updated successfully!')
-        return super().form_valid(form)
+        return redirect('monsters:monster_detail', pk=self.object.pk)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Please correct the errors below.')
+        return super().form_invalid(form)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['campaigns'] = Campaign.objects.all()
         return context
 
 
@@ -121,18 +119,3 @@ class MonsterDeleteView(LoginRequiredMixin, DeleteView):
         messages.success(self.request, 'Monster deleted successfully!')
         return super().form_valid(form)
 
-
-class CampaignMonstersView(LoginRequiredMixin, ListView):
-    model = Monster
-    template_name = 'monsters/campaign_monsters.html'
-    context_object_name = 'monsters'
-    paginate_by = 12
-    
-    def get_queryset(self):
-        self.campaign = get_object_or_404(Campaign, pk=self.kwargs['campaign_pk'])
-        return Monster.objects.filter(campaign=self.campaign).order_by('challenge_rating', 'name')
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['campaign'] = self.campaign
-        return context

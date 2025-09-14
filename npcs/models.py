@@ -1,5 +1,4 @@
 from django.db import models
-from campaigns.models import Campaign
 
 
 class NPC(models.Model):
@@ -27,7 +26,6 @@ class NPC(models.Model):
         ('Guarded', 'Guarded'),
     ]
     
-    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, related_name='npcs')
     name = models.CharField(max_length=120)
     npc_type = models.CharField(max_length=12, choices=NPC_TYPES, default='NEUTRAL')
     race = models.CharField(max_length=80, blank=True, null=True, help_text="Race (Human, Elf, Dwarf, etc.)")

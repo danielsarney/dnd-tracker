@@ -34,19 +34,7 @@
         </div>
         <div class="card-body">
             <form method="get" class="row g-3">
-                <div class="col-md-2">
-                    <label for="campaign" class="form-label">Campaign</label>
-                    <select name="campaign" id="campaign" class="form-select">
-                        <option value="">All Campaigns</option>
-                        {% for campaign in campaigns %}
-                            <option value="{{ campaign.pk }}" {% if selected_campaign == campaign.pk|stringformat:"s" %}selected{% endif %}>
-                                {{ campaign.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="type" class="form-label">Type</label>
                     <select name="type" id="type" class="form-select">
                         <option value="">All Types</option>
@@ -58,7 +46,7 @@
                     </select>
                 </div>
                 
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="size" class="form-label">Size</label>
                     <select name="size" id="size" class="form-select">
                         <option value="">All Sizes</option>
@@ -70,19 +58,19 @@
                     </select>
                 </div>
                 
-                <div class="col-md-2">
-                    <label for="cr_min" class="form-label">Min CR</label>
-                    <input type="number" name="cr_min" id="cr_min" class="form-control" 
-                           placeholder="0" value="{{ cr_min|default:'' }}" step="0.25" min="0">
+                <div class="col-md-3">
+                    <label for="challenge_rating" class="form-label">Challenge Rating</label>
+                    <select name="challenge_rating" id="challenge_rating" class="form-select">
+                        <option value="">All CRs</option>
+                        {% for cr in challenge_ratings %}
+                            <option value="{{ cr }}" {% if selected_cr == cr|stringformat:"s" %}selected{% endif %}>
+                                {{ cr }}
+                            </option>
+                        {% endfor %}
+                    </select>
                 </div>
                 
-                <div class="col-md-2">
-                    <label for="cr_max" class="form-label">Max CR</label>
-                    <input type="number" name="cr_max" id="cr_max" class="form-control" 
-                           placeholder="20" value="{{ cr_max|default:'' }}" step="0.25" min="0">
-                </div>
-                
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="search" class="form-label">Search</label>
                     <input type="text" name="search" id="search" class="form-control" 
                            placeholder="Search monsters..." value="{{ search_query|default:'' }}">
@@ -105,50 +93,25 @@
             {% for monster in monsters %}
                 <div class="col-lg-6 col-xl-4 mb-4">
                     <div class="card fade-in h-100 border-danger">
-                        <div class="card-header d-flex justify-content-between align-items-start">
+                        <div class="card-header">
                             <span class="badge bg-danger">
                                 <i class="fas fa-dragon me-1"></i>
                                 CR {{ monster.challenge_rating }}
                             </span>
-                            <div class="dropdown">
-                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-dark">
-                                    <li><a class="dropdown-item" href="{% url 'monsters:monster_detail' monster.pk %}">
-                                        <i class="fas fa-eye me-2"></i>View
-                                    </a></li>
-                                    <li><a class="dropdown-item" href="{% url 'monsters:monster_edit' monster.pk %}">
-                                        <i class="fas fa-edit me-2"></i>Edit
-                                    </a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-danger" href="{% url 'monsters:monster_delete' monster.pk %}">
-                                        <i class="fas fa-trash me-2"></i>Delete
-                                    </a></li>
-                                </ul>
-                            </div>
                         </div>
                         
                         <div class="card-body">
                             <h5 class="card-title mb-3">{{ monster.name }}</h5>
                             
                             <div class="mb-3">
-                                <p class="mb-2">
-                                    <i class="fas fa-map me-2 text-accent"></i>
-                                    <strong>Campaign:</strong> 
-                                    <a href="{% url 'campaigns:campaign_detail' monster.campaign.pk %}" class="text-accent">
-                                        {{ monster.campaign.name }}
-                                    </a>
-                                </p>
-                                
                                 <div class="row mb-2">
                                     <div class="col-6">
-                                        <small class="text-muted">
+                                        <small class="text-white">
                                             <i class="fas fa-tag me-1"></i>{{ monster.get_monster_type_display }}
                                         </small>
                                     </div>
                                     <div class="col-6">
-                                        <small class="text-muted">
+                                        <small class="text-white">
                                             <i class="fas fa-expand-arrows-alt me-1"></i>{{ monster.get_size_display }}
                                         </small>
                                     </div>
@@ -156,12 +119,12 @@
                                 
                                 <div class="row mb-2">
                                     <div class="col-6">
-                                        <small class="text-muted">
+                                        <small class="text-white">
                                             <i class="fas fa-shield me-1"></i>AC: {{ monster.armor_class }}
                                         </small>
                                     </div>
                                     <div class="col-6">
-                                        <small class="text-muted">
+                                        <small class="text-white">
                                             <i class="fas fa-heart me-1"></i>HP: {{ monster.hit_points }}
                                         </small>
                                     </div>
@@ -169,13 +132,13 @@
                                 
                                 
                                 {% if monster.alignment %}
-                                    <p class="mb-2">
+                                    <p class="mb-2 text-white">
                                         <i class="fas fa-balance-scale me-2"></i>
                                         <strong>Alignment:</strong> {{ monster.alignment }}
                                     </p>
                                 {% endif %}
                                 
-                                <p class="mb-0">
+                                <p class="mb-0 text-white">
                                     <i class="fas fa-calendar me-2"></i>
                                     Created: {{ monster.created_at|date:"M d, Y" }}
                                 </p>
@@ -183,7 +146,7 @@
                             
                             <div class="d-grid">
                                 <a href="{% url 'monsters:monster_detail' monster.pk %}" class="btn btn-primary">
-                                    <i class="fas fa-eye me-1"></i> View Monster
+                                    <i class="fas fa-eye me-1"></i> View
                                 </a>
                             </div>
                         </div>
@@ -199,10 +162,10 @@
                         <ul class="pagination justify-content-center mb-0">
                             {% if page_obj.has_previous %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page=1{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if selected_size %}&size={{ selected_size }}{% endif %}{% if cr_min %}&cr_min={{ cr_min }}{% endif %}{% if cr_max %}&cr_max={{ cr_max }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; First</a>
+                                    <a class="page-link" href="?page=1{% if selected_type %}&type={{ selected_type }}{% endif %}{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_cr %}&challenge_rating={{ selected_cr }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; First</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if selected_size %}&size={{ selected_size }}{% endif %}{% if cr_min %}&cr_min={{ cr_min }}{% endif %}{% if cr_max %}&cr_max={{ cr_max }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_cr %}&challenge_rating={{ selected_cr }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
                                 </li>
                             {% endif %}
                             
@@ -214,10 +177,10 @@
                             
                             {% if page_obj.has_next %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if selected_size %}&size={{ selected_size }}{% endif %}{% if cr_min %}&cr_min={{ cr_min }}{% endif %}{% if cr_max %}&cr_max={{ cr_max }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_cr %}&challenge_rating={{ selected_cr }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if selected_size %}&size={{ selected_size }}{% endif %}{% if cr_min %}&cr_min={{ cr_min }}{% endif %}{% if cr_max %}&cr_max={{ cr_max }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last &raquo;</a>
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if selected_size %}&size={{ selected_size }}{% endif %}{% if selected_cr %}&challenge_rating={{ selected_cr }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last &raquo;</a>
                                 </li>
                             {% endif %}
                         </ul>
@@ -228,7 +191,7 @@
     {% else %}
         <div class="card fade-in">
             <div class="card-body text-center py-5">
-                <i class="fas fa-dragon fa-4x text-muted mb-4"></i>
+                <i class="fas fa-dragon fa-4x text-white mb-4"></i>
                 <h3>No monsters found</h3>
                 <p class="mb-4">{% if search_query or selected_campaign or selected_type %}Try adjusting your filters or search terms.{% else %}Create your first monster to get started!{% endif %}</p>
                 <a href="{% url 'monsters:monster_create' %}" class="btn btn-primary btn-lg">

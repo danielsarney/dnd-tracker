@@ -57,10 +57,10 @@
                 <div class="col-md-4 text-md-end">
                     <div class="d-grid gap-2 d-md-block">
                         <a href="{% url 'game_sessions:session_edit' session.pk %}" class="btn btn-outline-primary me-2">
-                            <i class="fas fa-edit me-1"></i> Edit Session
+                            <i class="fas fa-edit me-1"></i> Edit
                         </a>
                         <a href="{% url 'game_sessions:session_delete' session.pk %}" class="btn btn-danger">
-                            <i class="fas fa-trash me-1"></i> Delete Session
+                            <i class="fas fa-trash me-1"></i> Delete
                         </a>
                     </div>
                 </div>
@@ -139,7 +139,7 @@
                             <h4>Campaign Details</h4>
                             <p class="mb-3">View campaign information</p>
                             <a href="{% url 'campaigns:campaign_detail' session.campaign.pk %}" class="btn btn-outline-primary">
-                                View Campaign
+                                View
                             </a>
                         </div>
                     </div>
@@ -171,7 +171,7 @@
                             <h2 class="text-accent mb-2">{{ session.campaign.sessions.count }}</h2>
                             <p class="mb-3">Total Sessions</p>
                             <a href="{% url 'game_sessions:campaign_sessions' session.campaign.pk %}" class="btn btn-outline-primary">
-                                View All Sessions
+                                View
                             </a>
                         </div>
                     </div>
@@ -185,10 +185,10 @@
         <div class="card-body text-center">
             <div class="d-flex justify-content-center gap-3">
                 <a href="{% url 'game_sessions:session_list' %}" class="btn btn-outline-primary">
-                    <i class="fas fa-arrow-left me-1"></i> Back to Sessions
+                    <i class="fas fa-arrow-left me-1"></i> Back
                 </a>
                 <a href="{% url 'campaigns:campaign_detail' session.campaign.pk %}" class="btn btn-outline-primary">
-                    <i class="fas fa-map me-1"></i> View Campaign
+                    <i class="fas fa-map me-1"></i> View
                 </a>
             </div>
         </div>

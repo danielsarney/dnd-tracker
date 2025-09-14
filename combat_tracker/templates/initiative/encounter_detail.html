@@ -378,7 +378,7 @@
                             <h4>Campaign Details</h4>
                             <p class="mb-3">View campaign information</p>
                             <a href="{% url 'campaigns:campaign_detail' encounter.campaign.pk %}" class="btn btn-outline-primary">
-                                View Campaign
+                                View
                             </a>
                         </div>
                     </div>
@@ -410,7 +410,7 @@
                             <h2 class="text-accent mb-2">{{ encounter.campaign.sessions.count }}</h2>
                             <p class="mb-3">Total Sessions</p>
                             <a href="{% url 'game_sessions:campaign_sessions' encounter.campaign.pk %}" class="btn btn-outline-primary">
-                                View Sessions
+                                View
                             </a>
                         </div>
                     </div>
@@ -426,7 +426,7 @@
                             <h2 class="text-accent mb-2">{{ encounter.campaign.combatencounter_set.count }}</h2>
                             <p class="mb-3">Combat Encounters</p>
                             <a href="{% url 'combat_tracker:encounter_list' %}" class="btn btn-outline-primary">
-                                View Encounters
+                                View
                             </a>
                         </div>
                     </div>
@@ -440,10 +440,10 @@
         <div class="card-body text-center">
             <div class="d-flex justify-content-center gap-3">
                 <a href="{% url 'combat_tracker:encounter_list' %}" class="btn btn-outline-primary">
-                    <i class="fas fa-arrow-left me-1"></i> Back to Encounters
+                    <i class="fas fa-arrow-left me-1"></i> Back
                 </a>
                 <a href="{% url 'campaigns:campaign_detail' encounter.campaign.pk %}" class="btn btn-outline-primary">
-                    <i class="fas fa-map me-1"></i> View Campaign
+                    <i class="fas fa-map me-1"></i> View
                 </a>
             </div>
         </div>

@@ -1,5 +1,4 @@
 from django.db import models
-from campaigns.models import Campaign
 
 
 class Monster(models.Model):
@@ -31,7 +30,6 @@ class Monster(models.Model):
         ('Swarm', 'Swarm'),
     ]
     
-    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, related_name='monsters')
     name = models.CharField(max_length=120)
     monster_type = models.CharField(max_length=12, choices=TYPE_CHOICES, default='Beast')
     size = models.CharField(max_length=1, choices=SIZE_CHOICES, default='M')
@@ -67,6 +65,7 @@ class Monster(models.Model):
     damage_immunities = models.CharField(max_length=200, blank=True, null=True, help_text="Damage immunities")
     condition_immunities = models.CharField(max_length=200, blank=True, null=True, help_text="Condition immunities")
     senses = models.CharField(max_length=200, blank=True, null=True, help_text="Special senses")
+    languages = models.CharField(max_length=200, blank=True, null=True, help_text="Languages known")
     
     # Combat Actions
     multiattack = models.TextField(blank=True, null=True, help_text="Multiattack description")

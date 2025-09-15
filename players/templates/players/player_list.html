@@ -70,73 +70,33 @@
         <div class="row">
             {% for player in players %}
                 <div class="col-lg-6 col-xl-4 mb-4">
-                    <div class="card fade-in h-100 border-success">
-                        <div class="card-header d-flex justify-content-between align-items-start">
-                            <span class="badge bg-success">
-                                <i class="fas fa-user me-1"></i>
-                                Level {{ player.level }}
-                            </span>
-                            <div class="dropdown">
-                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-dark">
-                                    <li><a class="dropdown-item" href="{% url 'players:player_detail' player.pk %}">
-                                        <i class="fas fa-eye me-2"></i>View
-                                    </a></li>
-                                    <li><a class="dropdown-item" href="{% url 'players:player_edit' player.pk %}">
-                                        <i class="fas fa-edit me-2"></i>Edit
-                                    </a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-danger" href="{% url 'players:player_delete' player.pk %}">
-                                        <i class="fas fa-trash me-2"></i>Delete
-                                    </a></li>
-                                </ul>
-                            </div>
+                    <div class="card fade-in h-100">
+                        <div class="card-header">
+                            <h5 class="mb-0">{{ player.character_name }}</h5>
                         </div>
                         
                         <div class="card-body">
-                            <h5 class="card-title mb-3">{{ player.character_name }}</h5>
                             
                             <div class="mb-3">
                                 <p class="mb-2">
-                                    <i class="fas fa-user me-2 text-accent"></i>
                                     <strong>Player:</strong> {{ player.player_name }}
                                 </p>
                                 
                                 <p class="mb-2">
-                                    <i class="fas fa-map me-2 text-accent"></i>
                                     <strong>Campaign:</strong> 
                                     <a href="{% url 'campaigns:campaign_detail' player.campaign.pk %}" class="text-accent">
                                         {{ player.campaign.name }}
                                     </a>
                                 </p>
                                 
-                                <div class="row mb-2">
-                                    <div class="col-6">
-                                        <small class="text-muted">
-                                            <i class="fas fa-level-up-alt me-1"></i>Level: {{ player.level }}
-                                        </small>
-                                    </div>
-                                    <div class="col-6">
-                                        <small class="text-muted">
-                                            <i class="fas fa-shield me-1"></i>AC: {{ player.armor_class }}
-                                        </small>
-                                    </div>
-                                </div>
                                 
                                 {% if player.background %}
                                     <p class="mb-2">
-                                        <i class="fas fa-book me-2"></i>
                                         <strong>Background:</strong> 
-                                        <span class="text-muted">{{ player.background|truncatewords:15 }}</span>
+                                        <span class="text-white">{{ player.background|truncatewords:15 }}</span>
                                     </p>
                                 {% endif %}
                                 
-                                <p class="mb-0">
-                                    <i class="fas fa-calendar me-2"></i>
-                                    Created: {{ player.created_at|date:"M d, Y" }}
-                                </p>
                             </div>
                             
                             <div class="d-grid">
@@ -186,7 +146,7 @@
     {% else %}
         <div class="card fade-in">
             <div class="card-body text-center py-5">
-                <i class="fas fa-user fa-4x text-muted mb-4"></i>
+                <i class="fas fa-user fa-4x text-white mb-4"></i>
                 <h3>No players found</h3>
                 <p class="mb-4">{% if search_query or selected_campaign %}Try adjusting your filters or search terms.{% else %}Create your first player character to get started!{% endif %}</p>
                 <a href="{% url 'players:player_create' %}" class="btn btn-primary btn-lg">

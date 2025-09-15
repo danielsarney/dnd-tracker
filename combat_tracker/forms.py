@@ -224,11 +224,15 @@ class CombatParticipantForm(forms.ModelForm):
         campaign = kwargs.pop('campaign', None)
         super().__init__(*args, **kwargs)
         
+        # Always set up querysets for each character type
         if campaign:
-            # Set up querysets for each character type
             self.fields['player'].queryset = Player.objects.filter(campaign=campaign)
-            self.fields['npc'].queryset = NPC.objects.filter(campaign=campaign)
-            self.fields['monster'].queryset = Monster.objects.filter(campaign=campaign)
+        else:
+            self.fields['player'].queryset = Player.objects.all()
+        
+        # NPCs and Monsters are not campaign-specific, so show all
+        self.fields['npc'].queryset = NPC.objects.all()
+        self.fields['monster'].queryset = Monster.objects.all()
     
     def clean(self):
         cleaned_data = super().clean()

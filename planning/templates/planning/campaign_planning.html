@@ -25,7 +25,7 @@
                             <i class="fas fa-plus me-1"></i> New Planning
                         </a>
                         <a href="{% url 'campaigns:campaign_detail' campaign.pk %}" class="btn btn-outline-primary">
-                            <i class="fas fa-map me-1"></i> View
+                            <i class="fas fa-dungeon me-1"></i> View
                         </a>
                     </div>
                 </div>
@@ -81,12 +81,6 @@
                                 <i class="fas fa-calendar me-2"></i>
                                 <span class="fw-bold">{{ planning_session.session_date|date:"M d, Y" }}</span>
                                 {% if planning_session.is_today %}
-                                    <span class="badge bg-warning text-dark ms-2">Today</span>
-                                {% elif planning_session.is_upcoming %}
-                                    <span class="badge bg-success ms-2">Upcoming</span>
-                                {% else %}
-                                    <span class="badge bg-secondary ms-2">Past</span>
-                                {% endif %}
                             </div>
                             <div class="dropdown">
                                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -114,10 +108,6 @@
                                 <p class="card-text">{{ planning_session.notes|truncatewords:40 }}</p>
                             </div>
                             
-                            <p class="mb-3">
-                                <i class="fas fa-clock me-2"></i>
-                                Created: {{ planning_session.created_at|date:"M d, Y" }}
-                            </p>
                             
                             <div class="d-grid">
                                 <a href="{% url 'planning:planning_detail' planning_session.pk %}" class="btn btn-primary">

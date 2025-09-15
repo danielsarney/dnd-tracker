@@ -16,17 +16,12 @@ class NPCListView(LoginRequiredMixin, ListView):
     paginate_by = 12
     
     def get_queryset(self):
-        queryset = NPC.objects.select_related('campaign').all()
+        queryset = NPC.objects.all()
         
-        # Filter by campaign if specified
-        campaign_id = self.request.GET.get('campaign')
-        if campaign_id:
-            queryset = queryset.filter(campaign_id=campaign_id)
-        
-        # Filter by type if specified
-        npc_type = self.request.GET.get('type')
-        if npc_type:
-            queryset = queryset.filter(npc_type=npc_type)
+        # Filter by race if specified
+        race = self.request.GET.get('race')
+        if race:
+            queryset = queryset.filter(race__icontains=race)
         
         # Search functionality
         search_query = self.request.GET.get('search')
@@ -43,10 +38,6 @@ class NPCListView(LoginRequiredMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['campaigns'] = Campaign.objects.all()
-        context['npc_types'] = NPC.NPC_TYPES
-        context['selected_campaign'] = self.request.GET.get('campaign')
-        context['selected_type'] = self.request.GET.get('type')
         context['search_query'] = self.request.GET.get('search')
         return context
 
@@ -58,7 +49,6 @@ class NPCDetailView(LoginRequiredMixin, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['campaign'] = self.object.campaign
         return context
 
 
@@ -74,7 +64,6 @@ class NPCCreateView(LoginRequiredMixin, CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['campaigns'] = Campaign.objects.all()
         return context
 
 
@@ -92,7 +81,6 @@ class NPCUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['campaigns'] = Campaign.objects.all()
         return context
 
 
@@ -114,7 +102,9 @@ class CampaignNPCsView(LoginRequiredMixin, ListView):
     
     def get_queryset(self):
         self.campaign = get_object_or_404(Campaign, pk=self.kwargs['campaign_pk'])
-        return NPC.objects.filter(campaign=self.campaign)
+        # Since NPCs no longer have a campaign field, return all NPCs
+        # You may want to implement a different filtering mechanism
+        return NPC.objects.all()
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

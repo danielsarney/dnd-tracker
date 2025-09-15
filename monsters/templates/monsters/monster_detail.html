@@ -55,8 +55,6 @@
                             {% if monster.alignment %}
                                 <p><strong>Alignment:</strong> {{ monster.alignment }}</p>
                             {% endif %}
-                            <p><strong>Created:</strong> {{ monster.created_at|date:"F d, Y" }}</p>
-                            <p><strong>Last Updated:</strong> {{ monster.updated_at|date:"F d, Y" }}</p>
                         </div>
                     </div>
                     
@@ -249,7 +247,7 @@
             <!-- Monster Type Badge -->
             <div class="card fade-in mb-4">
                 <div class="card-body text-center">
-                    <span class="badge bg-danger fs-6 mb-2">
+                    <span class="fs-6 mb-2">
                         <i class="fas fa-dragon me-2"></i>
                         {{ monster.get_monster_type_display }}
                     </span>

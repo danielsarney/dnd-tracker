@@ -27,10 +27,10 @@ class PlayerListView(LoginRequiredMixin, ListView):
         search_query = self.request.GET.get('search')
         if search_query:
             queryset = queryset.filter(
-                Q(name__icontains=search_query) |
-                Q(race__icontains=search_query) |
-                Q(character_class__icontains=search_query) |
-                Q(background__icontains=search_query)
+                Q(character_name__icontains=search_query) |
+                Q(player_name__icontains=search_query) |
+                Q(background__icontains=search_query) |
+                Q(campaign__name__icontains=search_query)
             )
         
         return queryset

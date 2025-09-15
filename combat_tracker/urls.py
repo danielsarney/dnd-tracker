@@ -7,7 +7,6 @@ urlpatterns = [
     path('', views.encounter_list, name='encounter_list'),
     path('create/', views.encounter_create, name='encounter_create'),
     path('edit/<int:encounter_id>/', views.encounter_edit, name='encounter_edit'),
-    path('setup/<int:encounter_id>/', views.encounter_setup, name='encounter_setup'),
     path('detail/<int:encounter_id>/', views.encounter_detail, name='encounter_detail'),
     path('start/<int:encounter_id>/', views.start_encounter, name='start_encounter'),
     path('end-turn/<int:encounter_id>/', views.end_turn, name='end_turn'),

@@ -11,7 +11,6 @@
             <div class="row align-items-center">
                 <div class="col-md-8">
                     <h1 class="mb-2">
-                        <i class="fas fa-shield-alt me-3 text-accent"></i>
                         Combat Encounters
                     </h1>
                     <p class="mb-0">Track and manage your D&D combat encounters</p>
@@ -29,7 +28,7 @@
     <div class="card fade-in mb-4">
         <div class="card-header">
             <h5 class="mb-0">
-                <i class="fas fa-filter me-2"></i>Filters & Search
+                <i class="fas fa-filter me-2"></i>Filters
             </h5>
         </div>
         <div class="card-body">
@@ -46,16 +45,22 @@
                     </select>
                 </div>
                 
-                <div class="col-md-6">
-                    <label for="search" class="form-label">Search</label>
-                    <input type="text" name="search" id="search" class="form-control" 
-                           placeholder="Search encounters by name or campaign..." value="{{ search_query|default:'' }}">
+                <div class="col-md-4">
+                    <label for="encounter_name" class="form-label">Encounter Name</label>
+                    <select name="encounter_name" id="encounter_name" class="form-select">
+                        <option value="">All Encounters</option>
+                        {% for encounter in all_encounters %}
+                            <option value="{{ encounter.name }}" {% if selected_encounter_name == encounter.name %}selected{% endif %}>
+                                {{ encounter.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
                 </div>
                 
-                <div class="col-md-2 d-flex align-items-end">
+                <div class="col-md-4 d-flex align-items-end">
                     <div class="d-grid gap-2 w-100">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-search me-1"></i> Filter
+                            <i class="fas fa-filter me-1"></i> Filter
                         </button>
                         <a href="{% url 'combat_tracker:encounter_list' %}" class="btn btn-outline-secondary">
                             <i class="fas fa-times me-1"></i> Clear
@@ -70,81 +75,30 @@
         <div class="row">
             {% for encounter in encounters %}
                 <div class="col-lg-6 col-xl-4 mb-4">
-                    <div class="card fade-in h-100 {% if encounter.is_active %}border-success{% else %}border-secondary{% endif %}">
-                        <div class="card-header d-flex justify-content-between align-items-start">
-                            <div>
-                                <i class="fas fa-shield-alt me-2"></i>
-                                {{ encounter.created_at|date:"M d, Y" }}
-                                {% if encounter.is_active %}
-                                    <span class="badge bg-success ms-2">Active</span>
-                                {% else %}
-                                    <span class="badge bg-secondary ms-2">Inactive</span>
-                                {% endif %}
-                            </div>
-                            <div class="dropdown">
-                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-dark">
-                                    {% if encounter.is_active %}
-                                        <li><a class="dropdown-item" href="{% url 'combat_tracker:encounter_detail' encounter.pk %}">
-                                            <i class="fas fa-play me-2"></i>Continue
-                                        </a></li>
-                                    {% else %}
-                                        <li><a class="dropdown-item" href="{% url 'combat_tracker:encounter_setup' encounter.pk %}">
-                                            <i class="fas fa-cog me-2"></i>Setup
-                                        </a></li>
-                                    {% endif %}
-                                    <li><a class="dropdown-item" href="{% url 'combat_tracker:encounter_edit' encounter.pk %}">
-                                        <i class="fas fa-edit me-2"></i>Edit
-                                    </a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-danger" href="{% url 'combat_tracker:encounter_delete' encounter.pk %}">
-                                        <i class="fas fa-trash me-2"></i>Delete
-                                    </a></li>
-                                </ul>
-                            </div>
+                    <div class="card fade-in h-100">
+                        <div class="card-header">
+                            <h3 class="mb-0">{{ encounter.name }}</h3>
                         </div>
                         
                         <div class="card-body">
-                            <h5 class="card-title mb-3">
-                                <i class="fas fa-map me-2"></i> 
-                                <a href="{% url 'campaigns:campaign_detail' encounter.campaign.pk %}" class="text-accent">
-                                    {{ encounter.campaign.name }}
-                                </a>
-                            </h5>
-                            
-                            <h6 class="text-accent mb-3">{{ encounter.name }}</h6>
                             
                             <div class="mb-3">
                                 <div class="mb-2">
                                     <p class="mb-2">
-                                        <i class="fas fa-crown me-2"></i>
                                         <strong>DM:</strong> {{ encounter.campaign.dm }}
                                     </p>
                                     
                                     <p class="mb-2">
-                                        <i class="fas fa-users me-2"></i>
                                         <strong>Participants:</strong> {{ encounter.participants.count }}
                                     </p>
                                 </div>
                                 
-                                <p class="mb-0">
-                                    <i class="fas fa-clock me-2"></i>
-                                    Created: {{ encounter.created_at|date:"M d, Y" }}
-                                </p>
                             </div>
                             
                             <div class="d-grid">
-                                {% if encounter.is_active %}
-                                    <a href="{% url 'combat_tracker:encounter_detail' encounter.pk %}" class="btn btn-primary">
-                                        <i class="fas fa-play me-1"></i> Continue Combat
-                                    </a>
-                                {% else %}
-                                    <a href="{% url 'combat_tracker:encounter_setup' encounter.pk %}" class="btn btn-outline-primary">
-                                        <i class="fas fa-cog me-1"></i> Setup Encounter
-                                    </a>
-                                {% endif %}
+                                <a href="{% url 'combat_tracker:encounter_detail' encounter.pk %}" class="btn btn-primary">
+                                    <i class="fas fa-eye me-1"></i> View
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -159,10 +113,10 @@
                         <ul class="pagination justify-content-center mb-0">
                             {% if page_obj.has_previous %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page=1{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; First</a>
+                                    <a class="page-link" href="?page=1{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_encounter_name %}&encounter_name={{ selected_encounter_name }}{% endif %}">&laquo; First</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_encounter_name %}&encounter_name={{ selected_encounter_name }}{% endif %}">Previous</a>
                                 </li>
                             {% endif %}
                             
@@ -174,10 +128,10 @@
                             
                             {% if page_obj.has_next %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_encounter_name %}&encounter_name={{ selected_encounter_name }}{% endif %}">Next</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last &raquo;</a>
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_encounter_name %}&encounter_name={{ selected_encounter_name }}{% endif %}">Last &raquo;</a>
                                 </li>
                             {% endif %}
                         </ul>

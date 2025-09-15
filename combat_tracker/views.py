@@ -21,24 +21,24 @@ def encounter_list(request):
     if campaign_id:
         encounters = encounters.filter(campaign_id=campaign_id)
     
-    # Search functionality
-    search_query = request.GET.get('search')
-    if search_query:
-        from django.db.models import Q
-        encounters = encounters.filter(
-            Q(name__icontains=search_query) |
-            Q(campaign__name__icontains=search_query)
-        )
+    # Filter by encounter name if specified
+    encounter_name = request.GET.get('encounter_name')
+    if encounter_name:
+        encounters = encounters.filter(name=encounter_name)
     
     # Get campaigns for filter dropdown
     from campaigns.models import Campaign
     campaigns = Campaign.objects.all().order_by('name')
     
+    # Get all encounters for the encounter name dropdown
+    all_encounters = CombatEncounter.objects.all().order_by('name').distinct('name')
+    
     return render(request, 'initiative/encounter_list.html', {
         'encounters': encounters,
         'campaigns': campaigns,
+        'all_encounters': all_encounters,
         'selected_campaign': campaign_id,
-        'search_query': search_query
+        'selected_encounter_name': encounter_name
     })
 
 
@@ -50,17 +50,11 @@ def encounter_create(request):
         if form.is_valid():
             encounter = form.save()
             messages.success(request, f'Combat encounter "{encounter.name}" created successfully!')
-            return redirect('combat_tracker:encounter_setup', encounter_id=encounter.pk)
+            return redirect('combat_tracker:encounter_detail', encounter_id=encounter.pk)
     else:
         form = CombatEncounterForm()
     
-    # Get all campaigns for the form
-    campaigns = Campaign.objects.all().order_by('name')
-    
-    return render(request, 'initiative/encounter_create.html', {
-        'form': form,
-        'campaigns': campaigns
-    })
+    return render(request, 'initiative/encounter_create.html', {'form': form})
 
 
 @login_required
@@ -88,20 +82,26 @@ def encounter_edit(request, encounter_id):
 
 
 @login_required
-def encounter_setup(request, encounter_id):
-    """Setup participants for a combat encounter"""
+def encounter_detail(request, encounter_id):
+    """View and manage an active combat encounter"""
     encounter = get_object_or_404(CombatEncounter, pk=encounter_id)
-    participants = encounter.participants.all()
-    # Get all available characters from the new apps
+    participants = encounter.get_participants()
+    living_participants = encounter.get_living_participants()
+    current_participant = encounter.get_current_participant()
+    
+    # Get character data for dropdowns
     from players.models import Player
     from npcs.models import NPC
     from monsters.models import Monster
     
-    players = Player.objects.filter(campaign=encounter.campaign)
-    npcs = NPC.objects.filter(campaign=encounter.campaign)
-    monsters = Monster.objects.filter(campaign=encounter.campaign)
-    
-    if request.method == 'POST':
+    # Handle participant form submission
+    if request.method == 'POST' and 'character_type' in request.POST:
+        # Debug: print form data and available players
+        print("Form data:", request.POST)
+        print("Encounter campaign:", encounter.campaign)
+        available_players = Player.objects.filter(campaign=encounter.campaign)
+        print("Available players:", [p.pk for p in available_players])
+        
         form = CombatParticipantForm(request.POST, campaign=encounter.campaign)
         if form.is_valid():
             participant = form.save(commit=False)
@@ -112,34 +112,56 @@ def encounter_setup(request, encounter_id):
                 participant.populate_from_character()
             
             participant.save()
-            messages.success(request, f'{participant.name} added to encounter!')
-            return redirect('combat_tracker:encounter_setup', encounter_id=encounter.pk)
+            
+            # If combat is active, adjust current turn if new participant has higher initiative
+            if encounter.is_active:
+                # Get all participants ordered by initiative (highest first)
+                all_participants = encounter.get_participants()
+                new_participant_position = 0
+                
+                # Find where the new participant should be in the initiative order
+                for i, existing_participant in enumerate(all_participants):
+                    if existing_participant.initiative_roll < participant.initiative_roll:
+                        new_participant_position = i
+                        break
+                    elif existing_participant.initiative_roll == participant.initiative_roll:
+                        # Same initiative - new participant goes after (lower in list)
+                        new_participant_position = i + 1
+                    else:
+                        new_participant_position = i + 1
+                
+                # If the new participant is inserted before the current turn, adjust current_turn
+                if new_participant_position <= encounter.current_turn:
+                    encounter.current_turn += 1
+                    encounter.save()
+                
+                messages.success(request, f'{participant.name} added to encounter and inserted into initiative order!')
+            else:
+                messages.success(request, f'{participant.name} added to encounter!')
+            
+            return redirect('combat_tracker:encounter_detail', encounter_id=encounter.pk)
+        else:
+            # Show form errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
     else:
         form = CombatParticipantForm(campaign=encounter.campaign)
     
-    return render(request, 'initiative/encounter_setup.html', {
-        'encounter': encounter,
-        'participants': participants,
-        'players': players,
-        'npcs': npcs,
-        'monsters': monsters,
-        'form': form
-    })
-
-
-@login_required
-def encounter_detail(request, encounter_id):
-    """View and manage an active combat encounter"""
-    encounter = get_object_or_404(CombatEncounter, pk=encounter_id)
-    participants = encounter.get_participants()
-    living_participants = encounter.get_living_participants()
-    current_participant = encounter.get_current_participant()
+    # Get character data for dropdowns
+    players = Player.objects.all()
+    npcs = NPC.objects.all()
+    monsters = Monster.objects.all()
     
     return render(request, 'initiative/encounter_detail.html', {
         'encounter': encounter,
         'participants': participants,
         'living_participants': living_participants,
-        'current_participant': current_participant
+        'current_participant': current_participant,
+        'participant_form': form,
+        'players': players,
+        'npcs': npcs,
+        'monsters': monsters
     })
 
 
@@ -151,7 +173,7 @@ def start_encounter(request, encounter_id):
     
     if encounter.participants.count() == 0:
         messages.error(request, 'Cannot start encounter without participants!')
-        return redirect('combat_tracker:encounter_setup', encounter_id=encounter.pk)
+        return redirect('combat_tracker:encounter_create_edit', encounter_id=encounter.pk)
     
     encounter.is_active = True
     encounter.current_round = 1
@@ -211,7 +233,7 @@ def remove_participant(request, encounter_id, participant_id):
     
     participant.delete()
     messages.success(request, f'{participant.name} removed from encounter!')
-    return redirect('combat_tracker:encounter_setup', encounter_id=encounter.pk)
+    return redirect('combat_tracker:encounter_create_edit', encounter_id=encounter.pk)
 
 
 @login_required

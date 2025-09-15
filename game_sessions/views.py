@@ -23,6 +23,11 @@ class GameSessionListView(LoginRequiredMixin, ListView):
         if campaign_id:
             queryset = queryset.filter(campaign_id=campaign_id)
         
+        # Filter by session date if specified
+        session_date = self.request.GET.get('session_date')
+        if session_date:
+            queryset = queryset.filter(date=session_date)
+        
         # Search functionality
         search_query = self.request.GET.get('search')
         if search_query:
@@ -37,6 +42,8 @@ class GameSessionListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['campaigns'] = Campaign.objects.all()
         context['selected_campaign'] = self.request.GET.get('campaign')
+        context['selected_session_date'] = self.request.GET.get('session_date')
+        context['session_dates'] = GameSession.objects.values_list('date', flat=True).distinct().order_by('-date')
         context['search_query'] = self.request.GET.get('search')
         return context
 

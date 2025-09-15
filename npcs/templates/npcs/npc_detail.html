@@ -15,18 +15,23 @@
                         {{ npc.name }}
                     </h1>
                     <p class="mb-0">
-                        {{ npc.get_npc_type_display }}
+                        {% if npc.race %}{{ npc.race }}{% endif %}
                         {% if npc.occupation %} • {{ npc.occupation }}{% endif %}
                         {% if npc.location %} • {{ npc.location }}{% endif %}
                     </p>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <a href="{% url 'npcs:npc_edit' npc.pk %}" class="btn btn-primary me-2">
-                        <i class="fas fa-edit me-1"></i> Edit
-                    </a>
-                    <a href="{% url 'npcs:npc_list' %}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-1"></i> Back
-                    </a>
+                    <div class="d-grid gap-2 d-md-block">
+                        <a href="{% url 'npcs:npc_list' %}" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-arrow-left me-1"></i> Back
+                        </a>
+                        <a href="{% url 'npcs:npc_edit' npc.pk %}" class="btn btn-outline-primary me-2">
+                            <i class="fas fa-edit me-1"></i> Edit
+                        </a>
+                        <a href="{% url 'npcs:npc_delete' npc.pk %}" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i> Delete
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -44,24 +49,23 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
+                            {% if npc.race %}
+                                <p><strong>Race:</strong> {{ npc.race }}</p>
+                            {% endif %}
                             {% if npc.occupation %}
                                 <p><strong>Occupation:</strong> {{ npc.occupation }}</p>
                             {% endif %}
                             {% if npc.location %}
                                 <p><strong>Location:</strong> {{ npc.location }}</p>
                             {% endif %}
-                            <p><strong>Type:</strong> {{ npc.get_npc_type_display }}</p>
+                            {% if npc.size %}
+                                <p><strong>Size:</strong> {{ npc.get_size_display }}</p>
+                            {% endif %}
                         </div>
                         <div class="col-md-6">
-                            {% if npc.url %}
-                                <p><strong>Reference:</strong> 
-                                    <a href="{{ npc.url }}" target="_blank" class="text-accent">
-                                        View Reference <i class="fas fa-external-link-alt"></i>
-                                    </a>
-                                </p>
+                            {% if npc.level %}
+                                <p><strong>Level:</strong> {{ npc.level_display }}</p>
                             {% endif %}
-                            <p><strong>Created:</strong> {{ npc.created_at|date:"F d, Y" }}</p>
-                            <p><strong>Last Updated:</strong> {{ npc.updated_at|date:"F d, Y" }}</p>
                         </div>
                     </div>
                     
@@ -73,40 +77,133 @@
                 </div>
             </div>
 
-            <!-- Social Information -->
+            <!-- Ability Scores -->
             <div class="card fade-in mb-4">
                 <div class="card-header">
                     <h5 class="mb-0">
-                        <i class="fas fa-users me-2"></i>Social Information
+                        <i class="fas fa-dice me-2"></i>Ability Scores
                     </h5>
                 </div>
                 <div class="card-body">
-                    {% if npc.disposition %}
-                        <p><strong>Disposition:</strong> {{ npc.disposition }}</p>
-                    {% endif %}
-                    
-                    {% if npc.motivation %}
-                        <p><strong>Motivation:</strong> {{ npc.motivation|linebreaks }}</p>
-                    {% endif %}
-                    
-                    {% if npc.secrets %}
-                        <p><strong>Secrets:</strong> {{ npc.secrets|linebreaks }}</p>
-                    {% endif %}
+                    <div class="row">
+                        <div class="col-md-2 text-center">
+                            <div class="mb-3">
+                                <h6 class="text-white">STR</h6>
+                                <h4 class="text-primary">{{ npc.strength }}</h4>
+                                <small class="text-white">({{ npc.strength_modifier|add:"0"|floatformat:"+0" }})</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <div class="mb-3">
+                                <h6 class="text-white">DEX</h6>
+                                <h4 class="text-success">{{ npc.dexterity }}</h4>
+                                <small class="text-white">({{ npc.dexterity_modifier|add:"0"|floatformat:"+0" }})</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <div class="mb-3">
+                                <h6 class="text-white">CON</h6>
+                                <h4 class="text-warning">{{ npc.constitution }}</h4>
+                                <small class="text-white">({{ npc.constitution_modifier|add:"0"|floatformat:"+0" }})</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <div class="mb-3">
+                                <h6 class="text-white">INT</h6>
+                                <h4 class="text-info">{{ npc.intelligence }}</h4>
+                                <small class="text-white">({{ npc.intelligence_modifier|add:"0"|floatformat:"+0" }})</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <div class="mb-3">
+                                <h6 class="text-white">WIS</h6>
+                                <h4 class="text-secondary">{{ npc.wisdom }}</h4>
+                                <small class="text-white">({{ npc.wisdom_modifier|add:"0"|floatformat:"+0" }})</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <div class="mb-3">
+                                <h6 class="text-white">CHA</h6>
+                                <h4 class="text-danger">{{ npc.charisma }}</h4>
+                                <small class="text-white">({{ npc.charisma_modifier|add:"0"|floatformat:"+0" }})</small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {% if npc.notes %}
-                <div class="card fade-in mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <i class="fas fa-sticky-note me-2"></i>DM Notes
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <p>{{ npc.notes|linebreaks }}</p>
+            <!-- Skills and Defenses -->
+            <div class="card fade-in mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-magic me-2"></i>Skills and Defenses
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            {% if npc.skills %}
+                                <p><strong>Skills:</strong> {{ npc.skills }}</p>
+                            {% endif %}
+                            {% if npc.damage_resistances %}
+                                <p><strong>Damage Resistances:</strong> {{ npc.damage_resistances }}</p>
+                            {% endif %}
+                            {% if npc.damage_immunities %}
+                                <p><strong>Damage Immunities:</strong> {{ npc.damage_immunities }}</p>
+                            {% endif %}
+                            {% if npc.condition_immunities %}
+                                <p><strong>Condition Immunities:</strong> {{ npc.condition_immunities }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            {% if npc.senses %}
+                                <p><strong>Senses:</strong> {{ npc.senses }}</p>
+                            {% endif %}
+                            {% if npc.languages %}
+                                <p><strong>Languages:</strong> {{ npc.languages }}</p>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Combat Actions -->
+            {% if npc.multiattack or npc.actions or npc.bonus_actions or npc.reactions or npc.legendary_actions %}
+            <div class="card fade-in mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-fist-raised me-2"></i>Combat Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if npc.multiattack %}
+                        <h6>Multiattack</h6>
+                        <p>{{ npc.multiattack|linebreaks }}</p>
+                    {% endif %}
+                    
+                    {% if npc.actions %}
+                        <h6>Actions</h6>
+                        <p>{{ npc.actions|linebreaks }}</p>
+                    {% endif %}
+                    
+                    {% if npc.bonus_actions %}
+                        <h6>Bonus Actions</h6>
+                        <p>{{ npc.bonus_actions|linebreaks }}</p>
+                    {% endif %}
+                    
+                    {% if npc.reactions %}
+                        <h6>Reactions</h6>
+                        <p>{{ npc.reactions|linebreaks }}</p>
+                    {% endif %}
+                    
+                    {% if npc.legendary_actions %}
+                        <h6>Legendary Actions</h6>
+                        <p>{{ npc.legendary_actions|linebreaks }}</p>
+                    {% endif %}
+                </div>
+            </div>
             {% endif %}
+
         </div>
 
         <!-- Combat Stats (if available) -->
@@ -123,13 +220,13 @@
                             <div class="col-6">
                                 <div class="text-center">
                                     <h4 class="text-primary">{{ npc.armor_class }}</h4>
-                                    <small class="text-muted">Armor Class</small>
+                                    <small class="text-white">Armor Class</small>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="text-center">
                                     <h4 class="text-success">{{ npc.hit_points }}</h4>
-                                    <small class="text-muted">Hit Points</small>
+                                    <small class="text-white">Hit Points</small>
                                 </div>
                             </div>
                         </div>
@@ -137,32 +234,84 @@
                         {% if npc.speed %}
                             <div class="text-center mt-3">
                                 <h5 class="text-info">{{ npc.speed }}</h5>
-                                <small class="text-muted">Speed (ft.)</small>
+                                <small class="text-white">Speed</small>
+                            </div>
+                        {% endif %}
+                        
+                        {% if npc.level %}
+                            <div class="text-center mt-3">
+                                <h5 class="text-warning">Level {{ npc.level_display }}</h5>
+                                <small class="text-white">Character Level</small>
                             </div>
                         {% endif %}
                     </div>
                 </div>
             {% endif %}
 
-            <!-- NPC Type Badge -->
+            <!-- Saving Throws -->
+            {% if npc.strength_save or npc.dexterity_save or npc.constitution_save or npc.intelligence_save or npc.wisdom_save or npc.charisma_save %}
+            <div class="card fade-in mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-shield-alt me-2"></i>Saving Throws
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% if npc.strength_save %}
+                        <div class="col-6 text-center mb-2">
+                            <small class="text-white">STR</small><br>
+                            <strong>{{ npc.strength_save|add:"0"|floatformat:"+0" }}</strong>
+                        </div>
+                        {% endif %}
+                        {% if npc.dexterity_save %}
+                        <div class="col-6 text-center mb-2">
+                            <small class="text-white">DEX</small><br>
+                            <strong>{{ npc.dexterity_save|add:"0"|floatformat:"+0" }}</strong>
+                        </div>
+                        {% endif %}
+                        {% if npc.constitution_save %}
+                        <div class="col-6 text-center mb-2">
+                            <small class="text-white">CON</small><br>
+                            <strong>{{ npc.constitution_save|add:"0"|floatformat:"+0" }}</strong>
+                        </div>
+                        {% endif %}
+                        {% if npc.intelligence_save %}
+                        <div class="col-6 text-center mb-2">
+                            <small class="text-white">INT</small><br>
+                            <strong>{{ npc.intelligence_save|add:"0"|floatformat:"+0" }}</strong>
+                        </div>
+                        {% endif %}
+                        {% if npc.wisdom_save %}
+                        <div class="col-6 text-center mb-2">
+                            <small class="text-white">WIS</small><br>
+                            <strong>{{ npc.wisdom_save|add:"0"|floatformat:"+0" }}</strong>
+                        </div>
+                        {% endif %}
+                        {% if npc.charisma_save %}
+                        <div class="col-6 text-center mb-2">
+                            <small class="text-white">CHA</small><br>
+                            <strong>{{ npc.charisma_save|add:"0"|floatformat:"+0" }}</strong>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- NPC Info -->
             <div class="card fade-in mb-4">
                 <div class="card-body text-center">
-                    <span class="badge {% if npc.npc_type == 'ENEMY' %}bg-danger{% elif npc.npc_type == 'ALLY' %}bg-success{% elif npc.npc_type == 'MERCHANT' %}bg-warning{% else %}bg-info{% endif %} fs-6">
-                        <i class="fas fa-{% if npc.npc_type == 'ENEMY' %}skull{% elif npc.npc_type == 'ALLY' %}heart{% elif npc.npc_type == 'MERCHANT' %}coins{% else %}ghost{% endif %} me-2"></i>
-                        {{ npc.get_npc_type_display }}
-                    </span>
+                    {% if npc.size %}
+                        <span class="fs-6 mb-2">
+                            <i class="fas fa-expand-arrows-alt me-1"></i>
+                            {{ npc.get_size_display }}
+                        </span>
+                    {% endif %}
                     
-                    {% if npc.is_friendly %}
-                        <p class="mt-2 text-success">
-                            <i class="fas fa-smile me-1"></i> Friendly NPC
-                        </p>
-                    {% elif npc.is_hostile %}
-                        <p class="mt-2 text-danger">
-                            <i class="fas fa-skull me-1"></i> Hostile NPC
-                        </p>
-                    {% else %}
-                        <p class="mt-2 text-muted">
-                            <i class="fas fa-question me-1"></i> Neutral NPC
+                    {% if npc.is_legendary %}
+                        <p class="mt-2 text-warning">
+                            <i class="fas fa-crown me-1"></i> Legendary Creature
                         </p>
                     {% endif %}
                 </div>

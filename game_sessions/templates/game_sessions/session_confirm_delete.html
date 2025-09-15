@@ -38,7 +38,7 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <div class="d-flex align-items-center">
-                                        <i class="fas fa-map me-3 text-accent"></i>
+                                        <i class="fas fa-dungeon me-3 text-accent"></i>
                                         <div>
                                             <strong>Campaign:</strong><br>
                                             {{ object.campaign.name }}
@@ -69,15 +69,6 @@
                                         <div>
                                             <strong>Summary:</strong><br>
                                             {{ object.summary|truncatewords:30 }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-clock me-3 text-accent"></i>
-                                        <div>
-                                            <strong>Logged:</strong><br>
-                                            {{ object.created_at|date:"F d, Y" }}
                                         </div>
                                     </div>
                                 </div>

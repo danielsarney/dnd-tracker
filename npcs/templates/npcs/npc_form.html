@@ -28,16 +28,16 @@
     <form method="post" class="fade-in">
         {% csrf_token %}
         
-        <div class="row">
-            <!-- Basic Information -->
-            <div class="col-lg-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <i class="fas fa-info-circle me-2"></i>Basic Information
-                        </h5>
-                    </div>
-                    <div class="card-body">
+        <!-- Basic Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Basic Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
                         <div class="mb-3">
                             <label for="{{ form.name.id_for_label }}" class="form-label">NPC Name *</label>
                             {{ form.name }}
@@ -46,25 +46,20 @@
                             {% endif %}
                         </div>
                         
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="{{ form.npc_type.id_for_label }}" class="form-label">NPC Type</label>
-                                    {{ form.npc_type }}
-                                    {% if form.npc_type.errors %}
-                                        <div class="text-danger">{{ form.npc_type.errors }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="{{ form.occupation.id_for_label }}" class="form-label">Occupation</label>
-                                    {{ form.occupation }}
-                                    {% if form.occupation.errors %}
-                                        <div class="text-danger">{{ form.occupation.errors }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
+                        <div class="mb-3">
+                            <label for="{{ form.race.id_for_label }}" class="form-label">Race</label>
+                            {{ form.race }}
+                            {% if form.race.errors %}
+                                <div class="text-danger">{{ form.race.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.occupation.id_for_label }}" class="form-label">Occupation</label>
+                            {{ form.occupation }}
+                            {% if form.occupation.errors %}
+                                <div class="text-danger">{{ form.occupation.errors }}</div>
+                            {% endif %}
                         </div>
                         
                         <div class="mb-3">
@@ -74,12 +69,14 @@
                                 <div class="text-danger">{{ form.location.errors }}</div>
                             {% endif %}
                         </div>
-                        
+                    </div>
+                    
+                    <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="{{ form.url.id_for_label }}" class="form-label">Reference URL</label>
-                            {{ form.url }}
-                            {% if form.url.errors %}
-                                <div class="text-danger">{{ form.url.errors }}</div>
+                            <label for="{{ form.size.id_for_label }}" class="form-label">Size</label>
+                            {{ form.size }}
+                            {% if form.size.errors %}
+                                <div class="text-danger">{{ form.size.errors }}</div>
                             {% endif %}
                         </div>
                         
@@ -93,62 +90,18 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Social Information -->
-            <div class="col-lg-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <i class="fas fa-users me-2"></i>Social Information
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="{{ form.disposition.id_for_label }}" class="form-label">Disposition</label>
-                            {{ form.disposition }}
-                            {% if form.disposition.errors %}
-                                <div class="text-danger">{{ form.disposition.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="{{ form.motivation.id_for_label }}" class="form-label">Motivation</label>
-                            {{ form.motivation }}
-                            {% if form.motivation.errors %}
-                                <div class="text-danger">{{ form.motivation.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="{{ form.secrets.id_for_label }}" class="form-label">Secrets</label>
-                            {{ form.secrets }}
-                            {% if form.secrets.errors %}
-                                <div class="text-danger">{{ form.secrets.errors }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="{{ form.notes.id_for_label }}" class="form-label">DM Notes</label>
-                            {{ form.notes }}
-                            {% if form.notes.errors %}
-                                <div class="text-danger">{{ form.notes.errors }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <!-- Combat Stats (Optional) -->
+        <!-- Core Combat Stats -->
         <div class="card mb-4">
             <div class="card-header">
                 <h5 class="mb-0">
-                    <i class="fas fa-sword me-2"></i>Combat Statistics (Optional)
+                    <i class="fas fa-sword me-2"></i>Core Combat Statistics
                 </h5>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="mb-3">
                             <label for="{{ form.armor_class.id_for_label }}" class="form-label">Armor Class</label>
                             {{ form.armor_class }}
@@ -157,7 +110,7 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="mb-3">
                             <label for="{{ form.hit_points.id_for_label }}" class="form-label">Hit Points</label>
                             {{ form.hit_points }}
@@ -166,12 +119,275 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="mb-3">
-                            <label for="{{ form.speed.id_for_label }}" class="form-label">Speed (ft.)</label>
+                            <label for="{{ form.level.id_for_label }}" class="form-label">Level</label>
+                            {{ form.level }}
+                            {% if form.level.errors %}
+                                <div class="text-danger">{{ form.level.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label for="{{ form.speed.id_for_label }}" class="form-label">Speed</label>
                             {{ form.speed }}
                             {% if form.speed.errors %}
                                 <div class="text-danger">{{ form.speed.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ability Scores -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-dice me-2"></i>Ability Scores
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.strength.id_for_label }}" class="form-label">STR</label>
+                            {{ form.strength }}
+                            {% if form.strength.errors %}
+                                <div class="text-danger">{{ form.strength.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.dexterity.id_for_label }}" class="form-label">DEX</label>
+                            {{ form.dexterity }}
+                            {% if form.dexterity.errors %}
+                                <div class="text-danger">{{ form.dexterity.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.constitution.id_for_label }}" class="form-label">CON</label>
+                            {{ form.constitution }}
+                            {% if form.constitution.errors %}
+                                <div class="text-danger">{{ form.constitution.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.intelligence.id_for_label }}" class="form-label">INT</label>
+                            {{ form.intelligence }}
+                            {% if form.intelligence.errors %}
+                                <div class="text-danger">{{ form.intelligence.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.wisdom.id_for_label }}" class="form-label">WIS</label>
+                            {{ form.wisdom }}
+                            {% if form.wisdom.errors %}
+                                <div class="text-danger">{{ form.wisdom.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.charisma.id_for_label }}" class="form-label">CHA</label>
+                            {{ form.charisma }}
+                            {% if form.charisma.errors %}
+                                <div class="text-danger">{{ form.charisma.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saving Throws -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-shield-alt me-2"></i>Saving Throws
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.strength_save.id_for_label }}" class="form-label">STR Save</label>
+                            {{ form.strength_save }}
+                            {% if form.strength_save.errors %}
+                                <div class="text-danger">{{ form.strength_save.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.dexterity_save.id_for_label }}" class="form-label">DEX Save</label>
+                            {{ form.dexterity_save }}
+                            {% if form.dexterity_save.errors %}
+                                <div class="text-danger">{{ form.dexterity_save.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.constitution_save.id_for_label }}" class="form-label">CON Save</label>
+                            {{ form.constitution_save }}
+                            {% if form.constitution_save.errors %}
+                                <div class="text-danger">{{ form.constitution_save.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.intelligence_save.id_for_label }}" class="form-label">INT Save</label>
+                            {{ form.intelligence_save }}
+                            {% if form.intelligence_save.errors %}
+                                <div class="text-danger">{{ form.intelligence_save.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.wisdom_save.id_for_label }}" class="form-label">WIS Save</label>
+                            {{ form.wisdom_save }}
+                            {% if form.wisdom_save.errors %}
+                                <div class="text-danger">{{ form.wisdom_save.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="{{ form.charisma_save.id_for_label }}" class="form-label">CHA Save</label>
+                            {{ form.charisma_save }}
+                            {% if form.charisma_save.errors %}
+                                <div class="text-danger">{{ form.charisma_save.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills and Defenses -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-magic me-2"></i>Skills and Defenses
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="{{ form.skills.id_for_label }}" class="form-label">Skills</label>
+                            {{ form.skills }}
+                            {% if form.skills.errors %}
+                                <div class="text-danger">{{ form.skills.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.damage_resistances.id_for_label }}" class="form-label">Damage Resistances</label>
+                            {{ form.damage_resistances }}
+                            {% if form.damage_resistances.errors %}
+                                <div class="text-danger">{{ form.damage_resistances.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.damage_immunities.id_for_label }}" class="form-label">Damage Immunities</label>
+                            {{ form.damage_immunities }}
+                            {% if form.damage_immunities.errors %}
+                                <div class="text-danger">{{ form.damage_immunities.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.condition_immunities.id_for_label }}" class="form-label">Condition Immunities</label>
+                            {{ form.condition_immunities }}
+                            {% if form.condition_immunities.errors %}
+                                <div class="text-danger">{{ form.condition_immunities.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="{{ form.senses.id_for_label }}" class="form-label">Senses</label>
+                            {{ form.senses }}
+                            {% if form.senses.errors %}
+                                <div class="text-danger">{{ form.senses.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.languages.id_for_label }}" class="form-label">Languages</label>
+                            {{ form.languages }}
+                            {% if form.languages.errors %}
+                                <div class="text-danger">{{ form.languages.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Combat Actions -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-fist-raised me-2"></i>Combat Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="{{ form.multiattack.id_for_label }}" class="form-label">Multiattack</label>
+                            {{ form.multiattack }}
+                            {% if form.multiattack.errors %}
+                                <div class="text-danger">{{ form.multiattack.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.actions.id_for_label }}" class="form-label">Actions</label>
+                            {{ form.actions }}
+                            {% if form.actions.errors %}
+                                <div class="text-danger">{{ form.actions.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.bonus_actions.id_for_label }}" class="form-label">Bonus Actions</label>
+                            {{ form.bonus_actions }}
+                            {% if form.bonus_actions.errors %}
+                                <div class="text-danger">{{ form.bonus_actions.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="{{ form.reactions.id_for_label }}" class="form-label">Reactions</label>
+                            {{ form.reactions }}
+                            {% if form.reactions.errors %}
+                                <div class="text-danger">{{ form.reactions.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.legendary_actions.id_for_label }}" class="form-label">Legendary Actions</label>
+                            {{ form.legendary_actions }}
+                            {% if form.legendary_actions.errors %}
+                                <div class="text-danger">{{ form.legendary_actions.errors }}</div>
                             {% endif %}
                         </div>
                     </div>
@@ -188,7 +404,7 @@
                     </a>
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save me-1"></i> 
-                        {% if object %}Update{% else %}Create NPC{% endif %}
+                        {% if object %}Update{% else %}Create{% endif %}
                     </button>
                 </div>
             </div>

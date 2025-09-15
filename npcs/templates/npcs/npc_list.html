@@ -34,31 +34,13 @@
         </div>
         <div class="card-body">
             <form method="get" class="row g-3">
-                <div class="col-md-3">
-                    <label for="campaign" class="form-label">Campaign</label>
-                    <select name="campaign" id="campaign" class="form-select">
-                        <option value="">All Campaigns</option>
-                        {% for campaign in campaigns %}
-                            <option value="{{ campaign.pk }}" {% if selected_campaign == campaign.pk|stringformat:"s" %}selected{% endif %}>
-                                {{ campaign.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div class="col-md-3">
-                    <label for="type" class="form-label">Type</label>
-                    <select name="type" id="type" class="form-select">
-                        <option value="">All Types</option>
-                        {% for type_code, type_name in npc_types %}
-                            <option value="{{ type_code }}" {% if selected_type == type_code %}selected{% endif %}>
-                                {{ type_name }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
                 <div class="col-md-4">
+                    <label for="race" class="form-label">Race</label>
+                    <input type="text" name="race" id="race" class="form-control" 
+                           placeholder="Filter by race..." value="{{ request.GET.race|default:'' }}">
+                </div>
+                
+                <div class="col-md-6">
                     <label for="search" class="form-label">Search</label>
                     <input type="text" name="search" id="search" class="form-control" 
                            placeholder="Search NPCs..." value="{{ search_query|default:'' }}">
@@ -82,91 +64,39 @@
         <div class="row">
             {% for npc in npcs %}
                 <div class="col-lg-6 col-xl-4 mb-4">
-                    <div class="card fade-in h-100 {% if npc.npc_type == 'ENEMY' %}border-danger{% elif npc.npc_type == 'ALLY' %}border-success{% elif npc.npc_type == 'MERCHANT' %}border-warning{% else %}border-info{% endif %}">
-                        <div class="card-header d-flex justify-content-between align-items-start">
-                            <span class="badge {% if npc.npc_type == 'ENEMY' %}bg-danger{% elif npc.npc_type == 'ALLY' %}bg-success{% elif npc.npc_type == 'MERCHANT' %}bg-warning{% else %}bg-info{% endif %}">
-                                <i class="fas fa-{% if npc.npc_type == 'ENEMY' %}skull{% elif npc.npc_type == 'ALLY' %}heart{% elif npc.npc_type == 'MERCHANT' %}coins{% else %}ghost{% endif %} me-1"></i>
-                                {{ npc.get_npc_type_display }}
-                            </span>
-                            <div class="dropdown">
-                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-dark">
-                                    <li><a class="dropdown-item" href="{% url 'npcs:npc_detail' npc.pk %}">
-                                        <i class="fas fa-eye me-2"></i>View
-                                    </a></li>
-                                    <li><a class="dropdown-item" href="{% url 'npcs:npc_edit' npc.pk %}">
-                                        <i class="fas fa-edit me-2"></i>Edit
-                                    </a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-danger" href="{% url 'npcs:npc_delete' npc.pk %}">
-                                        <i class="fas fa-trash me-2"></i>Delete
-                                    </a></li>
-                                </ul>
-                            </div>
+                    <div class="card fade-in h-100">
+                        <div class="card-header">
+                            <h3 class="mb-0">{{ npc.name }}</h3>
                         </div>
                         
                         <div class="card-body">
-                            <h5 class="card-title mb-3">{{ npc.name }}</h5>
                             
                             <div class="mb-3">
-                                <p class="mb-2">
-                                    <i class="fas fa-map me-2 text-accent"></i>
-                                    <strong>Campaign:</strong> 
-                                    <a href="{% url 'campaigns:campaign_detail' npc.campaign.pk %}" class="text-accent">
-                                        {{ npc.campaign.name }}
-                                    </a>
-                                </p>
+                                {% if npc.race %}
+                                    <p class="mb-2">
+                                        <strong>Race:</strong> {{ npc.race }}
+                                    </p>
+                                {% endif %}
                                 
                                 {% if npc.occupation %}
                                     <p class="mb-2">
-                                        <i class="fas fa-briefcase me-2"></i>
                                         <strong>Occupation:</strong> {{ npc.occupation }}
                                     </p>
                                 {% endif %}
                                 
                                 {% if npc.location %}
                                     <p class="mb-2">
-                                        <i class="fas fa-map-marker-alt me-2"></i>
                                         <strong>Location:</strong> {{ npc.location }}
                                     </p>
                                 {% endif %}
                                 
-                                {% if npc.disposition %}
+                                {% if npc.background %}
                                     <p class="mb-2">
-                                        <i class="fas fa-smile me-2"></i>
-                                        <strong>Disposition:</strong> {{ npc.disposition }}
+                                        <strong>Background:</strong> 
+                                        {{ npc.background|truncatewords:10 }}
                                     </p>
                                 {% endif %}
                                 
-                                {% if npc.is_combat_ready %}
-                                    <div class="row mb-2">
-                                        <div class="col-6">
-                                            <small class="text-muted">
-                                                <i class="fas fa-shield me-1"></i>AC: {{ npc.armor_class }}
-                                            </small>
-                                        </div>
-                                        <div class="col-6">
-                                            <small class="text-muted">
-                                                <i class="fas fa-heart me-1"></i>HP: {{ npc.hit_points }}
-                                            </small>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                                
-                                {% if npc.motivation %}
-                                    <p class="mb-2">
-                                        <i class="fas fa-lightbulb me-2"></i>
-                                        <strong>Motivation:</strong> 
-                                        {{ npc.motivation|truncatewords:10 }}
-                                    </p>
-                                {% endif %}
-                                
-                                <p class="mb-0">
-                                    <i class="fas fa-calendar me-2"></i>
-                                    Created: {{ npc.created_at|date:"M d, Y" }}
-                                </p>
                             </div>
                             
                             <div class="d-grid">
@@ -187,10 +117,10 @@
                         <ul class="pagination justify-content-center mb-0">
                             {% if page_obj.has_previous %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page=1{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; First</a>
+                                    <a class="page-link" href="?page=1{% if request.GET.race %}&race={{ request.GET.race }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; First</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.race %}&race={{ request.GET.race }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
                                 </li>
                             {% endif %}
                             
@@ -202,10 +132,10 @@
                             
                             {% if page_obj.has_next %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.race %}&race={{ request.GET.race }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last &raquo;</a>
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.race %}&race={{ request.GET.race }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last &raquo;</a>
                                 </li>
                             {% endif %}
                         </ul>
@@ -218,7 +148,7 @@
             <div class="card-body text-center py-5">
                 <i class="fas fa-ghost fa-4x text-muted mb-4"></i>
                 <h3>No NPCs found</h3>
-                <p class="mb-4">{% if search_query or selected_campaign or selected_type %}Try adjusting your filters or search terms.{% else %}Create your first NPC to get started!{% endif %}</p>
+                <p class="mb-4">{% if search_query or request.GET.race %}Try adjusting your filters or search terms.{% else %}Create your first NPC to get started!{% endif %}</p>
                 <a href="{% url 'npcs:npc_create' %}" class="btn btn-primary btn-lg">
                     <i class="fas fa-plus me-2"></i> Create NPC
                 </a>

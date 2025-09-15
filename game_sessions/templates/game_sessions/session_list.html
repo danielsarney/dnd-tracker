@@ -34,7 +34,7 @@
         </div>
         <div class="card-body">
             <form method="get" class="row g-3">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="campaign" class="form-label">Campaign</label>
                     <select name="campaign" id="campaign" class="form-select">
                         <option value="">All Campaigns</option>
@@ -46,7 +46,19 @@
                     </select>
                 </div>
                 
-                <div class="col-md-6">
+                <div class="col-md-3">
+                    <label for="session_date" class="form-label">Session Date</label>
+                    <select name="session_date" id="session_date" class="form-select">
+                        <option value="">All Dates</option>
+                        {% for date in session_dates %}
+                            <option value="{{ date|date:'Y-m-d' }}" {% if selected_session_date == date|date:'Y-m-d' %}selected{% endif %}>
+                                {{ date|date:"F d, Y" }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="col-md-4">
                     <label for="search" class="form-label">Search</label>
                     <input type="text" name="search" id="search" class="form-control" 
                            placeholder="Search sessions by summary or campaign..." value="{{ search_query|default:'' }}">
@@ -70,58 +82,21 @@
         <div class="row">
             {% for session in sessions %}
                 <div class="col-lg-6 col-xl-4 mb-4">
-                    <div class="card fade-in h-100 {% if session.is_today %}border-warning{% elif session.is_recent %}border-info{% endif %}">
-                        <div class="card-header d-flex justify-content-between align-items-start">
-                            <div>
-                                <i class="fas fa-calendar me-2"></i>
-                                {{ session.date|date:"M d, Y" }}
-                                {% if session.is_today %}
-                                    <span class="badge bg-warning ms-2">Today</span>
-                                {% elif session.is_recent %}
-                                    <span class="badge bg-info ms-2">Recent</span>
-                                {% endif %}
-                            </div>
-                            <div class="dropdown">
-                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-dark">
-                                    <li><a class="dropdown-item" href="{% url 'game_sessions:session_detail' session.pk %}">
-                                        <i class="fas fa-eye me-2"></i>View
-                                    </a></li>
-                                    <li><a class="dropdown-item" href="{% url 'game_sessions:session_edit' session.pk %}">
-                                        <i class="fas fa-edit me-2"></i>Edit
-                                    </a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-danger" href="{% url 'game_sessions:session_delete' session.pk %}">
-                                        <i class="fas fa-trash me-2"></i>Delete
-                                    </a></li>
-                                </ul>
-                            </div>
+                    <div class="card fade-in h-100">
+                        <div class="card-header">
+                            <h3 class="mb-0 text-white">{{ session.campaign.name }}</h3>
                         </div>
                         
                         <div class="card-body">
-                            <h5 class="card-title mb-3">
-                                <i class="fas fa-map me-2"></i> 
-                                <a href="{% url 'campaigns:campaign_detail' session.campaign.pk %}" class="text-accent">
-                                    {{ session.campaign.name }}
-                                </a>
-                            </h5>
-                            
                             <div class="mb-3">
                                 <p class="mb-2">
-                                    <i class="fas fa-crown me-2"></i>
-                                    <strong>DM:</strong> {{ session.campaign.dm }}
+                                    <strong>Session Date:</strong> {{ session.date|date:"M d, Y" }}
                                 </p>
                                 
                                 <div class="mb-2">
-                                    <p class="card-text">{{ session.summary|truncatewords:50 }}</p>
+                                    <p class="card-text">{{ session.summary|truncatewords:30 }}</p>
                                 </div>
                                 
-                                <p class="mb-0">
-                                    <i class="fas fa-clock me-2"></i>
-                                    Logged: {{ session.created_at|date:"M d, Y" }}
-                                </p>
                             </div>
                             
                             <div class="d-grid">
@@ -142,10 +117,10 @@
                         <ul class="pagination justify-content-center mb-0">
                             {% if page_obj.has_previous %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page=1{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; First</a>
+                                    <a class="page-link" href="?page=1{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_session_date %}&session_date={{ selected_session_date }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; First</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_session_date %}&session_date={{ selected_session_date }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
                                 </li>
                             {% endif %}
                             
@@ -157,10 +132,10 @@
                             
                             {% if page_obj.has_next %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_session_date %}&session_date={{ selected_session_date }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last &raquo;</a>
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if selected_campaign %}&campaign={{ selected_campaign }}{% endif %}{% if selected_session_date %}&session_date={{ selected_session_date }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last &raquo;</a>
                                 </li>
                             {% endif %}
                         </ul>

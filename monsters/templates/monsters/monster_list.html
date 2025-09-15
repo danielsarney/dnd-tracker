@@ -92,27 +92,22 @@
         <div class="row">
             {% for monster in monsters %}
                 <div class="col-lg-6 col-xl-4 mb-4">
-                    <div class="card fade-in h-100 border-danger">
+                    <div class="card fade-in h-100">
                         <div class="card-header">
-                            <span class="badge bg-danger">
-                                <i class="fas fa-dragon me-1"></i>
-                                CR {{ monster.challenge_rating }}
-                            </span>
+                            <h3 class="mb-0 text-white">{{ monster.name }}</h3>
                         </div>
                         
                         <div class="card-body">
-                            <h5 class="card-title mb-3">{{ monster.name }}</h5>
-                            
                             <div class="mb-3">
                                 <div class="row mb-2">
                                     <div class="col-6">
                                         <small class="text-white">
-                                            <i class="fas fa-tag me-1"></i>{{ monster.get_monster_type_display }}
+                                            <strong>CR:</strong> {{ monster.challenge_rating }}
                                         </small>
                                     </div>
                                     <div class="col-6">
                                         <small class="text-white">
-                                            <i class="fas fa-expand-arrows-alt me-1"></i>{{ monster.get_size_display }}
+                                            <strong>Type:</strong> {{ monster.get_monster_type_display }}
                                         </small>
                                     </div>
                                 </div>
@@ -120,28 +115,24 @@
                                 <div class="row mb-2">
                                     <div class="col-6">
                                         <small class="text-white">
-                                            <i class="fas fa-shield me-1"></i>AC: {{ monster.armor_class }}
+                                            <strong>Size:</strong> {{ monster.get_size_display }}
                                         </small>
                                     </div>
                                     <div class="col-6">
                                         <small class="text-white">
-                                            <i class="fas fa-heart me-1"></i>HP: {{ monster.hit_points }}
+                                            <strong>AC:</strong> {{ monster.armor_class }}
                                         </small>
                                     </div>
                                 </div>
                                 
+                                <div class="row mb-2">
+                                    <div class="col-6">
+                                        <small class="text-white">
+                                            <strong>HP:</strong> {{ monster.hit_points }}
+                                        </small>
+                                    </div>
+                                </div>
                                 
-                                {% if monster.alignment %}
-                                    <p class="mb-2 text-white">
-                                        <i class="fas fa-balance-scale me-2"></i>
-                                        <strong>Alignment:</strong> {{ monster.alignment }}
-                                    </p>
-                                {% endif %}
-                                
-                                <p class="mb-0 text-white">
-                                    <i class="fas fa-calendar me-2"></i>
-                                    Created: {{ monster.created_at|date:"M d, Y" }}
-                                </p>
                             </div>
                             
                             <div class="d-grid">

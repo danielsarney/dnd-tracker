@@ -23,6 +23,11 @@ class PlanningSessionListView(LoginRequiredMixin, ListView):
         if campaign_id:
             queryset = queryset.filter(campaign_id=campaign_id)
         
+        # Filter by session date if specified
+        session_date = self.request.GET.get('session_date')
+        if session_date:
+            queryset = queryset.filter(session_date=session_date)
+        
         # Search functionality
         search_query = self.request.GET.get('search')
         if search_query:
@@ -38,7 +43,12 @@ class PlanningSessionListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['campaigns'] = Campaign.objects.all()
         context['selected_campaign'] = self.request.GET.get('campaign')
+        context['selected_session_date'] = self.request.GET.get('session_date')
         context['search_query'] = self.request.GET.get('search')
+        
+        # Get unique session dates from the database, ordered by date
+        context['session_dates'] = PlanningSession.objects.values_list('session_date', flat=True).distinct().order_by('session_date')
+        
         return context
 
 

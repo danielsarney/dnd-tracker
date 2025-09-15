@@ -61,15 +61,13 @@
                         <div class="col-12 mb-3">
                             <div class="card bg-light-custom">
                                 <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="mb-2">
                                         <h5 class="card-title mb-0">{{ campaign.name }}</h5>
-                                        <span class="badge bg-secondary">{{ campaign.dm }}</span>
                                     </div>
                                     {% if campaign.description %}
                                     <p class="card-text small">{{ campaign.description|truncatewords:15 }}</p>
                                     {% endif %}
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <small class="text-muted">Created {{ campaign.created_at|date:"M d, Y" }}</small>
                                         <small class="text-muted">{{ campaign.dm }}</small>
                                     </div>
                                 </div>
@@ -104,9 +102,8 @@
                         <div class="col-12 mb-3">
                             <div class="card bg-light-custom">
                                 <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="mb-2">
                                         <h5 class="card-title mb-0">{{ player.character_name }}</h5>
-                                        <span class="badge bg-success">Player</span>
                                     </div>
                                     <div class="mb-2">
                                         <p class="card-text small mb-1">
@@ -154,13 +151,12 @@
                         <div class="col-12 mb-3">
                             <div class="card bg-light-custom">
                                 <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="mb-2">
                                         <h5 class="card-title mb-0">{{ npc.name }}</h5>
-                                        <span class="badge bg-info">NPC</span>
                                     </div>
                                     <div class="mb-2">
                                         <p class="card-text small mb-1">
-                                            <i class="fas fa-map me-1"></i>{{ npc.location|default:"Unknown Location" }}
+                                            <i class="fas fa-dungeon me-1"></i>{{ npc.location|default:"Unknown Location" }}
                                         </p>
                                         <p class="card-text small mb-1">
                                             <i class="fas fa-user-tag me-1"></i>{{ npc.get_npc_type_display }}
@@ -201,9 +197,8 @@
                         <div class="col-12 mb-3">
                             <div class="card bg-light-custom">
                                 <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="mb-2">
                                         <h5 class="card-title mb-0">{{ monster.name }}</h5>
-                                        <span class="badge bg-danger">Monster</span>
                                     </div>
                                     <div class="mb-2">
                                         <p class="card-text small mb-1">
@@ -251,9 +246,8 @@
                         <div class="col-12 mb-3">
                             <div class="card bg-light-custom">
                                 <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="mb-2">
                                         <h5 class="card-title mb-0">{{ session.campaign.name }}</h5>
-                                        <span class="badge bg-primary">Session</span>
                                     </div>
                                     <div class="mb-2">
                                         <p class="card-text small mb-1">
@@ -262,7 +256,6 @@
                                         <p class="card-text small">{{ session.summary|truncatewords:15 }}</p>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <small class="text-muted">Created {{ session.created_at|date:"M d, Y" }}</small>
                                     </div>
                                 </div>
                             </div>
@@ -296,9 +289,8 @@
                         <div class="col-12 mb-3">
                             <div class="card bg-light-custom">
                                 <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="mb-2">
                                         <h5 class="card-title mb-0">{{ plan.title }}</h5>
-                                        <span class="badge bg-warning">Planning</span>
                                     </div>
                                     <div class="mb-2">
                                         <p class="card-text small mb-1">
@@ -344,16 +336,14 @@
                         <div class="col-md-6 mb-3">
                             <div class="card bg-light-custom">
                                 <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="mb-2">
                                         <h5 class="card-title mb-0">{{ encounter.name }}</h5>
-                                        <span class="badge bg-success">Encounter</span>
                                     </div>
                                     <div class="mb-2">
                                         <p class="card-text small mb-1">
-                                            <i class="fas fa-map me-1"></i>{{ encounter.campaign.name }}
+                                            <i class="fas fa-dungeon me-1"></i>{{ encounter.campaign.name }}
                                         </p>
                                         <p class="card-text small mb-1">
-                                            <i class="fas fa-calendar me-1"></i>{{ encounter.created_at|date:"M d, Y" }}
                                         </p>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
@@ -395,11 +385,6 @@
                                     <i class="fas fa-calendar me-1"></i>
                                     {{ session.date|date:"M d, Y" }}
                                 </div>
-                                {% if session.date == today %}
-                                <span class="badge bg-warning">Today!</span>
-                                {% elif session.date <= tomorrow %}
-                                <span class="badge bg-info">Tomorrow</span>
-                                {% endif %}
                             </div>
                             <h5 class="card-title">{{ session.campaign.name }}</h5>
                             <p class="card-text">{{ session.summary|truncatewords:20 }}</p>

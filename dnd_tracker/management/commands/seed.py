@@ -307,7 +307,6 @@ class Command(BaseCommand):
     def create_npcs(self, count, campaigns):
         """Create dummy NPCs"""
         npcs = []
-        npc_types = ['ALLY', 'NEUTRAL', 'ENEMY', 'MERCHANT', 'QUESTGIVER', 'INFORMATION']
         
         npc_names = [
             'Gareth the Guard', 'Mira the Merchant', 'Thorin the Blacksmith', 'Luna the Librarian',
@@ -335,19 +334,6 @@ class Command(BaseCommand):
             'Jester', 'Sage', 'Captain', 'Quartermaster', 'Rogue', 'Xenophile', 'Yogi'
         ]
         
-        dispositions = [
-            'Friendly', 'Neutral', 'Suspicious', 'Hostile', 'Helpful',
-            'Indifferent', 'Wary', 'Enthusiastic', 'Cautious', 'Welcoming', 'Guarded'
-        ]
-        
-        motivations = [
-            'Seeking wealth and prosperity', 'Protecting the innocent', 'Gaining knowledge',
-            'Spreading their faith', 'Building a legacy', 'Finding redemption',
-            'Seeking revenge', 'Maintaining order', 'Pursuing power', 'Helping others',
-            'Discovering secrets', 'Preserving tradition', 'Creating change',
-            'Seeking adventure', 'Finding love', 'Escaping the past'
-        ]
-        
         locations = [
             'The Golden Dragon Tavern', 'The Market Square', 'The Temple of Light',
             'The Royal Castle', 'The Village Center', 'The Forest Edge',
@@ -355,33 +341,17 @@ class Command(BaseCommand):
         ]
         
         for i in range(count):
-            campaign = random.choice(campaigns)
             name = random.choice(npc_names)
-            npc_type = random.choice(npc_types)
             race = random.choice(races)
             occupation = random.choice(occupations)
-            disposition = random.choice(dispositions)
-            motivation = random.choice(motivations)
             location = random.choice(locations)
             
             # Some NPCs might have combat stats (guards, knights, etc.)
-            has_combat_stats = npc_type in ['ALLY', 'ENEMY'] or occupation in ['Guard', 'Knight', 'Captain', 'Scout']
-            
-            # Generate secrets
-            secrets = None
-            if random.random() < 0.4:  # 40% chance
-                secret_types = [
-                    f"Knows about a hidden treasure in the {random.choice(['dungeon', 'cave', 'ruins'])}",
-                    f"Has information about the {random.choice(['bandit leader', 'corrupt noble', 'mysterious stranger'])}",
-                    f"Was involved in the {random.choice(['recent theft', 'political scandal', 'magical accident'])}",
-                    f"Has a secret relationship with {random.choice(['the mayor', 'a criminal', 'a noble family'])}"
-                ]
-                secrets = random.choice(secret_types)
+            has_combat_stats = occupation in ['Guard', 'Knight', 'Captain', 'Scout']
             
             # Generate combat stats if needed
             armor_class = None
             hit_points = None
-            challenge_rating = None
             speed = None
             damage_resistances = None
             condition_immunities = None
@@ -391,7 +361,6 @@ class Command(BaseCommand):
             if has_combat_stats:
                 armor_class = random.randint(10, 16)
                 hit_points = random.randint(8, 50)
-                challenge_rating = random.choice([0.25, 0.5, 1, 2, 3, 4, 5])
                 speed = f"{random.randint(25, 35)} ft."
                 
                 if random.random() < 0.3:  # 30% chance for resistances
@@ -406,19 +375,13 @@ class Command(BaseCommand):
                     actions = f"Melee Attack: +{random.randint(3, 6)} to hit, reach 5 ft., one target. Hit: {random.randint(4, 12)} (1d8 + {random.randint(1, 4)}) slashing damage."
             
             npc = NPC.objects.create(
-                campaign=campaign,
                 name=name,
-                npc_type=npc_type,
                 race=race,
                 occupation=occupation,
-                disposition=disposition,
-                motivation=motivation,
-                secrets=secrets,
                 location=location,
-                background=f"A {disposition.lower()} {race.lower()} {occupation.lower()} who is {motivation.lower()}.",
+                background=f"A {race.lower()} {occupation.lower()}.",
                 armor_class=armor_class,
                 hit_points=hit_points,
-                challenge_rating=challenge_rating,
                 speed=speed,
                 damage_resistances=damage_resistances,
                 condition_immunities=condition_immunities,
@@ -522,7 +485,6 @@ class Command(BaseCommand):
                 legendary_actions = f"The {name} can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The {name} regains spent legendary actions at the start of its turn."
             
             monster = Monster.objects.create(
-                campaign=campaign,
                 name=name,
                 monster_type=monster_type,
                 size=size,
@@ -646,11 +608,20 @@ class Command(BaseCommand):
         start_date = timezone.now().date()
         end_date = start_date + timedelta(days=90)
         
+        used_dates = set()  # Track used campaign+date combinations
+        
         for i in range(count):
             campaign = random.choice(campaigns)
             # Random date within the next 3 months
             days_ahead = random.randint(1, 90)
             session_date = start_date + timedelta(days=days_ahead)
+            
+            # Ensure unique campaign+date combination
+            while (campaign.id, session_date) in used_dates:
+                days_ahead = random.randint(1, 90)
+                session_date = start_date + timedelta(days=days_ahead)
+            
+            used_dates.add((campaign.id, session_date))
             title = random.choice(planning_titles)
             
             # Choose a random template and fill it with random content

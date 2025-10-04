@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}
+    Delete {{ campaign.title }} - D&D Tracker
+{% endblock title %}
+{% block content %}
+    <div class="container-fluid mt-4 mb-5 px-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-exclamation-triangle"></i> Delete Campaign
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning mb-4">
+                            <i class="fas fa-warning"></i>
+                            <strong>Warning:</strong> This action cannot be undone!
+                        </div>
+                        <p class="text-white mb-4">Are you sure you want to delete the campaign:</p>
+                        <div class="card bg-light mb-4">
+                            <div class="card-body">
+                                <h6 class="card-title text-dark">{{ campaign.title }}</h6>
+                                {% if campaign.description %}
+                                    <p class="card-text text-muted">{{ campaign.description|truncatewords:20 }}</p>
+                                {% else %}
+                                    <p class="card-text text-muted fst-italic">No description provided</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{% url 'campaigns:campaign_detail' campaign.pk %}"
+                                   class="btn btn-outline-light">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash"></i> Delete Campaign
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

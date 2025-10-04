@@ -26,4 +26,5 @@ def home_redirect(request):
 urlpatterns = [
     path("", home_redirect, name="home"),
     path("accounts/", include("accounts.urls")),
+    path("campaigns/", include("campaigns.urls")),
 ]

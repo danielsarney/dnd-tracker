@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 import qrcode
 import io
 import base64
@@ -45,7 +44,7 @@ def login_view(request):
                     request.session["user_id"] = user.id
                     return redirect("accounts:setup_2fa")
             else:
-                messages.error(request, "Invalid email or password.")
+                pass  # Invalid credentials - no flash message
     else:
         form = LoginForm()
 
@@ -56,13 +55,11 @@ def verify_2fa_view(request):
     """2FA verification view"""
     user_id = request.session.get("user_id")
     if not user_id:
-        messages.error(request, "Please log in first.")
         return redirect("accounts:login")
 
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
-        messages.error(request, "User not found.")
         return redirect("accounts:login")
 
     if request.method == "POST":
@@ -76,7 +73,7 @@ def verify_2fa_view(request):
                 del request.session["user_id"]
                 return redirect("accounts:profile")
             else:
-                messages.error(request, "Invalid verification code.")
+                pass  # Invalid verification code - no flash message
     else:
         form = TwoFactorForm()
 
@@ -87,13 +84,11 @@ def setup_2fa_view(request):
     """Setup 2FA for user (can be accessed without login for mandatory setup)"""
     user_id = request.session.get("user_id")
     if not user_id:
-        messages.error(request, "Please log in first.")
         return redirect("accounts:login")
 
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
-        messages.error(request, "User not found.")
         return redirect("accounts:login")
 
     if request.method == "POST":
@@ -106,7 +101,7 @@ def setup_2fa_view(request):
                 del request.session["user_id"]
                 return redirect("accounts:profile")
             else:
-                messages.error(request, "Invalid verification code.")
+                pass  # Invalid verification code - no flash message
 
     # Always generate QR code for setup (skip initial screen)
     qr_url = user.get_two_factor_qr_code_url()

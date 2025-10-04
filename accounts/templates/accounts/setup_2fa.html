@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Setup 2FA - D&D Tracker{% endblock %}
+{% block content %}
+    <div class="auth-header">
+        <h2>
+            <i class="fas fa-shield-alt"></i> Setup Two-Factor Authentication
+        </h2>
+        <p>Secure your account with 2FA</p>
+    </div>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                 role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% if qr_code %}
+        <!-- QR Code Display -->
+        <div class="qr-code">
+            <img src="data:image/png;base64,{{ qr_code }}"
+                 alt="2FA QR Code"
+                 class="img-fluid">
+        </div>
+        <div class="alert alert-info">
+            <h5>
+                <i class="fas fa-info-circle"></i> Setup Instructions:
+            </h5>
+            <ol>
+                <li>Install an authenticator app like Google Authenticator, Authy, or Microsoft Authenticator</li>
+                <li>Scan the QR code above with your authenticator app</li>
+                <li>Enter the 6-digit code from your app below to verify setup</li>
+            </ol>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="verify_setup" value="1">
+            <div class="mb-3">
+                <label for="code" class="form-label text-center d-block">
+                    <i class="fas fa-key"></i> Enter Verification Code
+                </label>
+                <input type="text"
+                       name="code"
+                       id="code"
+                       class="form-control text-center"
+                       placeholder="000000"
+                       maxlength="6"
+                       pattern="[0-9]{6}"
+                       style="font-size: 1.5rem;
+                              letter-spacing: 0.5rem"
+                       required>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-check"></i> Verify & Enable 2FA
+                </button>
+            </div>
+        </form>
+        <div class="text-center mt-3">
+            <small class="text-muted">
+                <strong>Secret Key:</strong> {{ secret }}
+                <br>
+                <em>Save this key in a secure place as a backup</em>
+            </small>
+        </div>
+    {% else %}
+        <!-- Initial Setup -->
+        <div class="alert alert-warning">
+            <h5>
+                <i class="fas fa-exclamation-triangle"></i> Important Security Notice
+            </h5>
+            <p>
+                Two-Factor Authentication adds an extra layer of security to your account. Once enabled, you'll need both your password and a verification code from your authenticator app to sign in.
+            </p>
+        </div>
+        <div class="text-center mb-4">
+            <i class="fas fa-mobile-alt fa-3x text-primary mb-3"></i>
+            <h4>Ready to secure your account?</h4>
+            <p class="text-muted">You'll need an authenticator app on your phone</p>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="enable_2fa" value="1">
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-shield-alt"></i> Enable Two-Factor Authentication
+                </button>
+            </div>
+        </form>
+    {% endif %}
+    <div class="text-center mt-4">
+        <p class="text-muted">
+            <a href="{% url 'accounts:profile' %}" class="text-decoration-none">
+                <i class="fas fa-arrow-left"></i> Back to Profile
+            </a>
+        </p>
+    </div>
+{% endblock %}

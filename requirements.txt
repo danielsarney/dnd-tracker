@@ -1,0 +1,9 @@
+black==25.9.0
+Django==4.2.23
+djlint==1.35.0
+pyotp==2.9.0
+qrcode==7.4.2
+Pillow==10.0.1
+python-dotenv==1.0.0
+psycopg2-binary==2.9.7
+factory-boy==3.3.0

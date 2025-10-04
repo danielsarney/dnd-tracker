@@ -15,7 +15,6 @@ def register_view(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            messages.success(request, "Account created successfully! Please log in.")
             return redirect("accounts:login")
     else:
         form = UserRegistrationForm()
@@ -44,10 +43,6 @@ def login_view(request):
                 else:
                     # Redirect to 2FA setup if not enabled (mandatory)
                     request.session["user_id"] = user.id
-                    messages.warning(
-                        request,
-                        "Two-factor authentication is required. Please set it up to continue.",
-                    )
                     return redirect("accounts:setup_2fa")
             else:
                 messages.error(request, "Invalid email or password.")
@@ -79,7 +74,6 @@ def verify_2fa_view(request):
             if user.verify_two_factor_code(code):
                 login(request, user)
                 del request.session["user_id"]
-                messages.success(request, f"Welcome back, {user.username}!")
                 return redirect("accounts:profile")
             else:
                 messages.error(request, "Invalid verification code.")
@@ -103,39 +97,33 @@ def setup_2fa_view(request):
         return redirect("accounts:login")
 
     if request.method == "POST":
-        if "enable_2fa" in request.POST:
-            # Generate QR code for setup
-            qr_url = user.get_two_factor_qr_code_url()
-            qr = qrcode.QRCode(version=1, box_size=10, border=5)
-            qr.add_data(qr_url)
-            qr.make(fit=True)
-
-            img = qr.make_image(fill_color="black", back_color="white")
-            buffer = io.BytesIO()
-            img.save(buffer)
-            img_str = base64.b64encode(buffer.getvalue()).decode()
-
-            return render(
-                request,
-                "accounts/setup_2fa.html",
-                {"qr_code": img_str, "secret": user.two_factor_secret, "user": user},
-            )
-
-        elif "verify_setup" in request.POST:
+        if "verify_setup" in request.POST:
             code = request.POST.get("code")
             if user.verify_two_factor_code(code):
                 user.two_factor_enabled = True
                 user.save()
                 login(request, user)
                 del request.session["user_id"]
-                messages.success(
-                    request, "2FA has been enabled successfully! You are now logged in."
-                )
                 return redirect("accounts:profile")
             else:
                 messages.error(request, "Invalid verification code.")
 
-    return render(request, "accounts/setup_2fa.html", {"user": user})
+    # Always generate QR code for setup (skip initial screen)
+    qr_url = user.get_two_factor_qr_code_url()
+    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+    qr.add_data(qr_url)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+    buffer = io.BytesIO()
+    img.save(buffer)
+    img_str = base64.b64encode(buffer.getvalue()).decode()
+
+    return render(
+        request,
+        "accounts/setup_2fa.html",
+        {"qr_code": img_str, "secret": user.two_factor_secret, "user": user},
+    )
 
 
 @login_required
@@ -145,7 +133,6 @@ def profile_view(request):
         form = ProfileUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            messages.success(request, "Profile updated successfully!")
             return redirect("accounts:profile")
     else:
         form = ProfileUpdateForm(instance=request.user)
@@ -160,5 +147,4 @@ def logout_view(request):
     from django.contrib.auth import logout
 
     logout(request)
-    messages.success(request, "You have been logged out successfully.")
     return redirect("accounts:login")

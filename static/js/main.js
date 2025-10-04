@@ -36,11 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Auto-hide flash messages after 5 minutes
+// Auto-hide error flash messages after 5 minutes
 document.addEventListener('DOMContentLoaded', function() {
-    const flashMessages = document.querySelectorAll('.alert');
+    const errorMessages = document.querySelectorAll('.alert-error');
     
-    flashMessages.forEach(function(message) {
+    errorMessages.forEach(function(message) {
         setTimeout(function() {
             // Use Bootstrap's alert dismiss functionality
             const closeButton = message.querySelector('.btn-close');

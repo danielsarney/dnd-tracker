@@ -9,80 +9,45 @@
                 </h2>
                 <p>Secure your account with 2FA</p>
             </div>
-            {% if qr_code %}
-                <!-- QR Code Display -->
-                <div class="qr-code">
-                    <img src="data:image/png;base64,{{ qr_code }}"
-                         alt="2FA QR Code"
-                         class="img-fluid">
+            <!-- QR Code Display -->
+            <div class="qr-code text-center mb-4">
+                <img src="data:image/png;base64,{{ qr_code }}"
+                     alt="2FA QR Code"
+                     class="img-fluid"
+                     style="max-width: 200px;
+                            height: auto">
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="verify_setup" value="1">
+                <div class="mb-3">
+                    <label for="code" class="form-label text-center d-block">
+                        <i class="fas fa-key"></i> Enter Verification Code
+                    </label>
+                    <input type="text"
+                           name="code"
+                           id="code"
+                           class="form-control text-center"
+                           placeholder="000000"
+                           maxlength="6"
+                           pattern="[0-9]{6}"
+                           style="font-size: 1.5rem;
+                                  letter-spacing: 0.5rem"
+                           required>
                 </div>
-                <div class="alert alert-info">
-                    <h5>
-                        <i class="fas fa-info-circle"></i> Setup Instructions:
-                    </h5>
-                    <ol>
-                        <li>Install an authenticator app like Google Authenticator, Authy, or Microsoft Authenticator</li>
-                        <li>Scan the QR code above with your authenticator app</li>
-                        <li>Enter the 6-digit code from your app below to verify setup</li>
-                    </ol>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check"></i> Verify & Enable 2FA
+                    </button>
                 </div>
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="verify_setup" value="1">
-                    <div class="mb-3">
-                        <label for="code" class="form-label text-center d-block">
-                            <i class="fas fa-key"></i> Enter Verification Code
-                        </label>
-                        <input type="text"
-                               name="code"
-                               id="code"
-                               class="form-control text-center"
-                               placeholder="000000"
-                               maxlength="6"
-                               pattern="[0-9]{6}"
-                               style="font-size: 1.5rem;
-                                      letter-spacing: 0.5rem"
-                               required>
-                    </div>
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-check"></i> Verify & Enable 2FA
-                        </button>
-                    </div>
-                </form>
-                <div class="text-center mt-3">
-                    <small class="text-muted">
-                        <strong>Secret Key:</strong> {{ secret }}
-                        <br>
-                        <em>Save this key in a secure place as a backup</em>
-                    </small>
-                </div>
-            {% else %}
-                <!-- Initial Setup -->
-                <div class="text-center mb-4">
-                    <i class="fas fa-mobile-alt fa-3x text-primary mb-3"></i>
-                    <h4>Ready to secure your account?</h4>
-                    <p class="text-muted">You'll need an authenticator app on your phone</p>
-                </div>
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="enable_2fa" value="1">
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-shield-alt"></i> Enable Two-Factor Authentication
-                        </button>
-                    </div>
-                </form>
-            {% endif %}
-            {% if not qr_code %}
-                <div class="text-center mt-4">
-                    <p class="text-muted">
-                        <a href="{% url 'accounts:logout' %}" class="text-decoration-none">
-                            <i class="fas fa-sign-out-alt"></i> Cancel Setup & Logout
-                        </a>
-                    </p>
-                </div>
-            {% endif %}
+            </form>
+            <div class="text-center mt-4">
+                <p class="text-muted">
+                    <a href="{% url 'accounts:logout' %}" class="text-decoration-none">
+                        <i class="fas fa-sign-out-alt"></i> Cancel Setup & Logout
+                    </a>
+                </p>
+            </div>
         </div>
     </div>
 {% endblock %}

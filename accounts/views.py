@@ -6,7 +6,7 @@ import qrcode
 import io
 import base64
 from .models import User, TwoFactorCode
-from .forms import UserRegistrationForm, LoginForm, TwoFactorForm
+from .forms import UserRegistrationForm, LoginForm, TwoFactorForm, ProfileUpdateForm
 
 
 def register_view(request):
@@ -26,7 +26,7 @@ def register_view(request):
 def login_view(request):
     """User login view with 2FA support"""
     if request.user.is_authenticated:
-        return redirect("home")  # Redirect to your main app
+        return redirect("accounts:profile")  # Redirect to profile instead of home
 
     if request.method == "POST":
         form = LoginForm(request.POST)
@@ -42,10 +42,13 @@ def login_view(request):
                     request.session["user_id"] = user.id
                     return redirect("accounts:verify_2fa")
                 else:
-                    # Login directly if 2FA is not enabled
-                    login(request, user)
-                    messages.success(request, f"Welcome back, {user.username}!")
-                    return redirect("home")
+                    # Redirect to 2FA setup if not enabled (mandatory)
+                    request.session["user_id"] = user.id
+                    messages.warning(
+                        request,
+                        "Two-factor authentication is required. Please set it up to continue.",
+                    )
+                    return redirect("accounts:setup_2fa")
             else:
                 messages.error(request, "Invalid email or password.")
     else:
@@ -77,7 +80,7 @@ def verify_2fa_view(request):
                 login(request, user)
                 del request.session["user_id"]
                 messages.success(request, f"Welcome back, {user.username}!")
-                return redirect("home")
+                return redirect("accounts:profile")
             else:
                 messages.error(request, "Invalid verification code.")
     else:
@@ -86,13 +89,23 @@ def verify_2fa_view(request):
     return render(request, "accounts/verify_2fa.html", {"form": form, "user": user})
 
 
-@login_required
 def setup_2fa_view(request):
-    """Setup 2FA for authenticated user"""
+    """Setup 2FA for user (can be accessed without login for mandatory setup)"""
+    user_id = request.session.get("user_id")
+    if not user_id:
+        messages.error(request, "Please log in first.")
+        return redirect("accounts:login")
+
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        messages.error(request, "User not found.")
+        return redirect("accounts:login")
+
     if request.method == "POST":
         if "enable_2fa" in request.POST:
             # Generate QR code for setup
-            qr_url = request.user.get_two_factor_qr_code_url()
+            qr_url = user.get_two_factor_qr_code_url()
             qr = qrcode.QRCode(version=1, box_size=10, border=5)
             qr.add_data(qr_url)
             qr.make(fit=True)
@@ -105,26 +118,41 @@ def setup_2fa_view(request):
             return render(
                 request,
                 "accounts/setup_2fa.html",
-                {"qr_code": img_str, "secret": request.user.two_factor_secret},
+                {"qr_code": img_str, "secret": user.two_factor_secret, "user": user},
             )
 
         elif "verify_setup" in request.POST:
             code = request.POST.get("code")
-            if request.user.verify_two_factor_code(code):
-                request.user.two_factor_enabled = True
-                request.user.save()
-                messages.success(request, "2FA has been enabled successfully!")
+            if user.verify_two_factor_code(code):
+                user.two_factor_enabled = True
+                user.save()
+                login(request, user)
+                del request.session["user_id"]
+                messages.success(
+                    request, "2FA has been enabled successfully! You are now logged in."
+                )
                 return redirect("accounts:profile")
             else:
                 messages.error(request, "Invalid verification code.")
 
-    return render(request, "accounts/setup_2fa.html")
+    return render(request, "accounts/setup_2fa.html", {"user": user})
 
 
 @login_required
 def profile_view(request):
-    """User profile view"""
-    return render(request, "accounts/profile.html", {"user": request.user})
+    """User profile view with editable form"""
+    if request.method == "POST":
+        form = ProfileUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect("accounts:profile")
+    else:
+        form = ProfileUpdateForm(instance=request.user)
+
+    return render(
+        request, "accounts/profile.html", {"form": form, "user": request.user}
+    )
 
 
 def logout_view(request):

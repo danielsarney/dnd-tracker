@@ -1,114 +1,98 @@
 {% extends "base.html" %}
 {% block title %}Register - D&D Tracker{% endblock %}
 {% block content %}
-    <div class="auth-header">
-        <h2>
-            <i class="fas fa-dice-d20"></i> Join the Adventure
-        </h2>
-        <p>Create your D&D Tracker account</p>
-    </div>
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
-                 role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>
+                    <i class="fas fa-dice-d20"></i> Join the Adventure
+                </h2>
+                <p>Create your D&D Tracker account</p>
             </div>
-        {% endfor %}
-    {% endif %}
-    <form method="post">
-        {% csrf_token %}
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="{{ form.first_name.id_for_label }}" class="form-label">
-                    <i class="fas fa-user"></i> First Name
-                </label>
-                {{ form.first_name }}
-                {% if form.first_name.errors %}
-                    <div class="text-danger small mt-1">
-                        {% for error in form.first_name.errors %}{{ error }}{% endfor %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.first_name.id_for_label }}" class="form-label">
+                            <i class="fas fa-user"></i> First Name <span class="text-danger">*</span>
+                        </label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.first_name.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
-                {% endif %}
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="{{ form.last_name.id_for_label }}" class="form-label">
-                    <i class="fas fa-user"></i> Last Name
-                </label>
-                {{ form.last_name }}
-                {% if form.last_name.errors %}
-                    <div class="text-danger small mt-1">
-                        {% for error in form.last_name.errors %}{{ error }}{% endfor %}
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.last_name.id_for_label }}" class="form-label">
+                            <i class="fas fa-user"></i> Last Name <span class="text-danger">*</span>
+                        </label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.last_name.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
-                {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.username.id_for_label }}" class="form-label">
+                        <i class="fas fa-at"></i> Username <span class="text-danger">*</span>
+                    </label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <div class="text-danger small mt-1">
+                            {% for error in form.username.errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.email.id_for_label }}" class="form-label">
+                        <i class="fas fa-envelope"></i> Email Address <span class="text-danger">*</span>
+                    </label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="text-danger small mt-1">
+                            {% for error in form.email.errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.password1.id_for_label }}" class="form-label">
+                        <i class="fas fa-lock"></i> Password <span class="text-danger">*</span>
+                    </label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                        <div class="text-danger small mt-1">
+                            {% for error in form.password1.errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.password2.id_for_label }}" class="form-label">
+                        <i class="fas fa-lock"></i> Confirm Password <span class="text-danger">*</span>
+                    </label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        <div class="text-danger small mt-1">
+                            {% for error in form.password2.errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Create Account
+                    </button>
+                </div>
+            </form>
+            <div class="text-center mt-4">
+                <p class="text-muted">
+                    Already have an account?
+                    <a href="{% url 'accounts:login' %}" class="text-decoration-none">
+                        <strong>Sign in here</strong>
+                    </a>
+                </p>
             </div>
         </div>
-        <div class="mb-3">
-            <label for="{{ form.username.id_for_label }}" class="form-label">
-                <i class="fas fa-at"></i> Username
-            </label>
-            {{ form.username }}
-            {% if form.username.errors %}
-                <div class="text-danger small mt-1">
-                    {% for error in form.username.errors %}{{ error }}{% endfor %}
-                </div>
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            <label for="{{ form.email.id_for_label }}" class="form-label">
-                <i class="fas fa-envelope"></i> Email Address
-            </label>
-            {{ form.email }}
-            {% if form.email.errors %}
-                <div class="text-danger small mt-1">
-                    {% for error in form.email.errors %}{{ error }}{% endfor %}
-                </div>
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            <label for="{{ form.phone_number.id_for_label }}" class="form-label">
-                <i class="fas fa-phone"></i> Phone Number (Optional)
-            </label>
-            {{ form.phone_number }}
-            {% if form.phone_number.errors %}
-                <div class="text-danger small mt-1">
-                    {% for error in form.phone_number.errors %}{{ error }}{% endfor %}
-                </div>
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            <label for="{{ form.password1.id_for_label }}" class="form-label">
-                <i class="fas fa-lock"></i> Password
-            </label>
-            {{ form.password1 }}
-            {% if form.password1.errors %}
-                <div class="text-danger small mt-1">
-                    {% for error in form.password1.errors %}{{ error }}{% endfor %}
-                </div>
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            <label for="{{ form.password2.id_for_label }}" class="form-label">
-                <i class="fas fa-lock"></i> Confirm Password
-            </label>
-            {{ form.password2 }}
-            {% if form.password2.errors %}
-                <div class="text-danger small mt-1">
-                    {% for error in form.password2.errors %}{{ error }}{% endfor %}
-                </div>
-            {% endif %}
-        </div>
-        <div class="d-grid">
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-user-plus"></i> Create Account
-            </button>
-        </div>
-    </form>
-    <div class="text-center mt-4">
-        <p class="text-muted">
-            Already have an account?
-            <a href="{% url 'accounts:login' %}" class="text-decoration-none">
-                <strong>Sign in here</strong>
-            </a>
-        </p>
     </div>
 {% endblock %}

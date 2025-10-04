@@ -35,3 +35,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Auto-hide flash messages after 5 minutes
+document.addEventListener('DOMContentLoaded', function() {
+    const flashMessages = document.querySelectorAll('.alert');
+    
+    flashMessages.forEach(function(message) {
+        setTimeout(function() {
+            // Use Bootstrap's alert dismiss functionality
+            const closeButton = message.querySelector('.btn-close');
+            if (closeButton) {
+                closeButton.click();
+            } else {
+                // Fallback: manually hide the alert
+                message.style.transition = 'opacity 0.5s';
+                message.style.opacity = '0';
+                setTimeout(function() {
+                    message.remove();
+                }, 500);
+            }
+        }, 5 * 60 * 1000); // 5 minutes in milliseconds
+    });
+});

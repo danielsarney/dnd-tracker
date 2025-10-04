@@ -99,7 +99,7 @@ def setup_2fa_view(request):
 
             img = qr.make_image(fill_color="black", back_color="white")
             buffer = io.BytesIO()
-            img.save(buffer, format="PNG")
+            img.save(buffer)
             img_str = base64.b64encode(buffer.getvalue()).decode()
 
             return render(

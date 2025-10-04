@@ -9,6 +9,7 @@ class PlayerForm(forms.ModelForm):
             "character_name",
             "player_name",
             "character_class",
+            "subclass",
             "race",
             "level",
             "ac",
@@ -29,6 +30,12 @@ class PlayerForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "Enter character class (e.g., Wizard/Monk)",
+                }
+            ),
+            "subclass": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Enter subclass (e.g., Beast Master, Eldritch Knight)",
                 }
             ),
             "race": forms.TextInput(
@@ -63,6 +70,7 @@ class PlayerForm(forms.ModelForm):
         self.fields["character_name"].required = True
         self.fields["player_name"].required = True
         self.fields["character_class"].required = True
+        self.fields["subclass"].required = False
         self.fields["race"].required = True
         self.fields["level"].required = True
         self.fields["ac"].required = True

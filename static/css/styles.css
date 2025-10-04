@@ -83,6 +83,20 @@ body {
     width: 100%;
 }
 
+/* General form control styling for all pages */
+.form-control, textarea {
+    border-radius: 12px;
+    border: 2px solid #5d6d7e;
+    padding: 18px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(70, 90, 110, 0.8);
+    backdrop-filter: blur(10px);
+    color: #ffffff;
+    width: 100%;
+}
+
 .auth-card .form-control:focus,
 .auth-card input[type="text"]:focus, 
 .auth-card input[type="email"]:focus, 
@@ -91,6 +105,15 @@ body {
 .auth-card input[type="url"]:focus, 
 .auth-card input[type="search"]:focus, 
 .auth-card textarea:focus {
+    border-color: #9b59b6;
+    box-shadow: 0 0 0 4px rgba(155, 89, 182, 0.1);
+    background: rgba(70, 90, 110, 0.95);
+    transform: translateY(-1px);
+    color: #ffffff;
+}
+
+/* General form control focus styling */
+.form-control:focus, textarea:focus {
     border-color: #9b59b6;
     box-shadow: 0 0 0 4px rgba(155, 89, 182, 0.1);
     background: rgba(70, 90, 110, 0.95);

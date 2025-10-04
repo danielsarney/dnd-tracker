@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "accounts",
     "campaigns",
     "players",
+    "game_sessions",
 ]
 
 MIDDLEWARE = [

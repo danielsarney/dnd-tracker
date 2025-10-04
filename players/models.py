@@ -8,6 +8,12 @@ class Player(models.Model):
     character_class = models.CharField(
         max_length=100, help_text="Character class (e.g., Wizard/Monk)"
     )
+    subclass = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Character subclass (e.g., Beast Master, Eldritch Knight)",
+    )
     race = models.CharField(max_length=100, help_text="Character race")
     level = models.PositiveIntegerField(default=1, help_text="Character level")
     ac = models.PositiveIntegerField(help_text="Armor Class")

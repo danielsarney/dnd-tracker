@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block title %}
-    Delete {{ player.character_name }} - D&D Tracker
+    Delete {{ session.campaign.title }}
+    {% if session.session_date %}- {{ session.session_date }}{% endif %}
+    - D&D Tracker
 {% endblock title %}
 {% block content %}
     <div class="container-fluid mt-4 mb-5 px-4">
@@ -9,7 +11,7 @@
                 <div class="card border-danger">
                     <div class="card-header bg-danger text-white">
                         <h5 class="mb-0">
-                            <i class="fas fa-exclamation-triangle"></i> Delete Player
+                            <i class="fas fa-exclamation-triangle"></i> Delete Session
                         </h5>
                     </div>
                     <div class="card-body">
@@ -17,36 +19,41 @@
                             <i class="fas fa-warning"></i>
                             <strong>Warning:</strong> This action cannot be undone!
                         </div>
-                        <p class="text-white mb-4">Are you sure you want to delete the player:</p>
+                        <p class="text-white mb-4">Are you sure you want to delete the session:</p>
                         <div class="card bg-light mb-4">
                             <div class="card-body">
-                                <h6 class="card-title text-dark">{{ player.character_name }}</h6>
+                                <h6 class="card-title text-dark">
+                                    {{ session.campaign.title }}
+                                    {% if session.session_date %}- {{ session.session_date }}{% endif %}
+                                </h6>
                                 <p class="card-text text-muted">
-                                    <strong>Player:</strong> {{ player.player_name }}
+                                    <strong>Campaign:</strong> {{ session.campaign.title }}
                                     <br>
-                                    <strong>Class:</strong> {{ player.character_class }}
-                                    {% if player.subclass %}
-                                        <br>
-                                        <strong>Subclass:</strong> {{ player.subclass }}
+                                    {% if session.session_date %}
+                                        <strong>Date:</strong> {{ session.session_date }}
+                                    {% else %}
+                                        <strong>Date:</strong> <em class="text-muted">Not scheduled</em>
                                     {% endif %}
-                                    <br>
-                                    <strong>Race:</strong> {{ player.race }}
-                                    <br>
-                                    <strong>Level:</strong> {{ player.level }}
-                                    <br>
-                                    <strong>Campaign:</strong> {{ player.campaign.title }}
+                                    {% if session.planning_notes %}
+                                        <br>
+                                        <strong>Planning Notes:</strong> {{ session.planning_notes|truncatewords:20 }}
+                                    {% endif %}
+                                    {% if session.session_notes %}
+                                        <br>
+                                        <strong>Session Notes:</strong> {{ session.session_notes|truncatewords:20 }}
+                                    {% endif %}
                                 </p>
                             </div>
                         </div>
                         <form method="post">
                             {% csrf_token %}
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a href="{% url 'players:player_detail' player.pk %}"
+                                <a href="{% url 'game_sessions:session_detail' session.pk %}"
                                    class="btn btn-outline-light">
                                     <i class="fas fa-times"></i> Cancel
                                 </a>
                                 <button type="submit" class="btn btn-danger">
-                                    <i class="fas fa-trash"></i> Delete Player
+                                    <i class="fas fa-trash"></i> Delete Session
                                 </button>
                             </div>
                         </form>

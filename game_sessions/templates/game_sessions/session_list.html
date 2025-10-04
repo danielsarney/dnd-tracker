@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-    Players - D&D Tracker
+    Sessions - D&D Tracker
 {% endblock title %}
 {% block content %}
     <div class="container mt-4 mb-5">
@@ -9,14 +9,14 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h2 class="mb-2">
-                            <i class="fas fa-users text-primary"></i> Players
+                            <i class="fas fa-calendar-alt text-primary"></i> Sessions
                         </h2>
-                        <p class="text-white mb-0">Manage your D&D characters and players</p>
+                        <p class="text-white mb-0">Plan and track your D&D sessions</p>
                     </div>
                     <div>
-                        <a href="{% url 'players:player_create' %}"
+                        <a href="{% url 'game_sessions:session_create' %}"
                            class="btn btn-primary btn-lg">
-                            <i class="fas fa-plus"></i> Create New Player
+                            <i class="fas fa-plus"></i> Create New Session
                         </a>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                                        class="form-control"
                                        id="search"
                                        name="search"
-                                       placeholder="Search players..."
+                                       placeholder="Search sessions..."
                                        value="{{ request.GET.search }}">
                             </div>
                             <div class="col-md-6">
@@ -46,37 +46,39 @@
                 </div>
             </div>
         </div>
-        {% if players %}
+        {% if sessions %}
             <div class="row">
-                {% for player in players %}
+                {% for session in sessions %}
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="card h-100 shadow-sm border-0">
                             <div class="card-header bg-primary text-white">
                                 <h5 class="card-title mb-0 text-white">
-                                    <i class="fas fa-user me-2"></i>{{ player.character_name }}
+                                    <i class="fas fa-dice-d20 me-2"></i>{{ session.campaign.title }}
                                 </h5>
                             </div>
                             <div class="card-body">
                                 <p class="card-text">
-                                    <strong>Player:</strong> {{ player.player_name }}
-                                    <br>
-                                    <strong>Class:</strong> {{ player.character_class }}
-                                    {% if player.subclass %}
-                                        <br>
-                                        <strong>Subclass:</strong> {{ player.subclass }}
+                                    {% if session.session_date %}
+                                        <strong>Date:</strong> {{ session.session_date }}
+                                    {% else %}
+                                        <strong>Date:</strong> <em class="text-muted">Not scheduled</em>
                                     {% endif %}
                                     <br>
-                                    <strong>Race:</strong> {{ player.race }}
+                                    {% if session.planning_notes %}
+                                        <strong>Planning Notes:</strong> {{ session.planning_notes|truncatewords:15 }}
+                                    {% else %}
+                                        <strong>Planning Notes:</strong> <em class="text-muted">None</em>
+                                    {% endif %}
                                     <br>
-                                    <strong>Level:</strong> {{ player.level }}
-                                    <br>
-                                    <strong>AC:</strong> {{ player.ac }}
-                                    <br>
-                                    <strong>Campaign:</strong> {{ player.campaign.title }}
+                                    {% if session.session_notes %}
+                                        <strong>Session Notes:</strong> {{ session.session_notes|truncatewords:15 }}
+                                    {% else %}
+                                        <strong>Session Notes:</strong> <em class="text-muted">None</em>
+                                    {% endif %}
                                 </p>
                             </div>
                             <div class="card-footer bg-light border-0">
-                                <a href="{% url 'players:player_detail' player.pk %}"
+                                <a href="{% url 'game_sessions:session_detail' session.pk %}"
                                    class="btn btn-primary w-100">
                                     <i class="fas fa-eye me-2"></i>View Details
                                 </a>
@@ -89,12 +91,12 @@
             <div class="text-center py-5">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body py-5">
-                        <i class="fas fa-users fa-4x text-primary mb-4"></i>
-                        <h4 class="text-white mb-3">No players yet</h4>
-                        <p class="text-white mb-4">Start by creating your first D&D character!</p>
-                        <a href="{% url 'players:player_create' %}"
+                        <i class="fas fa-calendar-alt fa-4x text-primary mb-4"></i>
+                        <h4 class="text-white mb-3">No sessions yet</h4>
+                        <p class="text-white mb-4">Start planning your first D&D session!</p>
+                        <a href="{% url 'game_sessions:session_create' %}"
                            class="btn btn-primary btn-lg">
-                            <i class="fas fa-plus me-2"></i>Create Your First Player
+                            <i class="fas fa-plus me-2"></i>Create Your First Session
                         </a>
                     </div>
                 </div>

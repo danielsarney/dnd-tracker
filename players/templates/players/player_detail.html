@@ -55,6 +55,14 @@
                                     </h6>
                                     <p class="text-muted">{{ player.character_class }}</p>
                                 </div>
+                                {% if player.subclass %}
+                                    <div class="mb-3">
+                                        <h6 class="text-primary">
+                                            <i class="fas fa-magic"></i> Subclass
+                                        </h6>
+                                        <p class="text-muted">{{ player.subclass }}</p>
+                                    </div>
+                                {% endif %}
                                 <div class="mb-3">
                                     <h6 class="text-primary">
                                         <i class="fas fa-paw"></i> Race

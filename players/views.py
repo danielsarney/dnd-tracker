@@ -17,6 +17,7 @@ def player_list_view(request):
             models.Q(character_name__icontains=search_query)
             | models.Q(player_name__icontains=search_query)
             | models.Q(character_class__icontains=search_query)
+            | models.Q(subclass__icontains=search_query)
             | models.Q(race__icontains=search_query)
             | models.Q(background__icontains=search_query)
             | models.Q(campaign__title__icontains=search_query)

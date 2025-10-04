@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}
+    Edit {{ session.campaign.title }}
+    {% if session.session_date %}- {{ session.session_date }}{% endif %}
+    - D&D Tracker
+{% endblock title %}
+{% block content %}
+    <div class="container-fluid mt-4 mb-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="auth-header mb-4">
+                    <h2>
+                        <i class="fas fa-edit"></i> Edit Session
+                    </h2>
+                    <p>Update your session details</p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5>
+                            <i class="fas fa-calendar-alt"></i> Session Details
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.campaign.id_for_label }}" class="form-label">
+                                        <i class="fas fa-book"></i> Campaign <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.campaign }}
+                                    {% if form.campaign.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.campaign.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.session_date.id_for_label }}" class="form-label">
+                                        <i class="fas fa-calendar"></i> Session Date
+                                    </label>
+                                    {{ form.session_date }}
+                                    {% if form.session_date.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.session_date.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.planning_notes.id_for_label }}" class="form-label">
+                                        <i class="fas fa-clipboard-list"></i> Planning Notes
+                                    </label>
+                                    {{ form.planning_notes }}
+                                    {% if form.planning_notes.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.planning_notes.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.session_notes.id_for_label }}" class="form-label">
+                                        <i class="fas fa-sticky-note"></i> Session Notes
+                                    </label>
+                                    {{ form.session_notes }}
+                                    {% if form.session_notes.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.session_notes.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{% url 'game_sessions:session_detail' session.pk %}"
+                                   class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Update Session
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}
+    {{ session.campaign.title }}
+    {% if session.session_date %}- {{ session.session_date }}{% endif %}
+    - D&D Tracker
+{% endblock title %}
+{% block content %}
+    <div class="container-fluid mt-4 mb-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0 text-white">
+                            <i class="fas fa-calendar-alt"></i> {{ session.campaign.title }}
+                            {% if session.session_date %}- {{ session.session_date }}{% endif %}
+                        </h2>
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'game_sessions:session_list' %}"
+                               class="btn btn-secondary btn-sm btn-centered">
+                                <i class="fas fa-arrow-left"></i> Back to Sessions
+                            </a>
+                            <a href="{% url 'game_sessions:session_update' session.pk %}"
+                               class="btn btn-primary btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'game_sessions:session_delete' session.pk %}"
+                               class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-book"></i> Campaign
+                                    </h6>
+                                    <p class="text-muted">
+                                        <a href="{% url 'campaigns:campaign_detail' session.campaign.pk %}"
+                                           class="text-decoration-none">{{ session.campaign.title }}</a>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-calendar"></i> Session Date
+                                    </h6>
+                                    {% if session.session_date %}
+                                        <p class="text-muted">{{ session.session_date }}</p>
+                                    {% else %}
+                                        <p class="text-muted fst-italic">Not scheduled</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-clipboard-list"></i> Planning Notes
+                                    </h6>
+                                    {% if session.planning_notes %}
+                                        <div class="card bg-light">
+                                            <div class="card-body">
+                                                <p class="text-dark mb-0">{{ session.planning_notes|linebreaks }}</p>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <p class="text-muted fst-italic">No planning notes provided</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-sticky-note"></i> Session Notes
+                                    </h6>
+                                    {% if session.session_notes %}
+                                        <div class="card bg-light">
+                                            <div class="card-body">
+                                                <p class="text-dark mb-0">{{ session.session_notes|linebreaks }}</p>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <p class="text-muted fst-italic">No session notes provided</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

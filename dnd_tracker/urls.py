@@ -27,4 +27,5 @@ urlpatterns = [
     path("", home_redirect, name="home"),
     path("accounts/", include("accounts.urls")),
     path("campaigns/", include("campaigns.urls")),
+    path("players/", include("players.urls")),
 ]

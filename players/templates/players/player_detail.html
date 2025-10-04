@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}
+    {{ player.character_name }} - D&D Tracker
+{% endblock title %}
+{% block content %}
+    <div class="container-fluid mt-4 mb-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0 text-white">
+                            <i class="fas fa-user"></i> {{ player.character_name }}
+                        </h2>
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'players:player_list' %}"
+                               class="btn btn-secondary btn-sm btn-centered">
+                                <i class="fas fa-arrow-left"></i> Back to Players
+                            </a>
+                            <a href="{% url 'players:player_update' player.pk %}"
+                               class="btn btn-primary btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'players:player_delete' player.pk %}"
+                               class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-user"></i> Character Name
+                                    </h6>
+                                    <p class="text-muted">{{ player.character_name }}</p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-id-card"></i> Player Name
+                                    </h6>
+                                    <p class="text-muted">{{ player.player_name }}</p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-shield-alt"></i> Armor Class
+                                    </h6>
+                                    <p class="text-muted">{{ player.ac }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-dice-d20"></i> Class
+                                    </h6>
+                                    <p class="text-muted">{{ player.character_class }}</p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-paw"></i> Race
+                                    </h6>
+                                    <p class="text-muted">{{ player.race }}</p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-star"></i> Level
+                                    </h6>
+                                    <p class="text-muted">{{ player.level }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-scroll"></i> Background
+                                    </h6>
+                                    <p class="text-muted">{{ player.background|linebreaks }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-book"></i> Campaign
+                                    </h6>
+                                    <p class="text-muted">
+                                        <a href="{% url 'campaigns:campaign_detail' player.campaign.pk %}"
+                                           class="text-decoration-none">{{ player.campaign.title }}</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

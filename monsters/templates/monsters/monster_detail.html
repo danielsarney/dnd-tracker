@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block title %}
+    {{ monster.name }} - D&D Tracker
+{% endblock title %}
+{% block content %}
+    <div class="container-fluid mt-4 mb-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0 text-white">
+                            <i class="fas fa-dragon"></i> {{ monster.name }}
+                        </h2>
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'monsters:monster_list' %}"
+                               class="btn btn-secondary btn-sm btn-centered">
+                                <i class="fas fa-arrow-left"></i> Back to Monsters
+                            </a>
+                            <a href="{% url 'monsters:monster_update' monster.pk %}"
+                               class="btn btn-primary btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'monsters:monster_delete' monster.pk %}"
+                               class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Basic Stats -->
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-shield-alt"></i> Armor Class
+                                    </h6>
+                                    <p class="text-muted">{{ monster.ac }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-heart"></i> Hit Points
+                                    </h6>
+                                    <p class="text-muted">{{ monster.hp }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-running"></i> Speed
+                                    </h6>
+                                    <p class="text-muted">{{ monster.speed }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-star"></i> Challenge Rating
+                                    </h6>
+                                    <p class="text-muted">{{ monster.challenge_rating }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Ability Scores -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-dice-d20"></i> Ability Scores
+                                </h5>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">STR</h6>
+                                    <p class="text-muted">{{ monster.strength }} ({{ monster.strength_mod }}) ({{ monster.strength_save }})</p>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">DEX</h6>
+                                    <p class="text-muted">{{ monster.dexterity }} ({{ monster.dexterity_mod }}) ({{ monster.dexterity_save }})</p>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">CON</h6>
+                                    <p class="text-muted">{{ monster.constitution }} ({{ monster.constitution_mod }}) ({{ monster.constitution_save }})</p>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">INT</h6>
+                                    <p class="text-muted">{{ monster.intelligence }} ({{ monster.intelligence_mod }}) ({{ monster.intelligence_save }})</p>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">WIS</h6>
+                                    <p class="text-muted">{{ monster.wisdom }} ({{ monster.wisdom_mod }}) ({{ monster.wisdom_save }})</p>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">CHA</h6>
+                                    <p class="text-muted">{{ monster.charisma }} ({{ monster.charisma_mod }}) ({{ monster.charisma_save }})</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Combat Features -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                {% if monster.skills %}
+                                    <div class="mb-3">
+                                        <h6 class="text-primary">
+                                            <i class="fas fa-tools"></i> Skills
+                                        </h6>
+                                        <p class="text-muted">{{ monster.skills|linebreaks }}</p>
+                                    </div>
+                                {% endif %}
+                                {% if monster.resistances %}
+                                    <div class="mb-3">
+                                        <h6 class="text-primary">
+                                            <i class="fas fa-shield"></i> Resistances
+                                        </h6>
+                                        <p class="text-muted">{{ monster.resistances|linebreaks }}</p>
+                                    </div>
+                                {% endif %}
+                                {% if monster.immunities %}
+                                    <div class="mb-3">
+                                        <h6 class="text-primary">
+                                            <i class="fas fa-shield-alt"></i> Immunities
+                                        </h6>
+                                        <p class="text-muted">{{ monster.immunities|linebreaks }}</p>
+                                    </div>
+                                {% endif %}
+                                {% if monster.vulnerabilities %}
+                                    <div class="mb-3">
+                                        <h6 class="text-primary">
+                                            <i class="fas fa-exclamation-triangle"></i> Vulnerabilities
+                                        </h6>
+                                        <p class="text-muted">{{ monster.vulnerabilities|linebreaks }}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {% if monster.senses %}
+                                    <div class="mb-3">
+                                        <h6 class="text-primary">
+                                            <i class="fas fa-eye"></i> Senses
+                                        </h6>
+                                        <p class="text-muted">{{ monster.senses|linebreaks }}</p>
+                                    </div>
+                                {% endif %}
+                                {% if monster.languages %}
+                                    <div class="mb-3">
+                                        <h6 class="text-primary">
+                                            <i class="fas fa-language"></i> Languages
+                                        </h6>
+                                        <p class="text-muted">{{ monster.languages|linebreaks }}</p>
+                                    </div>
+                                {% endif %}
+                                {% if monster.gear %}
+                                    <div class="mb-3">
+                                        <h6 class="text-primary">
+                                            <i class="fas fa-shield-alt"></i> Gear
+                                        </h6>
+                                        <p class="text-muted">{{ monster.gear|linebreaks }}</p>
+                                    </div>
+                                {% endif %}
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-clock"></i> Initiative
+                                    </h6>
+                                    <p class="text-muted">{{ monster.initiative }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Actions -->
+                        {% if monster.traits %}
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-magic"></i> Traits
+                                    </h5>
+                                    <p class="text-muted">{{ monster.traits|linebreaks }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if monster.actions %}
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-sword"></i> Actions
+                                    </h5>
+                                    <p class="text-muted">{{ monster.actions|linebreaks }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if monster.bonus_actions %}
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-plus"></i> Bonus Actions
+                                    </h5>
+                                    <p class="text-muted">{{ monster.bonus_actions|linebreaks }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if monster.reactions %}
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-bolt"></i> Reactions
+                                    </h5>
+                                    <p class="text-muted">{{ monster.reactions|linebreaks }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if monster.legendary_actions %}
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-crown"></i> Legendary Actions
+                                    </h5>
+                                    <p class="text-muted">{{ monster.legendary_actions|linebreaks }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

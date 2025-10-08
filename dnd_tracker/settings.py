@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "accounts",
     "campaigns",
     "players",
+    "monsters",
     "game_sessions",
 ]
 

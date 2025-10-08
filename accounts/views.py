@@ -92,8 +92,9 @@ def setup_2fa_view(request):
         return redirect("accounts:login")
 
     if request.method == "POST":
-        if "verify_setup" in request.POST:
-            code = request.POST.get("code")
+        form = TwoFactorForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data["code"]
             if user.verify_two_factor_code(code):
                 user.two_factor_enabled = True
                 user.save()
@@ -102,6 +103,8 @@ def setup_2fa_view(request):
                 return redirect("accounts:profile")
             else:
                 pass  # Invalid verification code - no flash message
+    else:
+        form = TwoFactorForm()
 
     # Always generate QR code for setup (skip initial screen)
     qr_url = user.get_two_factor_qr_code_url()
@@ -117,7 +120,12 @@ def setup_2fa_view(request):
     return render(
         request,
         "accounts/setup_2fa.html",
-        {"qr_code": img_str, "secret": user.two_factor_secret, "user": user},
+        {
+            "qr_code": img_str,
+            "secret": user.two_factor_secret,
+            "user": user,
+            "form": form,
+        },
     )
 
 

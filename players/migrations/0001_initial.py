@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("campaigns", "0002_auto_20251004_1510"),
+        ("campaigns", "0001_initial"),
     ]
 
     operations = [

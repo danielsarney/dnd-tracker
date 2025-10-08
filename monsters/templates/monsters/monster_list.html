@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}
+    Monsters - D&D Tracker
+{% endblock title %}
+{% block content %}
+    <div class="container mt-4 mb-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="mb-2">
+                            <i class="fas fa-dragon text-primary"></i> Monsters
+                        </h2>
+                        <p class="text-white mb-0">Manage your D&D monster stat blocks for combat encounters</p>
+                    </div>
+                    <div>
+                        <a href="{% url 'monsters:monster_create' %}"
+                           class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus"></i> Create New Monster
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Search Filter -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="get" class="row g-3 align-items-end">
+                            <div class="col-md-6">
+                                <input type="text"
+                                       class="form-control"
+                                       id="search"
+                                       name="search"
+                                       placeholder="Search monsters..."
+                                       value="{{ request.GET.search }}">
+                            </div>
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if monsters %}
+            <div class="row">
+                {% for monster in monsters %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0 text-white">
+                                    <i class="fas fa-dragon me-2"></i>{{ monster.name }}
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <strong>AC:</strong> {{ monster.ac }}
+                                    <br>
+                                    <strong>HP:</strong> {{ monster.hp }}
+                                    <br>
+                                    <strong>Speed:</strong> {{ monster.speed }}
+                                    <br>
+                                    <strong>Challenge:</strong> {{ monster.challenge_rating }}
+                                    <br>
+                                    <strong>Initiative:</strong> {{ monster.initiative }}
+                                </p>
+                            </div>
+                            <div class="card-footer bg-light border-0">
+                                <a href="{% url 'monsters:monster_detail' monster.pk %}"
+                                   class="btn btn-primary w-100">
+                                    <i class="fas fa-eye me-2"></i>View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body py-5">
+                        <i class="fas fa-dragon fa-4x text-primary mb-4"></i>
+                        <h4 class="text-white mb-3">No monsters yet</h4>
+                        <p class="text-white mb-4">Start by creating your first monster stat block!</p>
+                        <a href="{% url 'monsters:monster_create' %}"
+                           class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus me-2"></i>Create Your First Monster
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}

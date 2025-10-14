@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}
+    Start {{ encounter.name }} - D&D Tracker
+{% endblock title %}
+{% block content %}
+    <div class="container-fluid mt-4 mb-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="auth-header mb-4">
+                    <h2>
+                        <i class="fas fa-play"></i> Start Combat Encounter
+                    </h2>
+                    <p>Enter initiative rolls to begin combat</p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5>
+                            <i class="fas fa-sword"></i> {{ encounter.name }}
+                        </h5>
+                        <p class="mb-0 text-muted">
+                            <strong>Campaign:</strong> {{ encounter.campaign.title }}
+                        </p>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-primary mb-3">
+                                        <i class="fas fa-users"></i> Player Initiative Rolls
+                                    </h6>
+                                    {% for player in encounter.players.all %}
+                                        <div class="mb-3">
+                                            <label for="player_{{ player.id }}_initiative" class="form-label">
+                                                {{ player.character_name }} ({{ player.player_name }})
+                                            </label>
+                                            <input type="number"
+                                                   class="form-control"
+                                                   id="player_{{ player.id }}_initiative"
+                                                   name="player_{{ player.id }}_initiative"
+                                                   min="1"
+                                                   max="30"
+                                                   placeholder="Roll initiative"
+                                                   required>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-primary mb-3">
+                                        <i class="fas fa-dragon"></i> Monster Initiative Rolls
+                                    </h6>
+                                    {% for monster in encounter.monsters.all %}
+                                        <div class="mb-3">
+                                            <label for="monster_{{ monster.id }}_initiative" class="form-label">{{ monster.name }}</label>
+                                            <input type="number"
+                                                   class="form-control"
+                                                   id="monster_{{ monster.id }}_initiative"
+                                                   name="monster_{{ monster.id }}_initiative"
+                                                   min="1"
+                                                   max="30"
+                                                   placeholder="Roll initiative"
+                                                   required>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Note:</strong> Enter the total initiative roll (d20 + initiative modifier) for each participant.
+                                Combat will start with the highest initiative going first.
+                            </div>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{% url 'combat_tracker:encounter_detail' encounter.pk %}"
+                                   class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-play"></i> Start Combat
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

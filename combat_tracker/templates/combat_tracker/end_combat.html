@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}
+    End Combat: {{ encounter.name }} - D&D Tracker
+{% endblock title %}
+{% block content %}
+    <div class="container-fluid mt-4 mb-5 px-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-warning">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">
+                            <i class="fas fa-stop"></i> End Combat Session
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info mb-4">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Combat Summary:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>
+                                    <strong>Encounter:</strong> {{ encounter.name }}
+                                </li>
+                                <li>
+                                    <strong>Campaign:</strong> {{ encounter.campaign.title }}
+                                </li>
+                                <li>
+                                    <strong>Round Reached:</strong> {{ combat_session.current_round }}
+                                </li>
+                                <li>
+                                    <strong>Started:</strong> {{ combat_session.started_at|date:"F d, Y g:i A" }}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h6 class="text-primary">Participants</h6>
+                                <ul class="list-group">
+                                    {% for participant in combat_session.participants.all %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            {{ participant.name }}
+                                            <span class="badge {% if participant.participant_type == 'player' %}bg-primary{% else %}bg-danger{% endif %}">
+                                                {{ participant.participant_type|title }}
+                                            </span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-primary">Final Status</h6>
+                                <ul class="list-group">
+                                    {% for participant in combat_session.participants.all %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            {{ participant.name }}
+                                            <span class="badge {% if participant.is_dead %}bg-danger{% else %}bg-success{% endif %}">
+                                                {% if participant.is_dead %}
+                                                    Dead
+                                                {% else %}
+                                                    Alive
+                                                {% endif %}
+                                            </span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <p class="text-dark mb-4">Are you sure you want to end this combat session?</p>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{% url 'combat_tracker:combat_interface' encounter.pk %}"
+                                   class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fas fa-stop"></i> End Combat Session
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

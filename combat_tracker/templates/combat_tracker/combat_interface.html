@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+{% block title %}
+    Combat: {{ encounter.name }} - D&D Tracker
+{% endblock title %}
+{% block content %}
+    <div class="container-fluid mt-4 mb-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-0 text-white">
+                                <i class="fas fa-sword"></i> {{ encounter.name }} - Combat
+                            </h2>
+                            <p class="mb-0 text-white-50">Round {{ combat_session.current_round }}</p>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'combat_tracker:encounter_detail' encounter.pk %}"
+                               class="btn btn-secondary btn-sm">
+                                <i class="fas fa-arrow-left"></i> Back to Encounter
+                            </a>
+                            <a href="{% url 'combat_tracker:end_combat' encounter.pk %}"
+                               class="btn btn-danger btn-sm">
+                                <i class="fas fa-stop"></i> End Combat
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Initiative Order -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-list-ol"></i> Initiative Order
+                                </h5>
+                                <div class="row">
+                                    {% for participant in all_participants %}
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                            <div class="card {% if participant == current_participant %}border-success bg-light{% elif participant.is_dead %}border-danger bg-danger bg-opacity-10{% endif %}">
+                                                <div class="card-body p-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <strong class="{% if participant.participant_type == 'player' %}text-primary{% else %}text-danger{% endif %}">
+                                                                {{ participant.name }}
+                                                            </strong>
+                                                            <br>
+                                                            <small class="text-muted">Initiative: {{ participant.initiative }}</small>
+                                                            <br>
+                                                            {% if participant.participant_type == 'monster' %}
+                                                                <small class="{% if participant.is_dead %}text-danger{% else %}text-success{% endif %}">
+                                                                    HP: {{ participant.current_hp }}/{{ participant.max_hp }}
+                                                                    {% if participant.is_dead %} (Dead){% endif %}
+                                                                </small>
+                                                            {% else %}
+                                                                <small class="text-info">
+                                                                    Player manages own HP
+                                                                </small>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="d-flex flex-column align-items-end">
+                                                            {% if participant == current_participant %}
+                                                                <i class="fas fa-play text-success mb-1"></i>
+                                                            {% endif %}
+                                                            {% if participant.participant_type == 'monster' and not participant.is_dead %}
+                                                                <a href="{% url 'combat_tracker:update_hp' encounter.pk participant.pk %}"
+                                                                   class="btn btn-sm btn-outline-warning">
+                                                                    <i class="fas fa-heart"></i> HP
+                                                                </a>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Current Turn -->
+                        {% if current_participant %}
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="text-primary mb-3">
+                                        <i class="fas fa-user-clock"></i> Current Turn: {{ current_participant.name }}
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <!-- Player Turn -->
+                                {% if current_participant.participant_type == 'player' %}
+                                    <div class="col-md-6">
+                                        <div class="card border-primary">
+                                            <div class="card-header bg-primary text-white">
+                                                <h6 class="mb-0">
+                                                    <i class="fas fa-user"></i> {{ current_participant.player.character_name }}
+                                                </h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="mb-1">
+                                                    <strong>Player:</strong> {{ current_participant.player.player_name }}
+                                                </p>
+                                                <p class="mb-1">
+                                                    <strong>Class:</strong> {{ current_participant.player.character_class }}
+                                                </p>
+                                                {% if current_participant.player.subclass %}
+                                                    <p class="mb-1">
+                                                        <strong>Subclass:</strong> {{ current_participant.player.subclass }}
+                                                    </p>
+                                                {% endif %}
+                                                <p class="mb-1">
+                                                    <strong>Race:</strong> {{ current_participant.player.race }}
+                                                </p>
+                                                <p class="mb-1">
+                                                    <strong>Level:</strong> {{ current_participant.player.level }}
+                                                </p>
+                                                <p class="mb-1">
+                                                    <strong>AC:</strong> {{ current_participant.player.ac }}
+                                                </p>
+                                                <p class="mb-0">
+                                                    <strong>Current HP:</strong> {{ current_participant.current_hp }}/{{ current_participant.max_hp }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h6 class="mb-0">
+                                                    <i class="fas fa-dice"></i> Player Actions
+                                                </h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="text-muted">
+                                                    It's {{ current_participant.player.player_name }}'s turn!
+                                                    They can take their action, movement, and bonus action.
+                                                </p>
+                                                <div class="alert alert-info">
+                                                    <i class="fas fa-info-circle"></i>
+                                                    <strong>Note:</strong> Players manage their own character actions, spells, and abilities.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Monster Turn -->
+                                {% else %}
+                                    <div class="col-md-6">
+                                        <div class="card border-danger">
+                                            <div class="card-header bg-danger text-white">
+                                                <h6 class="mb-0">
+                                                    <i class="fas fa-dragon"></i> {{ current_participant.monster.name }}
+                                                </h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <p class="mb-1">
+                                                            <strong>AC:</strong> {{ current_participant.monster.ac }}
+                                                        </p>
+                                                        <p class="mb-1">
+                                                            <strong>Current HP:</strong> {{ current_participant.current_hp }}/{{ current_participant.max_hp }}
+                                                        </p>
+                                                        <p class="mb-1">
+                                                            <strong>Speed:</strong> {{ current_participant.monster.speed }}
+                                                        </p>
+                                                        <p class="mb-0">
+                                                            <strong>CR:</strong> {{ current_participant.monster.challenge_rating }}
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p class="mb-1">
+                                                            <strong>STR:</strong> {{ current_participant.monster.strength }} ({{ current_participant.monster.strength_mod }})
+                                                        </p>
+                                                        <p class="mb-1">
+                                                            <strong>DEX:</strong> {{ current_participant.monster.dexterity }} ({{ current_participant.monster.dexterity_mod }})
+                                                        </p>
+                                                        <p class="mb-1">
+                                                            <strong>CON:</strong> {{ current_participant.monster.constitution }} ({{ current_participant.monster.constitution_mod }})
+                                                        </p>
+                                                        <p class="mb-1">
+                                                            <strong>INT:</strong> {{ current_participant.monster.intelligence }} ({{ current_participant.monster.intelligence_mod }})
+                                                        </p>
+                                                        <p class="mb-1">
+                                                            <strong>WIS:</strong> {{ current_participant.monster.wisdom }} ({{ current_participant.monster.wisdom_mod }})
+                                                        </p>
+                                                        <p class="mb-0">
+                                                            <strong>CHA:</strong> {{ current_participant.monster.charisma }} ({{ current_participant.monster.charisma_mod }})
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                {% if current_participant.monster.resistances %}
+                                                    <div class="mt-2">
+                                                        <strong>Resistances:</strong> {{ current_participant.monster.resistances }}
+                                                    </div>
+                                                {% endif %}
+                                                {% if current_participant.monster.immunities %}
+                                                    <div class="mt-1">
+                                                        <strong>Immunities:</strong> {{ current_participant.monster.immunities }}
+                                                    </div>
+                                                {% endif %}
+                                                {% if current_participant.monster.vulnerabilities %}
+                                                    <div class="mt-1">
+                                                        <strong>Vulnerabilities:</strong> {{ current_participant.monster.vulnerabilities }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h6 class="mb-0">
+                                                    <i class="fas fa-scroll"></i> Monster Abilities & Actions
+                                                </h6>
+                                            </div>
+                                            <div class="card-body">
+                                                {% if current_participant.monster.abilities %}
+                                                    <div class="mb-3">
+                                                        <strong>Abilities:</strong>
+                                                        <div class="mt-1">{{ current_participant.monster.abilities|linebreaks }}</div>
+                                                    </div>
+                                                {% endif %}
+                                                {% if current_participant.monster.actions %}
+                                                    <div class="mb-3">
+                                                        <strong>Actions:</strong>
+                                                        <div class="mt-1">{{ current_participant.monster.actions|linebreaks }}</div>
+                                                    </div>
+                                                {% endif %}
+                                                {% if current_participant.monster.gear %}
+                                                    <div class="mb-3">
+                                                        <strong>Gear:</strong>
+                                                        <div class="mt-1">{{ current_participant.monster.gear|linebreaks }}</div>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <!-- Turn Actions -->
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                                        {% if current_participant.participant_type == 'monster' and not current_participant.is_dead %}
+                                            <a href="{% url 'combat_tracker:update_hp' encounter.pk current_participant.pk %}"
+                                               class="btn btn-warning btn-lg me-2">
+                                                <i class="fas fa-heart"></i> Track Monster HP
+                                            </a>
+                                        {% endif %}
+                                        <a href="{% url 'combat_tracker:next_turn' encounter.pk %}"
+                                           class="btn btn-success btn-lg">
+                                            <i class="fas fa-forward"></i> Complete Turn & Next
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -16,6 +16,10 @@
                                class="btn btn-secondary btn-sm btn-centered">
                                 <i class="fas fa-arrow-left"></i> Back to Encounters
                             </a>
+                            <a href="{% url 'combat_tracker:start_encounter' encounter.pk %}"
+                               class="btn btn-success btn-sm">
+                                <i class="fas fa-play"></i> Start Encounter
+                            </a>
                             <a href="{% url 'combat_tracker:encounter_update' encounter.pk %}"
                                class="btn btn-primary btn-sm">
                                 <i class="fas fa-edit"></i> Edit

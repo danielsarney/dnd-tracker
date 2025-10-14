@@ -556,3 +556,22 @@ footer.bg-primary {
         padding: 64px;
     }
 }
+
+/* Combat tracker specific styles */
+.scrollable-checkbox-container {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #5d6d7e;
+    border-radius: 8px;
+    padding: 16px;
+    background: rgba(70, 90, 110, 0.3);
+}
+
+.form-check {
+    margin-bottom: 8px;
+}
+
+.form-check-label {
+    color: #ecf0f1;
+    font-weight: 500;
+}

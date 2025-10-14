@@ -30,4 +30,5 @@ urlpatterns = [
     path("players/", include("players.urls")),
     path("monsters/", include("monsters.urls")),
     path("sessions/", include("game_sessions.urls")),
+    path("combat/", include("combat_tracker.urls")),
 ]

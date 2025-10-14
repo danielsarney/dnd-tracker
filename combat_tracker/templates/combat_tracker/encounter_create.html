@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}
+    Create Encounter - D&D Tracker
+{% endblock title %}
+{% block content %}
+    <div class="container-fluid mt-4 mb-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="auth-header mb-4">
+                    <h2>
+                        <i class="fas fa-plus"></i> Create New Encounter
+                    </h2>
+                    <p>Set up your D&D combat encounter</p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5>
+                            <i class="fas fa-sword"></i> Encounter Details
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.name.id_for_label }}" class="form-label">
+                                        <i class="fas fa-sword"></i> Encounter Name <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.name }}
+                                    {% if form.name.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.name.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.campaign.id_for_label }}" class="form-label">
+                                        <i class="fas fa-book"></i> Campaign <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.campaign }}
+                                    {% if form.campaign.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.campaign.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label for="{{ form.description.id_for_label }}" class="form-label">
+                                        <i class="fas fa-scroll"></i> Description
+                                    </label>
+                                    {{ form.description }}
+                                    {% if form.description.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.description.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">
+                                        <i class="fas fa-users"></i> Players <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="scrollable-checkbox-container">
+                                        {% for player in form.players %}
+                                            <div class="form-check">
+                                                {{ player.tag }}
+                                                <label class="form-check-label" for="{{ player.id_for_label }}">{{ player.choice_label }}</label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% if form.players.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.players.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">
+                                        <i class="fas fa-dragon"></i> Monsters <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="scrollable-checkbox-container">
+                                        {% for monster in form.monsters %}
+                                            <div class="form-check">
+                                                {{ monster.tag }}
+                                                <label class="form-check-label" for="{{ monster.id_for_label }}">{{ monster.choice_label }}</label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% if form.monsters.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.monsters.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{% url 'combat_tracker:encounter_list' %}"
+                                   class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Create Encounter
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

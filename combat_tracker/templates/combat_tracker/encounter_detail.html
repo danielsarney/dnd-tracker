@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}
+    {{ encounter.name }} - D&D Tracker
+{% endblock title %}
+{% block content %}
+    <div class="container-fluid mt-4 mb-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0 text-white">
+                            <i class="fas fa-sword"></i> {{ encounter.name }}
+                        </h2>
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'combat_tracker:encounter_list' %}"
+                               class="btn btn-secondary btn-sm btn-centered">
+                                <i class="fas fa-arrow-left"></i> Back to Encounters
+                            </a>
+                            <a href="{% url 'combat_tracker:encounter_update' encounter.pk %}"
+                               class="btn btn-primary btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'combat_tracker:encounter_delete' encounter.pk %}"
+                               class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-book"></i> Campaign
+                                    </h6>
+                                    <p class="text-muted">
+                                        <a href="{% url 'campaigns:campaign_detail' encounter.campaign.pk %}"
+                                           class="text-decoration-none">{{ encounter.campaign.title }}</a>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-calendar"></i> Created
+                                    </h6>
+                                    <p class="text-muted">{{ encounter.created_at|date:"F d, Y" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-scroll"></i> Description
+                                    </h6>
+                                    {% if encounter.description %}
+                                        <div class="card bg-light">
+                                            <div class="card-body">
+                                                <p class="text-dark mb-0">{{ encounter.description|linebreaks }}</p>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <p class="text-muted fst-italic">No description provided</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Players Combat Stats -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-users"></i> Players Combat Stats
+                                </h5>
+                            </div>
+                            {% for player in encounter.players.all %}
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <div class="card border-primary">
+                                        <div class="card-header bg-primary text-white">
+                                            <h6 class="mb-0">{{ player.character_name }}</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="mb-1">
+                                                <strong>Player:</strong> {{ player.player_name }}
+                                            </p>
+                                            <p class="mb-1">
+                                                <strong>Class:</strong> {{ player.character_class }}
+                                            </p>
+                                            {% if player.subclass %}
+                                                <p class="mb-1">
+                                                    <strong>Subclass:</strong> {{ player.subclass }}
+                                                </p>
+                                            {% endif %}
+                                            <p class="mb-1">
+                                                <strong>Race:</strong> {{ player.race }}
+                                            </p>
+                                            <p class="mb-1">
+                                                <strong>Level:</strong> {{ player.level }}
+                                            </p>
+                                            <p class="mb-0">
+                                                <strong>AC:</strong> {{ player.ac }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <!-- Monsters Combat Stats -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-dragon"></i> Monsters Combat Stats
+                                </h5>
+                            </div>
+                            {% for monster in encounter.monsters.all %}
+                                <div class="col-lg-6 col-md-12 mb-4">
+                                    <div class="card border-danger">
+                                        <div class="card-header bg-danger text-white">
+                                            <h6 class="mb-0">{{ monster.name }}</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p class="mb-1">
+                                                        <strong>AC:</strong> {{ monster.ac }}
+                                                    </p>
+                                                    <p class="mb-1">
+                                                        <strong>HP:</strong> {{ monster.hp }}
+                                                    </p>
+                                                    <p class="mb-1">
+                                                        <strong>Speed:</strong> {{ monster.speed }}
+                                                    </p>
+                                                    <p class="mb-1">
+                                                        <strong>Initiative:</strong> {{ monster.initiative }}
+                                                    </p>
+                                                    <p class="mb-0">
+                                                        <strong>CR:</strong> {{ monster.challenge_rating }}
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p class="mb-1">
+                                                        <strong>STR:</strong> {{ monster.strength }} ({{ monster.strength_mod }})
+                                                    </p>
+                                                    <p class="mb-1">
+                                                        <strong>DEX:</strong> {{ monster.dexterity }} ({{ monster.dexterity_mod }})
+                                                    </p>
+                                                    <p class="mb-1">
+                                                        <strong>CON:</strong> {{ monster.constitution }} ({{ monster.constitution_mod }})
+                                                    </p>
+                                                    <p class="mb-1">
+                                                        <strong>INT:</strong> {{ monster.intelligence }} ({{ monster.intelligence_mod }})
+                                                    </p>
+                                                    <p class="mb-1">
+                                                        <strong>WIS:</strong> {{ monster.wisdom }} ({{ monster.wisdom_mod }})
+                                                    </p>
+                                                    <p class="mb-0">
+                                                        <strong>CHA:</strong> {{ monster.charisma }} ({{ monster.charisma_mod }})
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            {% if monster.resistances %}
+                                                <div class="mt-2">
+                                                    <strong>Resistances:</strong> {{ monster.resistances }}
+                                                </div>
+                                            {% endif %}
+                                            {% if monster.immunities %}
+                                                <div class="mt-1">
+                                                    <strong>Immunities:</strong> {{ monster.immunities }}
+                                                </div>
+                                            {% endif %}
+                                            {% if monster.vulnerabilities %}
+                                                <div class="mt-1">
+                                                    <strong>Vulnerabilities:</strong> {{ monster.vulnerabilities }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

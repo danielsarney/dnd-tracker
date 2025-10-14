@@ -33,11 +33,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "dnd_tracker",
     "accounts",
     "campaigns",
     "players",
     "monsters",
     "game_sessions",
+    "combat_tracker",
 ]
 
 MIDDLEWARE = [

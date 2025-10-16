@@ -1,3 +1,18 @@
+"""
+Player Character Views for D&D Tracker
+
+This module contains all the view functions for player character management.
+It handles CRUD operations for player characters including listing, creating,
+updating, and deleting characters with search functionality.
+
+Key Features:
+- Player character listing with search functionality
+- Character creation and editing
+- Character detail viewing
+- Character deletion with confirmation
+- Search across character name, player name, class, subclass, race, background, and campaign
+"""
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db import models
@@ -7,10 +22,22 @@ from .forms import PlayerForm
 
 @login_required
 def player_list_view(request):
-    """Display list of players with search functionality"""
+    """
+    Display a list of all player characters with optional search functionality.
+
+    This view shows all player characters in the system and allows users to search
+    through character names, player names, classes, subclasses, races, backgrounds,
+    and associated campaigns using a search query parameter.
+
+    Args:
+        request: HTTP request object
+
+    Returns:
+        HttpResponse: Rendered player list page with search results
+    """
     players = Player.objects.all()
 
-    # Handle search functionality
+    # Handle search functionality across multiple character fields
     search_query = request.GET.get("search")
     if search_query:
         players = players.filter(
@@ -32,14 +59,38 @@ def player_list_view(request):
 
 @login_required
 def player_detail_view(request, pk):
-    """Display player details"""
+    """
+    Display detailed information about a specific player character.
+
+    This view shows all the details of a player character including their
+    name, class, race, level, armor class, background, and associated campaign.
+
+    Args:
+        request: HTTP request object
+        pk: Primary key of the player character to display
+
+    Returns:
+        HttpResponse: Rendered player detail page
+    """
     player = get_object_or_404(Player, pk=pk)
     return render(request, "players/player_detail.html", {"player": player})
 
 
 @login_required
 def player_create_view(request):
-    """Create a new player"""
+    """
+    Handle creation of new player characters.
+
+    This view processes player character creation forms and creates new
+    character instances. After successful creation, users are redirected
+    to the player list page.
+
+    Args:
+        request: HTTP request object
+
+    Returns:
+        HttpResponse: Rendered player creation form or redirect to list
+    """
     if request.method == "POST":
         form = PlayerForm(request.POST)
         if form.is_valid():
@@ -53,7 +104,20 @@ def player_create_view(request):
 
 @login_required
 def player_update_view(request, pk):
-    """Update an existing player"""
+    """
+    Handle updating existing player characters.
+
+    This view processes player character update forms and modifies existing
+    character instances. After successful update, users are redirected to
+    the character detail page.
+
+    Args:
+        request: HTTP request object
+        pk: Primary key of the player character to update
+
+    Returns:
+        HttpResponse: Rendered player update form or redirect to detail
+    """
     player = get_object_or_404(Player, pk=pk)
 
     if request.method == "POST":
@@ -71,7 +135,20 @@ def player_update_view(request, pk):
 
 @login_required
 def player_delete_view(request, pk):
-    """Delete a player"""
+    """
+    Handle deletion of player characters with confirmation.
+
+    This view displays a confirmation page for player character deletion.
+    Users must confirm the deletion by submitting the form. After successful
+    deletion, users are redirected to the player list page.
+
+    Args:
+        request: HTTP request object
+        pk: Primary key of the player character to delete
+
+    Returns:
+        HttpResponse: Rendered deletion confirmation page or redirect to list
+    """
     player = get_object_or_404(Player, pk=pk)
 
     if request.method == "POST":

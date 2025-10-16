@@ -1,3 +1,19 @@
+"""
+Combat Tracker Views for D&D Tracker
+
+This module contains all the view functions for combat encounter management.
+It handles encounter CRUD operations, combat session management, initiative
+tracking, turn management, and hit point tracking during combat.
+
+Key Features:
+- Encounter creation and management
+- Combat session initialization with initiative rolls
+- Turn-based combat tracking
+- Hit point management (damage/healing)
+- Combat interface with initiative order
+- Combat session termination
+"""
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db import models, transaction
@@ -8,11 +24,23 @@ from .forms import EncounterForm, InitiativeForm, HPTrackingForm
 
 
 def parse_monster_hp(hp_string):
-    """Extract numeric HP value from monster HP string like '82 (10d11 + 26)'"""
+    """
+    Extract numeric HP value from monster HP string.
+
+    Monster HP is stored as strings like '82 (10d11 + 26)' where the first
+    number represents the average hit points. This function extracts that
+    numeric value for combat calculations.
+
+    Args:
+        hp_string (str): HP string from monster data
+
+    Returns:
+        int: Numeric HP value, or 0 if parsing fails
+    """
     if not hp_string:
         return 0
 
-    # Try to extract the first number from the string
+    # Extract the first number from the HP string
     match = re.match(r"(\d+)", str(hp_string).strip())
     if match:
         return int(match.group(1))
@@ -22,10 +50,22 @@ def parse_monster_hp(hp_string):
 
 @login_required
 def encounter_list_view(request):
-    """Display list of encounters with search functionality"""
+    """
+    Display a list of all encounters with optional search functionality.
+
+    This view shows all encounters in the system and allows users to search
+    through encounter names, descriptions, and associated campaigns using
+    a search query parameter.
+
+    Args:
+        request: HTTP request object
+
+    Returns:
+        HttpResponse: Rendered encounter list page with search results
+    """
     encounters = Encounter.objects.all()
 
-    # Handle search functionality
+    # Handle search functionality across multiple encounter fields
     search_query = request.GET.get("search")
     if search_query:
         encounters = encounters.filter(
@@ -43,7 +83,19 @@ def encounter_list_view(request):
 
 @login_required
 def encounter_detail_view(request, pk):
-    """Display encounter details with player and monster stats"""
+    """
+    Display detailed information about a specific encounter.
+
+    This view shows all the details of an encounter including its name,
+    description, associated campaign, participating players, and monsters.
+
+    Args:
+        request: HTTP request object
+        pk: Primary key of the encounter to display
+
+    Returns:
+        HttpResponse: Rendered encounter detail page
+    """
     encounter = get_object_or_404(Encounter, pk=pk)
     return render(
         request, "combat_tracker/encounter_detail.html", {"encounter": encounter}
@@ -52,7 +104,19 @@ def encounter_detail_view(request, pk):
 
 @login_required
 def encounter_create_view(request):
-    """Create a new encounter"""
+    """
+    Handle creation of new encounters.
+
+    This view processes encounter creation forms and creates new encounter
+    instances. After successful creation, users are redirected to the
+    encounter detail page.
+
+    Args:
+        request: HTTP request object
+
+    Returns:
+        HttpResponse: Rendered encounter creation form or redirect to detail
+    """
     if request.method == "POST":
         form = EncounterForm(request.POST)
         if form.is_valid():
@@ -66,7 +130,20 @@ def encounter_create_view(request):
 
 @login_required
 def encounter_update_view(request, pk):
-    """Update an existing encounter"""
+    """
+    Handle updating existing encounters.
+
+    This view processes encounter update forms and modifies existing
+    encounter instances. After successful update, users are redirected
+    to the encounter detail page.
+
+    Args:
+        request: HTTP request object
+        pk: Primary key of the encounter to update
+
+    Returns:
+        HttpResponse: Rendered encounter update form or redirect to detail
+    """
     encounter = get_object_or_404(Encounter, pk=pk)
 
     if request.method == "POST":
@@ -86,7 +163,20 @@ def encounter_update_view(request, pk):
 
 @login_required
 def encounter_delete_view(request, pk):
-    """Delete an encounter"""
+    """
+    Handle deletion of encounters with confirmation.
+
+    This view displays a confirmation page for encounter deletion. Users
+    must confirm the deletion by submitting the form. After successful
+    deletion, users are redirected to the encounter list page.
+
+    Args:
+        request: HTTP request object
+        pk: Primary key of the encounter to delete
+
+    Returns:
+        HttpResponse: Rendered deletion confirmation page or redirect to list
+    """
     encounter = get_object_or_404(Encounter, pk=pk)
 
     if request.method == "POST":
@@ -100,7 +190,21 @@ def encounter_delete_view(request, pk):
 
 @login_required
 def start_encounter_view(request, pk):
-    """Start an encounter by entering initiative rolls"""
+    """
+    Start a combat session by entering initiative rolls.
+
+    This view handles the transition from encounter planning to active combat.
+    It creates a combat session and combat participants based on initiative
+    rolls entered by the user. Players manage their own HP while monsters
+    get their HP parsed from their stat blocks.
+
+    Args:
+        request: HTTP request object
+        pk: Primary key of the encounter to start
+
+    Returns:
+        HttpResponse: Rendered initiative entry form or redirect to combat interface
+    """
     encounter = get_object_or_404(Encounter, pk=pk)
 
     # Check if combat session already exists
@@ -158,7 +262,20 @@ def start_encounter_view(request, pk):
 
 @login_required
 def combat_interface_view(request, pk):
-    """Main combat interface showing current turn and participant details"""
+    """
+    Main combat interface showing current turn and participant details.
+
+    This view displays the active combat interface with initiative order,
+    current turn information, and participant status. It handles round
+    progression and turn management automatically.
+
+    Args:
+        request: HTTP request object
+        pk: Primary key of the encounter in combat
+
+    Returns:
+        HttpResponse: Rendered combat interface page
+    """
     encounter = get_object_or_404(Encounter, pk=pk)
     combat_session = get_object_or_404(CombatSession, encounter=encounter)
 
@@ -202,7 +319,20 @@ def combat_interface_view(request, pk):
 
 @login_required
 def next_turn_view(request, pk):
-    """Move to the next turn in combat"""
+    """
+    Move to the next turn in combat.
+
+    This view advances the combat to the next turn, marking the current
+    turn as completed and moving to the next participant in initiative
+    order. When all participants have had their turn, it starts a new round.
+
+    Args:
+        request: HTTP request object
+        pk: Primary key of the encounter in combat
+
+    Returns:
+        HttpResponse: Redirect to combat interface
+    """
     encounter = get_object_or_404(Encounter, pk=pk)
     combat_session = get_object_or_404(CombatSession, encounter=encounter)
 
@@ -241,7 +371,19 @@ def next_turn_view(request, pk):
 
 @login_required
 def end_combat_view(request, pk):
-    """End the current combat session"""
+    """
+    End the current combat session.
+
+    This view handles the termination of an active combat session,
+    marking it as inactive and returning users to the encounter detail page.
+
+    Args:
+        request: HTTP request object
+        pk: Primary key of the encounter in combat
+
+    Returns:
+        HttpResponse: Rendered combat end confirmation or redirect to encounter detail
+    """
     encounter = get_object_or_404(Encounter, pk=pk)
     combat_session = get_object_or_404(CombatSession, encounter=encounter)
 
@@ -260,7 +402,21 @@ def end_combat_view(request, pk):
 
 @login_required
 def update_hp_view(request, pk, participant_id):
-    """Update HP for a combat participant (damage/healing)"""
+    """
+    Update HP for a combat participant (damage/healing).
+
+    This view handles hit point changes during combat, including damage
+    and healing. It automatically handles death status when HP reaches 0
+    and prevents HP from exceeding maximum values.
+
+    Args:
+        request: HTTP request object
+        pk: Primary key of the encounter in combat
+        participant_id: Primary key of the combat participant
+
+    Returns:
+        HttpResponse: Rendered HP update form or redirect to combat interface
+    """
     encounter = get_object_or_404(Encounter, pk=pk)
     combat_session = get_object_or_404(CombatSession, encounter=encounter)
     participant = get_object_or_404(

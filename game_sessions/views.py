@@ -1,3 +1,18 @@
+"""
+Game Session Views for D&D Tracker
+
+This module contains all the view functions for game session management.
+It handles CRUD operations for game sessions including listing, creating,
+updating, and deleting sessions with search functionality.
+
+Key Features:
+- Game session listing with search functionality
+- Session creation and editing
+- Session detail viewing
+- Session deletion with confirmation
+- Search across campaign title, planning notes, and session notes
+"""
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db import models
@@ -7,10 +22,22 @@ from .forms import SessionForm
 
 @login_required
 def session_list_view(request):
-    """Display list of sessions with search functionality"""
+    """
+    Display a list of all game sessions with optional search functionality.
+
+    This view shows all game sessions in the system and allows users to search
+    through campaign titles, planning notes, and session notes using a search
+    query parameter.
+
+    Args:
+        request: HTTP request object
+
+    Returns:
+        HttpResponse: Rendered session list page with search results
+    """
     sessions = Session.objects.all()
 
-    # Handle search functionality
+    # Handle search functionality across multiple session fields
     search_query = request.GET.get("search")
     if search_query:
         sessions = sessions.filter(
@@ -28,14 +55,38 @@ def session_list_view(request):
 
 @login_required
 def session_detail_view(request, pk):
-    """Display session details"""
+    """
+    Display detailed information about a specific game session.
+
+    This view shows all the details of a game session including its
+    associated campaign, planning notes, session notes, and session date.
+
+    Args:
+        request: HTTP request object
+        pk: Primary key of the session to display
+
+    Returns:
+        HttpResponse: Rendered session detail page
+    """
     session = get_object_or_404(Session, pk=pk)
     return render(request, "game_sessions/session_detail.html", {"session": session})
 
 
 @login_required
 def session_create_view(request):
-    """Create a new session"""
+    """
+    Handle creation of new game sessions.
+
+    This view processes game session creation forms and creates new
+    session instances. After successful creation, users are redirected
+    to the session list page.
+
+    Args:
+        request: HTTP request object
+
+    Returns:
+        HttpResponse: Rendered session creation form or redirect to list
+    """
     if request.method == "POST":
         form = SessionForm(request.POST)
         if form.is_valid():
@@ -49,7 +100,20 @@ def session_create_view(request):
 
 @login_required
 def session_update_view(request, pk):
-    """Update an existing session"""
+    """
+    Handle updating existing game sessions.
+
+    This view processes game session update forms and modifies existing
+    session instances. After successful update, users are redirected
+    to the session detail page.
+
+    Args:
+        request: HTTP request object
+        pk: Primary key of the session to update
+
+    Returns:
+        HttpResponse: Rendered session update form or redirect to detail
+    """
     session = get_object_or_404(Session, pk=pk)
 
     if request.method == "POST":
@@ -67,7 +131,20 @@ def session_update_view(request, pk):
 
 @login_required
 def session_delete_view(request, pk):
-    """Delete a session"""
+    """
+    Handle deletion of game sessions with confirmation.
+
+    This view displays a confirmation page for game session deletion.
+    Users must confirm the deletion by submitting the form. After successful
+    deletion, users are redirected to the session list page.
+
+    Args:
+        request: HTTP request object
+        pk: Primary key of the session to delete
+
+    Returns:
+        HttpResponse: Rendered deletion confirmation page or redirect to list
+    """
     session = get_object_or_404(Session, pk=pk)
 
     if request.method == "POST":

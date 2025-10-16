@@ -1,3 +1,24 @@
+/*
+ * D&D Tracker Application Styles
+ * 
+ * This CSS file contains all styling for the D&D Tracker application.
+ * It provides a modern, dark-themed interface with purple accent colors
+ * that creates an immersive gaming experience.
+ * 
+ * Key Design Features:
+ * - Dark gradient background with purple accents
+ * - Glassmorphism effects with backdrop blur
+ * - Smooth animations and transitions
+ * - Responsive design for mobile and desktop
+ * - Consistent button and form styling
+ * - Combat tracker specific components
+ */
+
+/* =============================================================================
+   GLOBAL STYLES
+   ============================================================================= */
+
+/* Main body styling with dark gradient background */
 body {
   background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
   min-height: 100vh;
@@ -7,6 +28,11 @@ body {
   color: #ecf0f1;
 }
 
+/* =============================================================================
+   AUTHENTICATION LAYOUT
+   ============================================================================= */
+
+/* Container for authentication forms - centers content vertically and horizontally */
 .auth-container {
   min-height: 100vh;
   display: flex;
@@ -15,6 +41,7 @@ body {
   padding: 20px;
 }
 
+/* Main authentication card with glassmorphism effect */
 .auth-card {
   background: rgba(52, 73, 94, 0.95);
   border-radius: 16px;
@@ -28,6 +55,7 @@ body {
   overflow: hidden;
 }
 
+/* Purple gradient top border for auth card */
 .auth-card::before {
   content: "";
   position: absolute;
@@ -39,6 +67,7 @@ body {
   border-radius: 16px 16px 0 0;
 }
 
+/* Authentication form header styling */
 .auth-header {
   text-align: center;
   margin-bottom: 40px;
@@ -46,6 +75,7 @@ body {
   z-index: 1;
 }
 
+/* Main heading in auth forms with purple glow effect */
 .auth-header h2 {
   color: #9b59b6;
   font-weight: 800;
@@ -55,6 +85,7 @@ body {
   text-shadow: 0 0 10px rgba(155, 89, 182, 0.3);
 }
 
+/* Subtitle text in auth forms */
 .auth-header p {
   color: #bdc3c7;
   margin: 0;
@@ -62,7 +93,10 @@ body {
   font-weight: 500;
 }
 
-/* Form input styling */
+/* =============================================================================
+   FORM INPUT STYLING
+   ============================================================================= */
+/* Form controls within authentication cards */
 .auth-card .form-control,
 .auth-card input[type="text"],
 .auth-card input[type="email"],
@@ -98,6 +132,7 @@ textarea {
   width: 100%;
 }
 
+/* Focus states for form controls within auth cards */
 .auth-card .form-control:focus,
 .auth-card input[type="text"]:focus,
 .auth-card input[type="email"]:focus,
@@ -123,12 +158,13 @@ textarea:focus {
   color: #ffffff;
 }
 
+/* Placeholder text styling */
 .form-control::placeholder {
   color: #a0aec0;
   font-weight: 400;
 }
 
-/* Override browser autofill styling */
+/* Override browser autofill styling to maintain dark theme */
 .auth-card input:-webkit-autofill,
 .auth-card input:-webkit-autofill:hover,
 .auth-card input:-webkit-autofill:focus,
@@ -138,6 +174,11 @@ textarea:focus {
   color: #ffffff;
 }
 
+/* =============================================================================
+   BUTTON STYLING
+   ============================================================================= */
+
+/* Primary button with purple gradient and shimmer effect */
 .btn-primary {
   background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
   border: none;
@@ -154,6 +195,7 @@ textarea:focus {
   text-shadow: none;
 }
 
+/* Shimmer effect overlay for primary button */
 .btn-primary::before {
   content: "";
   position: absolute;
@@ -170,16 +212,19 @@ textarea:focus {
   transition: left 0.5s;
 }
 
+/* Shimmer animation on hover */
 .btn-primary:hover::before {
   left: 100%;
 }
 
+/* Primary button hover effects */
 .btn-primary:hover {
   transform: translateY(-3px);
   box-shadow: 0 20px 40px rgba(155, 89, 182, 0.4);
   background: linear-gradient(135deg, #a569bd 0%, #9b59b6 100%);
 }
 
+/* Outline primary button styling */
 .btn-outline-primary {
   border: 2px solid #9b59b6;
   color: #9b59b6;
@@ -192,6 +237,7 @@ textarea:focus {
   backdrop-filter: blur(10px);
 }
 
+/* Outline primary button hover effects */
 .btn-outline-primary:hover {
   background: #9b59b6;
   color: #ffffff;
@@ -199,6 +245,7 @@ textarea:focus {
   box-shadow: 0 15px 30px rgba(155, 89, 182, 0.3);
 }
 
+/* Outline secondary button styling */
 .btn-outline-secondary {
   border: 2px solid #7f8c8d;
   color: #7f8c8d;
@@ -211,6 +258,7 @@ textarea:focus {
   backdrop-filter: blur(10px);
 }
 
+/* Outline secondary button hover effects */
 .btn-outline-secondary:hover {
   background: #7f8c8d;
   color: #ffffff;
@@ -218,6 +266,7 @@ textarea:focus {
   box-shadow: 0 15px 30px rgba(127, 140, 141, 0.3);
 }
 
+/* Danger button with red gradient */
 .btn-danger {
   background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
   border: none;
@@ -229,12 +278,14 @@ textarea:focus {
   color: #ffffff;
 }
 
+/* Danger button hover effects */
 .btn-danger:hover {
   transform: translateY(-3px);
   box-shadow: 0 20px 40px rgba(231, 76, 60, 0.4);
   background: linear-gradient(135deg, #ec7063 0%, #e74c3c 100%);
 }
 
+/* Outline danger button styling */
 .btn-outline-danger {
   border: 2px solid #e74c3c;
   color: #e74c3c;
@@ -247,6 +298,7 @@ textarea:focus {
   backdrop-filter: blur(10px);
 }
 
+/* Outline danger button hover effects */
 .btn-outline-danger:hover {
   background: #e74c3c;
   color: #fff;
@@ -254,6 +306,7 @@ textarea:focus {
   box-shadow: 0 15px 30px rgba(231, 76, 60, 0.3);
 }
 
+/* Outline light button styling */
 .btn-outline-light {
   border: 2px solid #ecf0f1;
   color: #ecf0f1;
@@ -266,6 +319,7 @@ textarea:focus {
   backdrop-filter: blur(10px);
 }
 
+/* Outline light button hover effects */
 .btn-outline-light:hover {
   background: #ecf0f1;
   color: #2c3e50;
@@ -273,6 +327,7 @@ textarea:focus {
   box-shadow: 0 15px 30px rgba(236, 240, 241, 0.3);
 }
 
+/* Success button with green gradient */
 .btn-success {
   background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
   border: none;
@@ -284,12 +339,14 @@ textarea:focus {
   color: #ffffff;
 }
 
+/* Success button hover effects */
 .btn-success:hover {
   transform: translateY(-3px);
   box-shadow: 0 20px 40px rgba(46, 204, 113, 0.4);
   background: linear-gradient(135deg, #58d68d 0%, #2ecc71 100%);
 }
 
+/* Secondary button with gray gradient */
 .btn-secondary {
   background: linear-gradient(135deg, #7f8c8d 0%, #6c7b7d 100%);
   border: none;
@@ -301,13 +358,14 @@ textarea:focus {
   color: #ffffff;
 }
 
+/* Secondary button hover effects */
 .btn-secondary:hover {
   transform: translateY(-3px);
   box-shadow: 0 20px 40px rgba(127, 140, 141, 0.4);
   background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
 }
 
-/* Button styling for consistent text alignment and sizing */
+/* Centered button styling for consistent alignment */
 .btn-centered {
   font-size: 14px;
   text-align: center;
@@ -316,6 +374,12 @@ textarea:focus {
   justify-content: center;
 }
 
+/* =============================================================================
+   ALERT COMPONENTS
+   ============================================================================= */
+
+/* Base alert styling with glassmorphism effect */
+/* Base alert styling with glassmorphism effect */
 .alert {
   border-radius: 12px;
   border: none;
@@ -325,68 +389,96 @@ textarea:focus {
   font-weight: 500;
 }
 
+/* Success alert styling */
 .alert-success {
   background: rgba(46, 204, 113, 0.1);
   color: #2ecc71;
   border-left: 4px solid #2ecc71;
 }
 
+/* Danger alert styling */
 .alert-danger {
   background: rgba(231, 76, 60, 0.1);
   color: #e74c3c;
   border-left: 4px solid #e74c3c;
 }
 
+/* Warning alert styling */
 .alert-warning {
   background: rgba(241, 196, 15, 0.1);
   color: #f1c40f;
   border-left: 4px solid #f1c40f;
 }
 
+/* Info alert styling */
 .alert-info {
   background: rgba(52, 152, 219, 0.1);
   color: #3498db;
   border-left: 4px solid #3498db;
 }
 
+/* =============================================================================
+   FORM COMPONENTS
+   ============================================================================= */
+
+/* Checkbox styling when checked */
 .form-check-input:checked {
   background-color: #9b59b6;
   border-color: #9b59b6;
 }
 
+/* =============================================================================
+   TEXT UTILITIES
+   ============================================================================= */
+
+/* Muted text styling */
 .text-muted {
   color: #7f8c8d;
   font-weight: 500;
 }
 
+/* Primary text color */
 .text-primary {
   color: #9b59b6;
 }
 
+/* White text color */
 .text-white {
   color: #ecf0f1;
 }
 
+/* Dark text color */
 .text-dark {
   color: #2c3e50;
 }
 
+/* =============================================================================
+   QR CODE COMPONENTS
+   ============================================================================= */
+
+/* QR code container styling */
 .qr-code {
   text-align: center;
   margin: 24px 0;
 }
 
+/* QR code image styling */
 .qr-code img {
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
+/* QR code image sizing */
 .qr-code-image {
   max-width: 200px;
   height: auto;
 }
 
-/* Form labels */
+/* =============================================================================
+   FORM LABELS AND VALIDATION
+   ============================================================================= */
+
+/* Form label styling */
 .form-label {
   font-weight: 600;
   color: #9b59b6;
@@ -396,12 +488,14 @@ textarea:focus {
   letter-spacing: 0.5px;
 }
 
+/* Icon styling within form labels */
 .form-label i {
   margin-right: 8px;
   color: #8e44ad;
   width: 16px;
 }
 
+/* Error text styling */
 .text-danger {
   color: #e74c3c;
   font-weight: 700;
@@ -421,7 +515,27 @@ textarea:focus {
   margin-bottom: 32px;
 }
 
-/* Links */
+/* =============================================================================
+   SPACING UTILITIES
+   ============================================================================= */
+
+/* Margin bottom utilities */
+.mb-3 {
+  margin-bottom: 28px;
+}
+
+.mt-4 {
+  margin-top: 36px;
+}
+
+.mb-4 {
+  margin-bottom: 32px;
+}
+
+/* =============================================================================
+   LINK STYLING
+   ============================================================================= */
+/* Base link styling */
 a {
   color: #9b59b6;
   text-decoration: none;
@@ -429,18 +543,23 @@ a {
   transition: all 0.3s ease;
 }
 
+/* Link hover effects */
 a:hover {
   color: #8e44ad;
   text-decoration: underline;
 }
 
-/* Navbar */
+/* =============================================================================
+   NAVIGATION COMPONENTS
+   ============================================================================= */
+/* Primary navbar styling with gradient background */
 .navbar-dark.bg-primary {
   background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   border-bottom: 2px solid #9b59b6;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* Navbar brand styling */
 .navbar-brand {
   color: #9b59b6;
   font-weight: 800;
@@ -448,22 +567,29 @@ a:hover {
   text-shadow: 0 0 10px rgba(155, 89, 182, 0.3);
 }
 
+/* Navigation link styling */
 .nav-link {
   color: #ecf0f1;
   font-weight: 500;
   transition: all 0.3s ease;
 }
 
+/* Navigation link hover effects */
 .nav-link:hover {
   color: #9b59b6;
   text-shadow: 0 0 5px rgba(155, 89, 182, 0.3);
 }
 
+/* Icon styling within navigation links */
 .nav-link i {
   color: #8e44ad;
 }
 
-/* Dropdown */
+/* =============================================================================
+   DROPDOWN COMPONENTS
+   ============================================================================= */
+
+/* Dropdown menu styling with glassmorphism effect */
 .dropdown-menu {
   background: rgba(52, 73, 94, 0.95);
   border: 1px solid #9b59b6;
@@ -471,23 +597,32 @@ a:hover {
   backdrop-filter: blur(20px);
 }
 
+/* Dropdown item styling */
 .dropdown-item {
   color: #ecf0f1;
   transition: all 0.3s ease;
 }
 
+/* Dropdown item hover effects */
 .dropdown-item:hover {
   background: rgba(155, 89, 182, 0.1);
   color: #9b59b6;
 }
 
-/* Footer */
+/* =============================================================================
+   FOOTER COMPONENTS
+   ============================================================================= */
+
+/* Footer styling with gradient background */
 footer.bg-primary {
   background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   border-top: 2px solid #9b59b6;
 }
 
-/* Cards */
+/* =============================================================================
+   CARD COMPONENTS
+   ============================================================================= */
+/* Base card styling with glassmorphism effect */
 .card {
   background: rgba(52, 73, 94, 0.95);
   border: 1px solid rgba(155, 89, 182, 0.3);
@@ -496,51 +631,67 @@ footer.bg-primary {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
+/* Card header styling */
 .card-header {
   background: rgba(155, 89, 182, 0.1);
   border-bottom: 1px solid rgba(155, 89, 182, 0.3);
   border-radius: 16px 16px 0 0;
 }
 
+/* Primary card header with gradient */
 .card-header.bg-primary {
   background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
 }
 
+/* Danger card header with gradient */
 .card-header.bg-danger {
   background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
 }
 
+/* Card header title styling */
 .card-header h5 {
   color: #9b59b6;
   font-weight: 700;
   margin: 0;
 }
 
+/* Card body text styling */
 .card-body {
   color: #ecf0f1;
 }
 
+/* Card footer styling */
 .card-footer {
   background: rgba(155, 89, 182, 0.05);
   border-top: 1px solid rgba(155, 89, 182, 0.2);
   border-radius: 0 0 16px 16px;
 }
 
+/* =============================================================================
+   BADGE COMPONENTS
+   ============================================================================= */
+
+/* Base badge styling */
 .badge {
   font-weight: 600;
   padding: 8px 12px;
   border-radius: 8px;
 }
 
+/* Secondary badge background */
 .bg-secondary {
   background-color: #7f8c8d;
 }
 
+/* Light badge background */
 .bg-light {
   background-color: #ecf0f1;
 }
 
-/* Responsive */
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+/* Mobile responsive styles for small screens */
 @media (max-width: 576px) {
   .auth-card {
     margin: 16px;
@@ -562,6 +713,7 @@ footer.bg-primary {
   }
 }
 
+/* Tablet responsive styles for medium screens */
 @media (min-width: 768px) {
   .auth-card {
     max-width: 700px;
@@ -569,7 +721,10 @@ footer.bg-primary {
   }
 }
 
-/* Combat tracker specific styles */
+/* =============================================================================
+   COMBAT TRACKER SPECIFIC STYLES
+   ============================================================================= */
+/* Scrollable container for combat participant checkboxes */
 .scrollable-checkbox-container {
   max-height: 200px;
   overflow-y: auto;
@@ -579,10 +734,12 @@ footer.bg-primary {
   background: rgba(70, 90, 110, 0.3);
 }
 
+/* Form check styling for combat participants */
 .form-check {
   margin-bottom: 8px;
 }
 
+/* Form check label styling */
 .form-check-label {
   color: #ecf0f1;
   font-weight: 500;

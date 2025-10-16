@@ -1,9 +1,24 @@
+"""
+URL Configuration for Game Sessions App
+
+This module defines URL patterns for D&D game session management.
+It includes routes for session CRUD operations (Create, Read, Update, Delete).
+
+URL Patterns:
+- Session List: / (root)
+- Session Create: /create/
+- Session Detail: /<id>/
+- Session Update: /<id>/edit/
+- Session Delete: /<id>/delete/
+"""
+
 from django.urls import path
 from . import views
 
 app_name = "game_sessions"
 
 urlpatterns = [
+    # Game session management URLs
     path("", views.session_list_view, name="session_list"),
     path("create/", views.session_create_view, name="session_create"),
     path("<int:pk>/", views.session_detail_view, name="session_detail"),

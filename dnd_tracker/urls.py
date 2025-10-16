@@ -1,18 +1,18 @@
 """
-URL configuration for dnd_tracker project.
+Main URL Configuration for D&D Tracker Project
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+This module defines the main URL patterns for the D&D Tracker application.
+It includes the root URL redirect and includes all app-specific URL configurations.
+
+URL Structure:
+- Root URL (/) redirects to login page
+- App URLs are included with prefixes:
+  - /accounts/ - User authentication and account management
+  - /campaigns/ - D&D campaign management
+  - /players/ - Player character management
+  - /monsters/ - Monster database management
+  - /sessions/ - Game session management
+  - /combat/ - Combat encounter tracking
 """
 
 from django.urls import path, include
@@ -20,11 +20,20 @@ from django.shortcuts import redirect
 
 
 def home_redirect(request):
+    """
+    Redirect root URL to login page.
+
+    This function handles requests to the root URL and redirects
+    users to the login page since authentication is required
+    for all application features.
+    """
     return redirect("accounts:login")
 
 
 urlpatterns = [
+    # Root URL redirects to login
     path("", home_redirect, name="home"),
+    # App-specific URL includes
     path("accounts/", include("accounts.urls")),
     path("campaigns/", include("campaigns.urls")),
     path("players/", include("players.urls")),

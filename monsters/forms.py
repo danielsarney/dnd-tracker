@@ -1,8 +1,30 @@
+"""
+Monster Forms for D&D Tracker
+
+This module contains Django forms for monster management including
+creation, editing, and validation of monster data.
+
+Key Features:
+- Comprehensive monster creation and editing forms
+- Bootstrap styling for form fields
+- Field validation and requirements
+- User-friendly placeholders and widgets
+- Support for all D&D monster statistics
+"""
+
 from django import forms
 from .models import Monster
 
 
 class MonsterForm(forms.ModelForm):
+    """
+    Form for creating and editing D&D monsters.
+
+    This form handles all monster data including basic stats, ability scores,
+    combat features, and special abilities. It provides Bootstrap styling
+    and appropriate widgets for each field type with helpful placeholders.
+    """
+
     class Meta:
         model = Monster
         fields = [
@@ -203,8 +225,15 @@ class MonsterForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialize form with field requirements.
+
+        Sets all core monster statistics as required fields while making
+        optional fields like resistances, immunities, and vulnerabilities
+        optional since not all monsters have these features.
+        """
         super().__init__(*args, **kwargs)
-        # Required fields
+        # Required fields for basic monster stats
         self.fields["name"].required = True
         self.fields["ac"].required = True
         self.fields["initiative"].required = True

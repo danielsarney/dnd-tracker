@@ -1,8 +1,31 @@
+"""
+Player Character Forms for D&D Tracker
+
+This module contains Django forms for player character management including
+creation, editing, and validation of character data.
+
+Key Features:
+- Player character creation and editing forms
+- Bootstrap styling for form fields
+- Field validation and requirements
+- User-friendly placeholders and widgets
+- Campaign selection dropdown
+"""
+
 from django import forms
 from .models import Player
 
 
 class PlayerForm(forms.ModelForm):
+    """
+    Form for creating and editing D&D player characters.
+
+    This form handles all player character data including character name,
+    player name, class, race, level, armor class, background, and campaign
+    association. It provides Bootstrap styling and appropriate widgets
+    for each field type.
+    """
+
     class Meta:
         model = Player
         fields = [
@@ -66,6 +89,12 @@ class PlayerForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialize form with field requirements.
+
+        Sets required fields for character creation while making subclass
+        optional since not all characters have subclasses.
+        """
         super().__init__(*args, **kwargs)
         self.fields["character_name"].required = True
         self.fields["player_name"].required = True

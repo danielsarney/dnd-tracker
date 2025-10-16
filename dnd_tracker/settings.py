@@ -171,7 +171,7 @@ AUTH_USER_MODEL = "accounts.User"
 
 # Login/logout URL configuration
 LOGIN_URL = "accounts:login"
-LOGIN_REDIRECT_URL = "accounts:profile"
+LOGIN_REDIRECT_URL = "campaigns:campaign_list"
 LOGOUT_REDIRECT_URL = "accounts:login"
 
 # =============================================================================

@@ -64,9 +64,9 @@ def login_view(request):
     Returns:
         HttpResponse: Rendered login page, 2FA verification, or profile redirect
     """
-    # Redirect authenticated users to profile
+    # Redirect authenticated users to campaigns
     if request.user.is_authenticated:
-        return redirect("accounts:profile")
+        return redirect("campaigns:campaign_list")
 
     if request.method == "POST":
         form = LoginForm(request.POST)
@@ -126,7 +126,7 @@ def verify_2fa_view(request):
             if user.verify_two_factor_code(code):
                 login(request, user)
                 del request.session["user_id"]
-                return redirect("accounts:profile")
+                return redirect("campaigns:campaign_list")
             else:
                 form.add_error(None, "Invalid verification code")
     else:
@@ -175,7 +175,7 @@ def setup_2fa_view(request):
                 login(request, user)
                 if "user_id" in request.session:
                     del request.session["user_id"]
-                return redirect("accounts:profile")
+                return redirect("campaigns:campaign_list")
             else:
                 form.add_error(None, "Invalid verification code")
     else:

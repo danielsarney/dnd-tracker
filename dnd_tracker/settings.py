@@ -18,6 +18,7 @@ from pathlib import Path
 import os
 from re import split
 from dotenv import load_dotenv
+import dj_database_url
 
 # Load environment variables from .env file
 load_dotenv()
@@ -63,6 +64,7 @@ INSTALLED_APPS = [
 # Middleware classes for request/response processing
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "django.middleware.security.SecurityHeadersMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -98,17 +100,27 @@ WSGI_APPLICATION = "dnd_tracker.wsgi.application"
 # DATABASE CONFIGURATION
 # =============================================================================
 
-# Database configuration using PostgreSQL
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DB_NAME"),
-        "USER": os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("DB_PASSWORD"),
-        "HOST": os.getenv("DB_HOST"),
-        "PORT": os.getenv("DB_PORT"),
+# Use DATABASE_URL for production, individual settings for development
+if os.getenv("DATABASE_URL"):
+    # Production: Use DATABASE_URL (Neon)
+    DATABASES = {
+        "default": dj_database_url.config(
+            env="DATABASE_URL", conn_max_age=600, ssl_require=True
+        )
     }
-}
+else:
+    # Development: Use individual settings without SSL requirement
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("DB_NAME"),
+            "USER": os.getenv("DB_USER"),
+            "PASSWORD": os.getenv("DB_PASSWORD"),
+            "HOST": os.getenv("DB_HOST"),
+            "PORT": os.getenv("DB_PORT"),
+            "OPTIONS": {},  # No SSL requirement for local development
+        }
+    }
 
 # =============================================================================
 # PASSWORD VALIDATION
@@ -191,3 +203,43 @@ SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access to session cookies
 # CSRF protection settings
 CSRF_COOKIE_SECURE = not DEBUG  # Use secure cookies in production
 CSRF_COOKIE_HTTPONLY = True  # Prevent JavaScript access to CSRF cookies
+
+# =============================================================================
+# SECURITY HEADERS CONFIGURATION
+# =============================================================================
+
+# Security headers for production
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = "DENY"
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# =============================================================================
+# CACHE CONFIGURATION
+# =============================================================================
+
+# Redis cache configuration for better performance
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": os.getenv("REDIS_URL", "redis://127.0.0.1:6379/1"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+        "KEY_PREFIX": "dnd_tracker",
+        "TIMEOUT": 300,  # 5 minutes default timeout
+    }
+}
+
+# =============================================================================
+# ADDITIONAL SECURITY SETTINGS
+# =============================================================================
+
+# Additional security settings for production
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
+
+# Make sure Django knows it's behind Render's proxy and uses HTTPS
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

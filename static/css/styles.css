@@ -6,26 +6,58 @@
  * that creates an immersive gaming experience.
  * 
  * Key Design Features:
- * - Dark gradient background with purple accents
+ * - Dark background with purple accents (#a855f7)
  * - Glassmorphism effects with backdrop blur
  * - Smooth animations and transitions
  * - Responsive design for mobile and desktop
  * - Consistent button and form styling
  * - Combat tracker specific components
+ * 
+ * Color Scheme:
+ * - Main Background: #2d2d2d
+ * - Card Background: rgba(45, 45, 45, 0.95)
+ * - Primary Purple: #a855f7
+ * - Secondary Purple: #9333ea
+ * - Tertiary Purple: #7c3aed
+ * - Light Purple: #c084fc
  */
 
 /* =============================================================================
    GLOBAL STYLES
    ============================================================================= */
 
-/* Main body styling with dark gradient background */
+/* Main body styling with solid dark background */
 body {
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+  background: #2d2d2d;
   min-height: 100vh;
   font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 400;
   line-height: 1.6;
-  color: #ecf0f1;
+  color: #ffffff;
+}
+
+/* Fantasy heading font */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Cinzel", "Times New Roman", serif;
+  font-weight: 600;
+}
+
+/* Custom primary color classes */
+.custom-navbar {
+  background-color: #2d2d2d;
+}
+
+.custom-footer {
+  background-color: #2d2d2d;
+}
+
+.text-primary {
+  color: #a855f7;
 }
 
 /* =============================================================================
@@ -43,11 +75,11 @@ body {
 
 /* Main authentication card with glassmorphism effect */
 .auth-card {
-  background: rgba(52, 73, 94, 0.95);
-  border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(155, 89, 182, 0.2);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(155, 89, 182, 0.3);
+  background: rgba(45, 45, 45, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(168, 85, 247, 0.4);
   max-width: 600px;
   width: 100%;
   padding: 56px;
@@ -63,8 +95,8 @@ body {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #9b59b6, #8e44ad, #7d3c98);
-  border-radius: 16px 16px 0 0;
+  background: linear-gradient(90deg, #a855f7, #9333ea, #7c3aed);
+  border-radius: 20px 20px 0 0;
 }
 
 /* Authentication form header styling */
@@ -77,17 +109,17 @@ body {
 
 /* Main heading in auth forms with purple glow effect */
 .auth-header h2 {
-  color: #9b59b6;
+  color: #a855f7;
   font-weight: 800;
   margin-bottom: 12px;
   font-size: 2rem;
   letter-spacing: -0.02em;
-  text-shadow: 0 0 10px rgba(155, 89, 182, 0.3);
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
 }
 
 /* Subtitle text in auth forms */
 .auth-header p {
-  color: #bdc3c7;
+  color: #d1d5db;
   margin: 0;
   font-size: 1.1rem;
   font-weight: 500;
@@ -105,13 +137,13 @@ body {
 .auth-card input[type="url"],
 .auth-card input[type="search"],
 .auth-card textarea {
-  border-radius: 12px;
-  border: 2px solid #5d6d7e;
+  border-radius: 16px;
+  border: 2px solid #4b5563;
   padding: 18px 24px;
   font-size: 16px;
   font-weight: 500;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(70, 90, 110, 0.8);
+  background: rgba(55, 65, 81, 0.8);
   backdrop-filter: blur(10px);
   color: #ffffff;
   width: 100%;
@@ -120,13 +152,13 @@ body {
 /* General form control styling for all pages */
 .form-control,
 textarea {
-  border-radius: 12px;
-  border: 2px solid #5d6d7e;
+  border-radius: 16px;
+  border: 2px solid #4b5563;
   padding: 18px 24px;
   font-size: 16px;
   font-weight: 500;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(70, 90, 110, 0.8);
+  background: rgba(55, 65, 81, 0.8);
   backdrop-filter: blur(10px);
   color: #ffffff;
   width: 100%;
@@ -141,9 +173,9 @@ textarea {
 .auth-card input[type="url"]:focus,
 .auth-card input[type="search"]:focus,
 .auth-card textarea:focus {
-  border-color: #9b59b6;
-  box-shadow: 0 0 0 4px rgba(155, 89, 182, 0.1);
-  background: rgba(70, 90, 110, 0.95);
+  border-color: #a855f7;
+  box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.15);
+  background: rgba(55, 65, 81, 0.95);
   transform: translateY(-1px);
   color: #ffffff;
 }
@@ -151,16 +183,16 @@ textarea {
 /* General form control focus styling */
 .form-control:focus,
 textarea:focus {
-  border-color: #9b59b6;
-  box-shadow: 0 0 0 4px rgba(155, 89, 182, 0.1);
-  background: rgba(70, 90, 110, 0.95);
+  border-color: #a855f7;
+  box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.15);
+  background: rgba(55, 65, 81, 0.95);
   transform: translateY(-1px);
   color: #ffffff;
 }
 
 /* Placeholder text styling */
 .form-control::placeholder {
-  color: #a0aec0;
+  color: #9ca3af;
   font-weight: 400;
 }
 
@@ -169,7 +201,7 @@ textarea:focus {
 .auth-card input:-webkit-autofill:hover,
 .auth-card input:-webkit-autofill:focus,
 .auth-card input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px rgba(70, 90, 110, 0.8) inset;
+  -webkit-box-shadow: 0 0 0 30px rgba(55, 65, 81, 0.8) inset;
   -webkit-text-fill-color: #ffffff;
   color: #ffffff;
 }
@@ -180,9 +212,9 @@ textarea:focus {
 
 /* Primary button with purple gradient and shimmer effect */
 .btn-primary {
-  background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+  background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
   border: none;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 16px 32px;
   font-weight: 700;
   font-size: 16px;
@@ -220,41 +252,41 @@ textarea:focus {
 /* Primary button hover effects */
 .btn-primary:hover {
   transform: translateY(-3px);
-  box-shadow: 0 20px 40px rgba(155, 89, 182, 0.4);
-  background: linear-gradient(135deg, #a569bd 0%, #9b59b6 100%);
+  box-shadow: 0 20px 40px rgba(168, 85, 247, 0.3);
+  background: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
 }
 
 /* Outline primary button styling */
 .btn-outline-primary {
-  border: 2px solid #9b59b6;
-  color: #9b59b6;
-  border-radius: 12px;
+  border: 2px solid #a855f7;
+  color: #a855f7;
+  border-radius: 16px;
   padding: 14px 28px;
   font-weight: 700;
   font-size: 16px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(52, 73, 94, 0.8);
+  background: rgba(45, 45, 45, 0.8);
   backdrop-filter: blur(10px);
 }
 
 /* Outline primary button hover effects */
 .btn-outline-primary:hover {
-  background: #9b59b6;
+  background: #a855f7;
   color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(155, 89, 182, 0.3);
+  box-shadow: 0 15px 30px rgba(168, 85, 247, 0.3);
 }
 
 /* Outline secondary button styling */
 .btn-outline-secondary {
   border: 2px solid #7f8c8d;
   color: #7f8c8d;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 14px 28px;
   font-weight: 700;
   font-size: 16px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(52, 73, 94, 0.8);
+  background: rgba(45, 45, 45, 0.8);
   backdrop-filter: blur(10px);
 }
 
@@ -270,7 +302,7 @@ textarea:focus {
 .btn-danger {
   background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
   border: none;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 16px 32px;
   font-weight: 700;
   font-size: 16px;
@@ -289,12 +321,12 @@ textarea:focus {
 .btn-outline-danger {
   border: 2px solid #e74c3c;
   color: #e74c3c;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 14px 28px;
   font-weight: 700;
   font-size: 16px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(52, 73, 94, 0.8);
+  background: rgba(45, 45, 45, 0.8);
   backdrop-filter: blur(10px);
 }
 
@@ -308,30 +340,30 @@ textarea:focus {
 
 /* Outline light button styling */
 .btn-outline-light {
-  border: 2px solid #ecf0f1;
-  color: #ecf0f1;
-  border-radius: 12px;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  border-radius: 16px;
   padding: 14px 28px;
   font-weight: 700;
   font-size: 16px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(52, 73, 94, 0.8);
+  background: rgba(45, 45, 45, 0.8);
   backdrop-filter: blur(10px);
 }
 
 /* Outline light button hover effects */
 .btn-outline-light:hover {
-  background: #ecf0f1;
-  color: #2c3e50;
+  background: #ffffff;
+  color: #2d2d2d;
   transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(236, 240, 241, 0.3);
+  box-shadow: 0 15px 30px rgba(255, 255, 255, 0.3);
 }
 
 /* Success button with green gradient */
 .btn-success {
   background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
   border: none;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 16px 32px;
   font-weight: 700;
   font-size: 16px;
@@ -350,7 +382,7 @@ textarea:focus {
 .btn-secondary {
   background: linear-gradient(135deg, #7f8c8d 0%, #6c7b7d 100%);
   border: none;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 16px 32px;
   font-weight: 700;
   font-size: 16px;
@@ -379,9 +411,8 @@ textarea:focus {
    ============================================================================= */
 
 /* Base alert styling with glassmorphism effect */
-/* Base alert styling with glassmorphism effect */
 .alert {
-  border-radius: 12px;
+  border-radius: 16px;
   border: none;
   margin-bottom: 24px;
   padding: 16px 20px;
@@ -423,8 +454,8 @@ textarea:focus {
 
 /* Checkbox styling when checked */
 .form-check-input:checked {
-  background-color: #9b59b6;
-  border-color: #9b59b6;
+  background-color: #a855f7;
+  border-color: #a855f7;
 }
 
 /* =============================================================================
@@ -433,23 +464,23 @@ textarea:focus {
 
 /* Muted text styling */
 .text-muted {
-  color: #7f8c8d;
+  color: #cccccc;
   font-weight: 500;
 }
 
 /* Primary text color */
 .text-primary {
-  color: #9b59b6;
+  color: #a855f7;
 }
 
 /* White text color */
 .text-white {
-  color: #ecf0f1;
+  color: #ffffff;
 }
 
 /* Dark text color */
 .text-dark {
-  color: #2c3e50;
+  color: #2d2d2d;
 }
 
 /* =============================================================================
@@ -464,8 +495,8 @@ textarea:focus {
 
 /* QR code image styling */
 .qr-code img {
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
 }
 
 /* QR code image sizing */
@@ -481,7 +512,7 @@ textarea:focus {
 /* Form label styling */
 .form-label {
   font-weight: 600;
-  color: #9b59b6;
+  color: #a855f7;
   margin-bottom: 8px;
   font-size: 14px;
   text-transform: uppercase;
@@ -491,7 +522,7 @@ textarea:focus {
 /* Icon styling within form labels */
 .form-label i {
   margin-right: 8px;
-  color: #8e44ad;
+  color: #9333ea;
   width: 16px;
 }
 
@@ -537,7 +568,7 @@ textarea:focus {
    ============================================================================= */
 /* Base link styling */
 a {
-  color: #9b59b6;
+  color: #a855f7;
   text-decoration: none;
   font-weight: 600;
   transition: all 0.3s ease;
@@ -545,44 +576,44 @@ a {
 
 /* Link hover effects */
 a:hover {
-  color: #8e44ad;
+  color: #9333ea;
   text-decoration: underline;
 }
 
 /* =============================================================================
    NAVIGATION COMPONENTS
    ============================================================================= */
-/* Primary navbar styling with gradient background */
-.navbar-dark.bg-primary {
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-  border-bottom: 2px solid #9b59b6;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+/* Custom navbar styling */
+.custom-navbar {
+  background-color: #2d2d2d;
+  border-bottom: 2px solid #a855f7;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
 /* Navbar brand styling */
 .navbar-brand {
-  color: #9b59b6;
+  color: #a855f7;
   font-weight: 800;
   font-size: 1.5rem;
-  text-shadow: 0 0 10px rgba(155, 89, 182, 0.3);
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
 }
 
 /* Navigation link styling */
 .nav-link {
-  color: #ecf0f1;
+  color: #ffffff;
   font-weight: 500;
   transition: all 0.3s ease;
 }
 
 /* Navigation link hover effects */
 .nav-link:hover {
-  color: #9b59b6;
-  text-shadow: 0 0 5px rgba(155, 89, 182, 0.3);
+  color: #a855f7;
+  text-shadow: 0 0 5px rgba(168, 85, 247, 0.3);
 }
 
 /* Icon styling within navigation links */
 .nav-link i {
-  color: #8e44ad;
+  color: #9333ea;
 }
 
 /* =============================================================================
@@ -591,32 +622,32 @@ a:hover {
 
 /* Dropdown menu styling with glassmorphism effect */
 .dropdown-menu {
-  background: rgba(52, 73, 94, 0.95);
-  border: 1px solid #9b59b6;
-  border-radius: 12px;
-  backdrop-filter: blur(20px);
+  background: rgba(45, 45, 45, 0.95);
+  border: 1px solid #a855f7;
+  border-radius: 16px;
+  backdrop-filter: blur(25px);
 }
 
 /* Dropdown item styling */
 .dropdown-item {
-  color: #ecf0f1;
+  color: #ffffff;
   transition: all 0.3s ease;
 }
 
 /* Dropdown item hover effects */
 .dropdown-item:hover {
-  background: rgba(155, 89, 182, 0.1);
-  color: #9b59b6;
+  background: rgba(168, 85, 247, 0.1);
+  color: #a855f7;
 }
 
 /* =============================================================================
    FOOTER COMPONENTS
    ============================================================================= */
 
-/* Footer styling with gradient background */
-footer.bg-primary {
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-  border-top: 2px solid #9b59b6;
+/* Custom footer styling */
+.custom-footer {
+  background-color: #2d2d2d;
+  border-top: 2px solid #a855f7;
 }
 
 /* =============================================================================
@@ -624,23 +655,23 @@ footer.bg-primary {
    ============================================================================= */
 /* Base card styling with glassmorphism effect */
 .card {
-  background: rgba(52, 73, 94, 0.95);
-  border: 1px solid rgba(155, 89, 182, 0.3);
-  border-radius: 16px;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  background: rgba(45, 45, 45, 0.95);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  border-radius: 20px;
+  backdrop-filter: blur(25px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
 }
 
 /* Card header styling */
 .card-header {
-  background: rgba(155, 89, 182, 0.1);
-  border-bottom: 1px solid rgba(155, 89, 182, 0.3);
-  border-radius: 16px 16px 0 0;
+  background: rgba(168, 85, 247, 0.1);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.4);
+  border-radius: 20px 20px 0 0;
 }
 
 /* Primary card header with gradient */
 .card-header.bg-primary {
-  background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+  background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
 }
 
 /* Danger card header with gradient */
@@ -650,21 +681,21 @@ footer.bg-primary {
 
 /* Card header title styling */
 .card-header h5 {
-  color: #9b59b6;
+  color: #a855f7;
   font-weight: 700;
   margin: 0;
 }
 
 /* Card body text styling */
 .card-body {
-  color: #ecf0f1;
+  color: #ffffff;
 }
 
 /* Card footer styling */
 .card-footer {
-  background: rgba(155, 89, 182, 0.05);
-  border-top: 1px solid rgba(155, 89, 182, 0.2);
-  border-radius: 0 0 16px 16px;
+  background: rgba(168, 85, 247, 0.05);
+  border-top: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 0 0 20px 20px;
 }
 
 /* =============================================================================
@@ -675,7 +706,7 @@ footer.bg-primary {
 .badge {
   font-weight: 600;
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 /* Secondary badge background */
@@ -685,7 +716,7 @@ footer.bg-primary {
 
 /* Light badge background */
 .bg-light {
-  background-color: #ecf0f1;
+  background-color: #ffffff;
 }
 
 /* =============================================================================
@@ -696,7 +727,7 @@ footer.bg-primary {
   .auth-card {
     margin: 16px;
     padding: 40px 28px;
-    border-radius: 16px;
+    border-radius: 20px;
     max-width: calc(100vw - 32px);
   }
 
@@ -728,10 +759,10 @@ footer.bg-primary {
 .scrollable-checkbox-container {
   max-height: 200px;
   overflow-y: auto;
-  border: 1px solid #5d6d7e;
-  border-radius: 8px;
+  border: 1px solid #4b5563;
+  border-radius: 12px;
   padding: 16px;
-  background: rgba(70, 90, 110, 0.3);
+  background: rgba(55, 65, 81, 0.3);
 }
 
 /* Form check styling for combat participants */
@@ -741,6 +772,6 @@ footer.bg-primary {
 
 /* Form check label styling */
 .form-check-label {
-  color: #ecf0f1;
+  color: #ffffff;
   font-weight: 500;
 }

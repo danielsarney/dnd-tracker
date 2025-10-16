@@ -47,17 +47,22 @@ h6 {
   font-weight: 600;
 }
 
-/* Custom primary color classes */
-.custom-navbar {
-  background-color: #2d2d2d;
+/* =============================================================================
+   CSS VARIABLES
+   ============================================================================= */
+
+:root {
+  --primary-purple: #a855f7;
+  --secondary-purple: #9333ea;
+  --tertiary-purple: #7c3aed;
+  --light-purple: #c084fc;
+  --dark-bg: #2d2d2d;
+  --card-bg: rgba(45, 45, 45, 0.95);
 }
 
-.custom-footer {
-  background-color: #2d2d2d;
-}
-
-.text-primary {
-  color: #a855f7;
+/* Custom purple text class */
+.text-purple {
+  color: var(--primary-purple);
 }
 
 /* =============================================================================
@@ -750,6 +755,130 @@ a:hover {
     max-width: 700px;
     padding: 64px;
   }
+}
+
+/* =============================================================================
+   CAMPAIGN CARDS SPECIFIC STYLES
+   ============================================================================= */
+
+/* Campaign card styling */
+.campaign-card {
+  background: rgba(45, 45, 45, 0.95);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 20px;
+  backdrop-filter: blur(25px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+/* Campaign card hover effects */
+.campaign-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+  border-color: rgba(168, 85, 247, 0.6);
+}
+
+/* Campaign card header */
+.campaign-card .card-header {
+  background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.4);
+  border-radius: 20px 20px 0 0;
+  padding: 20px;
+}
+
+/* Campaign card title */
+.campaign-card .card-title {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Campaign card body */
+.campaign-card .card-body {
+  padding: 24px 20px;
+  color: #ffffff;
+}
+
+/* Campaign card text */
+.campaign-card .card-text {
+  color: #d1d5db;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Campaign card footer */
+.campaign-card .card-footer {
+  background: rgba(168, 85, 247, 0.05);
+  border-top: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 0 0 20px 20px;
+  padding: 20px;
+}
+
+/* Empty state card */
+.empty-state-card {
+  background: rgba(45, 45, 45, 0.95);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 20px;
+  backdrop-filter: blur(25px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Form control large sizing */
+.form-control-lg {
+  padding: 18px 24px;
+  font-size: 18px;
+  border-radius: 16px;
+}
+
+/* Button large sizing */
+.btn-lg {
+  padding: 18px 32px;
+  font-size: 18px;
+  border-radius: 16px;
+}
+
+/* Delete confirmation card */
+.delete-confirmation-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(231, 76, 60, 0.4);
+  border-radius: 20px;
+  backdrop-filter: blur(25px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.delete-confirmation-card .card-header {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  border-bottom: 1px solid rgba(231, 76, 60, 0.4);
+  border-radius: 20px 20px 0 0;
+  padding: 24px;
+}
+
+/* Campaign preview card in delete confirmation */
+.campaign-preview-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.campaign-preview-card .card-header {
+  background: linear-gradient(
+    135deg,
+    var(--primary-purple) 0%,
+    var(--secondary-purple) 100%
+  );
+  border-bottom: 1px solid rgba(168, 85, 247, 0.4);
+  border-radius: 16px 16px 0 0;
+  padding: 20px;
+}
+
+.campaign-preview-card .card-body {
+  padding: 20px;
 }
 
 /* =============================================================================

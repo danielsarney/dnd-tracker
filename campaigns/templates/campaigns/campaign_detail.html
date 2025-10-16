@@ -35,26 +35,26 @@
                     <div class="card-body">
                         {% if campaign.description %}
                             <div class="mb-3">
-                                <h6 class="text-primary">
+                                <h6 class="text-purple">
                                     <i class="fas fa-align-left"></i> Description
                                 </h6>
-                                <p class="text-muted">{{ campaign.description|linebreaks }}</p>
+                                <p class="text-white">{{ campaign.description|linebreaks }}</p>
                             </div>
                         {% endif %}
                         {% if campaign.introduction %}
                             <div class="mb-3">
-                                <h6 class="text-primary">
+                                <h6 class="text-purple">
                                     <i class="fas fa-scroll"></i> Introduction
                                 </h6>
-                                <p class="text-muted">{{ campaign.introduction|linebreaks }}</p>
+                                <p class="text-white">{{ campaign.introduction|linebreaks }}</p>
                             </div>
                         {% endif %}
                         {% if campaign.character_requirements %}
                             <div class="mb-3">
-                                <h6 class="text-primary">
+                                <h6 class="text-purple">
                                     <i class="fas fa-users"></i> Character Requirements
                                 </h6>
-                                <p class="text-muted">{{ campaign.character_requirements|linebreaks }}</p>
+                                <p class="text-white">{{ campaign.character_requirements|linebreaks }}</p>
                             </div>
                         {% endif %}
                         {% if not campaign.description and not campaign.introduction and not campaign.character_requirements %}

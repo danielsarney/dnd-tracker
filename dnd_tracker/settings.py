@@ -64,7 +64,6 @@ INSTALLED_APPS = [
 # Middleware classes for request/response processing
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "django.middleware.security.SecurityHeadersMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",

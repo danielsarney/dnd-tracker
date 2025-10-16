@@ -48,18 +48,14 @@
                                                             {% if participant.participant_type == 'monster' %}
                                                                 <small class="{% if participant.is_dead %}text-danger{% else %}text-success{% endif %}">
                                                                     HP: {{ participant.current_hp }}/{{ participant.max_hp }}
-                                                                    {% if participant.is_dead %} (Dead){% endif %}
+                                                                    {% if participant.is_dead %}(Dead){% endif %}
                                                                 </small>
                                                             {% else %}
-                                                                <small class="text-info">
-                                                                    Player manages own HP
-                                                                </small>
+                                                                <small class="text-info">Player manages own HP</small>
                                                             {% endif %}
                                                         </div>
                                                         <div class="d-flex flex-column align-items-end">
-                                                            {% if participant == current_participant %}
-                                                                <i class="fas fa-play text-success mb-1"></i>
-                                                            {% endif %}
+                                                            {% if participant == current_participant %}<i class="fas fa-play text-success mb-1"></i>{% endif %}
                                                             {% if participant.participant_type == 'monster' and not participant.is_dead %}
                                                                 <a href="{% url 'combat_tracker:update_hp' encounter.pk participant.pk %}"
                                                                    class="btn btn-sm btn-outline-warning">

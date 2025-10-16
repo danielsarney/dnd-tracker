@@ -29,36 +29,35 @@
                         <!-- Initiative Order -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h5 class="text-primary mb-3">
+                                <h5 class="text-purple mb-3">
                                     <i class="fas fa-list-ol"></i> Initiative Order
                                 </h5>
                                 <div class="row">
                                     {% for participant in all_participants %}
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
-                                            <div class="card {% if participant == current_participant %}border-success bg-light{% elif participant.is_dead %}border-danger bg-danger bg-opacity-10{% endif %}">
+                                            <div class="card {% if participant == current_participant %}border-success bg-success bg-opacity-25{% elif participant.is_dead %}border-danger bg-danger bg-opacity-25{% else %}border-secondary{% endif %}">
                                                 <div class="card-body p-2">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <div>
-                                                            <strong class="{% if participant.participant_type == 'player' %}text-primary{% else %}text-danger{% endif %}">
-                                                                {{ participant.name }}
-                                                            </strong>
+                                                            <strong class="text-white">{{ participant.name }}</strong>
                                                             <br>
-                                                            <small class="text-muted">Initiative: {{ participant.initiative }}</small>
+                                                            <small class="text-white">Initiative: {{ participant.initiative }}</small>
                                                             <br>
                                                             {% if participant.participant_type == 'monster' %}
-                                                                <small class="{% if participant.is_dead %}text-danger{% else %}text-success{% endif %}">
-                                                                    HP: {{ participant.current_hp }}/{{ participant.max_hp }}
+                                                                <small class="{% if participant.is_dead %}text-danger{% else %}text-white{% endif %}">
+                                                                    AC: {{ participant.monster.ac }} | HP: {{ participant.current_hp }}/{{ participant.max_hp }}
+                                                                    <br>
+                                                                    <strong>Saves:</strong> STR{{ participant.monster.strength_save }} DEX{{ participant.monster.dexterity_save }} CON{{ participant.monster.constitution_save }} INT{{ participant.monster.intelligence_save }} WIS{{ participant.monster.wisdom_save }} CHA{{ participant.monster.charisma_save }}
                                                                     {% if participant.is_dead %}(Dead){% endif %}
                                                                 </small>
                                                             {% else %}
-                                                                <small class="text-info">Player manages own HP</small>
+                                                                <small class="text-white">AC: {{ participant.player.ac }}</small>
                                                             {% endif %}
                                                         </div>
                                                         <div class="d-flex flex-column align-items-end">
-                                                            {% if participant == current_participant %}<i class="fas fa-play text-success mb-1"></i>{% endif %}
                                                             {% if participant.participant_type == 'monster' and not participant.is_dead %}
                                                                 <a href="{% url 'combat_tracker:update_hp' encounter.pk participant.pk %}"
-                                                                   class="btn btn-sm btn-outline-warning">
+                                                                   class="btn btn-sm btn-warning">
                                                                     <i class="fas fa-heart"></i> HP
                                                                 </a>
                                                             {% endif %}
@@ -75,7 +74,7 @@
                         {% if current_participant %}
                             <div class="row">
                                 <div class="col-12">
-                                    <h5 class="text-primary mb-3">
+                                    <h5 class="text-purple mb-3">
                                         <i class="fas fa-user-clock"></i> Current Turn: {{ current_participant.name }}
                                     </h5>
                                 </div>
@@ -83,7 +82,7 @@
                             <div class="row">
                                 <!-- Player Turn -->
                                 {% if current_participant.participant_type == 'player' %}
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="card border-primary">
                                             <div class="card-header bg-primary text-white">
                                                 <h6 class="mb-0">
@@ -114,25 +113,6 @@
                                                 <p class="mb-0">
                                                     <strong>Current HP:</strong> {{ current_participant.current_hp }}/{{ current_participant.max_hp }}
                                                 </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h6 class="mb-0">
-                                                    <i class="fas fa-dice"></i> Player Actions
-                                                </h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <p class="text-muted">
-                                                    It's {{ current_participant.player.player_name }}'s turn!
-                                                    They can take their action, movement, and bonus action.
-                                                </p>
-                                                <div class="alert alert-info">
-                                                    <i class="fas fa-info-circle"></i>
-                                                    <strong>Note:</strong> Players manage their own character actions, spells, and abilities.
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -203,7 +183,7 @@
                                     <div class="col-md-6">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h6 class="mb-0">
+                                                <h6 class="mb-0 text-white">
                                                     <i class="fas fa-scroll"></i> Monster Abilities & Actions
                                                 </h6>
                                             </div>

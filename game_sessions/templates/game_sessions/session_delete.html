@@ -5,34 +5,36 @@
     - D&D Tracker
 {% endblock title %}
 {% block content %}
-    <div class="container-fluid mt-4 mb-5 px-4">
+    <div class="container mt-4 mb-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <div class="card border-danger">
-                    <div class="card-header bg-danger text-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-exclamation-triangle"></i> Delete Session
-                        </h5>
+                <div class="card delete-confirmation-card">
+                    <div class="card-header">
+                        <h4 class="mb-0 text-white">
+                            <i class="fas fa-exclamation-triangle text-danger me-2"></i>Delete Session
+                        </h4>
                     </div>
                     <div class="card-body">
                         <div class="alert alert-warning mb-4">
-                            <i class="fas fa-warning"></i>
+                            <i class="fas fa-warning me-2"></i>
                             <strong>Warning:</strong> This action cannot be undone!
                         </div>
-                        <p class="text-white mb-4">Are you sure you want to delete the session:</p>
-                        <div class="card bg-light mb-4">
-                            <div class="card-body">
-                                <h6 class="card-title text-dark">
-                                    {{ session.campaign.title }}
+                        <p class="text-white mb-4 fs-5">Are you sure you want to delete the session:</p>
+                        <div class="campaign-preview-card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0 text-white">
+                                    <i class="fas fa-calendar-alt me-2"></i>{{ session.campaign.title }}
                                     {% if session.session_date %}- {{ session.session_date }}{% endif %}
-                                </h6>
-                                <p class="card-text text-muted">
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text text-white">
                                     <strong>Campaign:</strong> {{ session.campaign.title }}
                                     <br>
                                     {% if session.session_date %}
                                         <strong>Date:</strong> {{ session.session_date }}
                                     {% else %}
-                                        <strong>Date:</strong> <em class="text-muted">Not scheduled</em>
+                                        <strong>Date:</strong> <em>Not scheduled</em>
                                     {% endif %}
                                     {% if session.planning_notes %}
                                         <br>
@@ -49,11 +51,11 @@
                             {% csrf_token %}
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <a href="{% url 'game_sessions:session_detail' session.pk %}"
-                                   class="btn btn-outline-light">
-                                    <i class="fas fa-times"></i> Cancel
+                                   class="btn btn-outline-light btn-lg px-4">
+                                    <i class="fas fa-times me-2"></i>Cancel
                                 </a>
-                                <button type="submit" class="btn btn-danger">
-                                    <i class="fas fa-trash"></i> Delete Session
+                                <button type="submit" class="btn btn-danger btn-lg px-4">
+                                    <i class="fas fa-trash me-2"></i>Delete Session
                                 </button>
                             </div>
                         </form>

@@ -31,78 +31,78 @@
                         <div class="row mb-4">
                             <div class="col-md-3">
                                 <div class="mb-3">
-                                    <h6 class="text-primary">
+                                    <h6 class="text-purple">
                                         <i class="fas fa-shield-alt"></i> Armor Class
                                     </h6>
-                                    <p class="text-muted">{{ monster.ac }}</p>
+                                    <p class="text-white">{{ monster.ac }}</p>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="mb-3">
-                                    <h6 class="text-primary">
+                                    <h6 class="text-purple">
                                         <i class="fas fa-heart"></i> Hit Points
                                     </h6>
-                                    <p class="text-muted">{{ monster.hp }}</p>
+                                    <p class="text-white">{{ monster.hp }}</p>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="mb-3">
-                                    <h6 class="text-primary">
+                                    <h6 class="text-purple">
                                         <i class="fas fa-running"></i> Speed
                                     </h6>
-                                    <p class="text-muted">{{ monster.speed }}</p>
+                                    <p class="text-white">{{ monster.speed }}</p>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="mb-3">
-                                    <h6 class="text-primary">
+                                    <h6 class="text-purple">
                                         <i class="fas fa-star"></i> Challenge Rating
                                     </h6>
-                                    <p class="text-muted">{{ monster.challenge_rating }}</p>
+                                    <p class="text-white">{{ monster.challenge_rating }}</p>
                                 </div>
                             </div>
                         </div>
                         <!-- Ability Scores -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h5 class="text-primary mb-3">
+                                <h5 class="text-purple mb-3">
                                     <i class="fas fa-dice-d20"></i> Ability Scores
                                 </h5>
                             </div>
                             <div class="col-md-2">
                                 <div class="mb-3">
-                                    <h6 class="text-primary">STR</h6>
-                                    <p class="text-muted">{{ monster.strength }} ({{ monster.strength_mod }}) ({{ monster.strength_save }})</p>
+                                    <h6 class="text-purple">STR</h6>
+                                    <p class="text-white">{{ monster.strength }} ({{ monster.strength_mod }}) ({{ monster.strength_save }})</p>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="mb-3">
-                                    <h6 class="text-primary">DEX</h6>
-                                    <p class="text-muted">{{ monster.dexterity }} ({{ monster.dexterity_mod }}) ({{ monster.dexterity_save }})</p>
+                                    <h6 class="text-purple">DEX</h6>
+                                    <p class="text-white">{{ monster.dexterity }} ({{ monster.dexterity_mod }}) ({{ monster.dexterity_save }})</p>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="mb-3">
-                                    <h6 class="text-primary">CON</h6>
-                                    <p class="text-muted">{{ monster.constitution }} ({{ monster.constitution_mod }}) ({{ monster.constitution_save }})</p>
+                                    <h6 class="text-purple">CON</h6>
+                                    <p class="text-white">{{ monster.constitution }} ({{ monster.constitution_mod }}) ({{ monster.constitution_save }})</p>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="mb-3">
-                                    <h6 class="text-primary">INT</h6>
-                                    <p class="text-muted">{{ monster.intelligence }} ({{ monster.intelligence_mod }}) ({{ monster.intelligence_save }})</p>
+                                    <h6 class="text-purple">INT</h6>
+                                    <p class="text-white">{{ monster.intelligence }} ({{ monster.intelligence_mod }}) ({{ monster.intelligence_save }})</p>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="mb-3">
-                                    <h6 class="text-primary">WIS</h6>
-                                    <p class="text-muted">{{ monster.wisdom }} ({{ monster.wisdom_mod }}) ({{ monster.wisdom_save }})</p>
+                                    <h6 class="text-purple">WIS</h6>
+                                    <p class="text-white">{{ monster.wisdom }} ({{ monster.wisdom_mod }}) ({{ monster.wisdom_save }})</p>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="mb-3">
-                                    <h6 class="text-primary">CHA</h6>
-                                    <p class="text-muted">{{ monster.charisma }} ({{ monster.charisma_mod }}) ({{ monster.charisma_save }})</p>
+                                    <h6 class="text-purple">CHA</h6>
+                                    <p class="text-white">{{ monster.charisma }} ({{ monster.charisma_mod }}) ({{ monster.charisma_save }})</p>
                                 </div>
                             </div>
                         </div>
@@ -111,67 +111,67 @@
                             <div class="col-md-6">
                                 {% if monster.skills %}
                                     <div class="mb-3">
-                                        <h6 class="text-primary">
+                                        <h6 class="text-purple">
                                             <i class="fas fa-tools"></i> Skills
                                         </h6>
-                                        <p class="text-muted">{{ monster.skills|linebreaks }}</p>
+                                        <p class="text-white">{{ monster.skills|linebreaks }}</p>
                                     </div>
                                 {% endif %}
                                 {% if monster.resistances %}
                                     <div class="mb-3">
-                                        <h6 class="text-primary">
+                                        <h6 class="text-purple">
                                             <i class="fas fa-shield"></i> Resistances
                                         </h6>
-                                        <p class="text-muted">{{ monster.resistances|linebreaks }}</p>
+                                        <p class="text-white">{{ monster.resistances|linebreaks }}</p>
                                     </div>
                                 {% endif %}
                                 {% if monster.immunities %}
                                     <div class="mb-3">
-                                        <h6 class="text-primary">
+                                        <h6 class="text-purple">
                                             <i class="fas fa-shield-alt"></i> Immunities
                                         </h6>
-                                        <p class="text-muted">{{ monster.immunities|linebreaks }}</p>
+                                        <p class="text-white">{{ monster.immunities|linebreaks }}</p>
                                     </div>
                                 {% endif %}
                                 {% if monster.vulnerabilities %}
                                     <div class="mb-3">
-                                        <h6 class="text-primary">
+                                        <h6 class="text-purple">
                                             <i class="fas fa-exclamation-triangle"></i> Vulnerabilities
                                         </h6>
-                                        <p class="text-muted">{{ monster.vulnerabilities|linebreaks }}</p>
+                                        <p class="text-white">{{ monster.vulnerabilities|linebreaks }}</p>
                                     </div>
                                 {% endif %}
                             </div>
                             <div class="col-md-6">
                                 {% if monster.senses %}
                                     <div class="mb-3">
-                                        <h6 class="text-primary">
+                                        <h6 class="text-purple">
                                             <i class="fas fa-eye"></i> Senses
                                         </h6>
-                                        <p class="text-muted">{{ monster.senses|linebreaks }}</p>
+                                        <p class="text-white">{{ monster.senses|linebreaks }}</p>
                                     </div>
                                 {% endif %}
                                 {% if monster.languages %}
                                     <div class="mb-3">
-                                        <h6 class="text-primary">
+                                        <h6 class="text-purple">
                                             <i class="fas fa-language"></i> Languages
                                         </h6>
-                                        <p class="text-muted">{{ monster.languages|linebreaks }}</p>
+                                        <p class="text-white">{{ monster.languages|linebreaks }}</p>
                                     </div>
                                 {% endif %}
                                 {% if monster.gear %}
                                     <div class="mb-3">
-                                        <h6 class="text-primary">
+                                        <h6 class="text-purple">
                                             <i class="fas fa-shield-alt"></i> Gear
                                         </h6>
-                                        <p class="text-muted">{{ monster.gear|linebreaks }}</p>
+                                        <p class="text-white">{{ monster.gear|linebreaks }}</p>
                                     </div>
                                 {% endif %}
                                 <div class="mb-3">
-                                    <h6 class="text-primary">
+                                    <h6 class="text-purple">
                                         <i class="fas fa-clock"></i> Initiative
                                     </h6>
-                                    <p class="text-muted">{{ monster.initiative }}</p>
+                                    <p class="text-white">{{ monster.initiative }}</p>
                                 </div>
                             </div>
                         </div>
@@ -179,50 +179,50 @@
                         {% if monster.traits %}
                             <div class="row mb-4">
                                 <div class="col-12">
-                                    <h5 class="text-primary mb-3">
+                                    <h5 class="text-purple mb-3">
                                         <i class="fas fa-magic"></i> Traits
                                     </h5>
-                                    <p class="text-muted">{{ monster.traits|linebreaks }}</p>
+                                    <p class="text-white">{{ monster.traits|linebreaks }}</p>
                                 </div>
                             </div>
                         {% endif %}
                         {% if monster.actions %}
                             <div class="row mb-4">
                                 <div class="col-12">
-                                    <h5 class="text-primary mb-3">
+                                    <h5 class="text-purple mb-3">
                                         <i class="fas fa-sword"></i> Actions
                                     </h5>
-                                    <p class="text-muted">{{ monster.actions|linebreaks }}</p>
+                                    <p class="text-white">{{ monster.actions|linebreaks }}</p>
                                 </div>
                             </div>
                         {% endif %}
                         {% if monster.bonus_actions %}
                             <div class="row mb-4">
                                 <div class="col-12">
-                                    <h5 class="text-primary mb-3">
+                                    <h5 class="text-purple mb-3">
                                         <i class="fas fa-plus"></i> Bonus Actions
                                     </h5>
-                                    <p class="text-muted">{{ monster.bonus_actions|linebreaks }}</p>
+                                    <p class="text-white">{{ monster.bonus_actions|linebreaks }}</p>
                                 </div>
                             </div>
                         {% endif %}
                         {% if monster.reactions %}
                             <div class="row mb-4">
                                 <div class="col-12">
-                                    <h5 class="text-primary mb-3">
+                                    <h5 class="text-purple mb-3">
                                         <i class="fas fa-bolt"></i> Reactions
                                     </h5>
-                                    <p class="text-muted">{{ monster.reactions|linebreaks }}</p>
+                                    <p class="text-white">{{ monster.reactions|linebreaks }}</p>
                                 </div>
                             </div>
                         {% endif %}
                         {% if monster.legendary_actions %}
                             <div class="row mb-4">
                                 <div class="col-12">
-                                    <h5 class="text-primary mb-3">
+                                    <h5 class="text-purple mb-3">
                                         <i class="fas fa-crown"></i> Legendary Actions
                                     </h5>
-                                    <p class="text-muted">{{ monster.legendary_actions|linebreaks }}</p>
+                                    <p class="text-white">{{ monster.legendary_actions|linebreaks }}</p>
                                 </div>
                             </div>
                         {% endif %}

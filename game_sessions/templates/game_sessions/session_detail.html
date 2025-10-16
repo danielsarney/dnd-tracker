@@ -33,22 +33,22 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <h6 class="text-primary">
+                                    <h6 class="text-purple">
                                         <i class="fas fa-book"></i> Campaign
                                     </h6>
-                                    <p class="text-muted">
+                                    <p class="text-white">
                                         <a href="{% url 'campaigns:campaign_detail' session.campaign.pk %}"
                                            class="text-decoration-none">{{ session.campaign.title }}</a>
                                     </p>
                                 </div>
                                 <div class="mb-3">
-                                    <h6 class="text-primary">
+                                    <h6 class="text-purple">
                                         <i class="fas fa-calendar"></i> Session Date
                                     </h6>
                                     {% if session.session_date %}
-                                        <p class="text-muted">{{ session.session_date }}</p>
+                                        <p class="text-white">{{ session.session_date }}</p>
                                     {% else %}
-                                        <p class="text-muted fst-italic">Not scheduled</p>
+                                        <p class="text-white fst-italic">Not scheduled</p>
                                     {% endif %}
                                 </div>
                             </div>
@@ -56,33 +56,25 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <h6 class="text-primary">
+                                    <h6 class="text-purple">
                                         <i class="fas fa-clipboard-list"></i> Planning Notes
                                     </h6>
                                     {% if session.planning_notes %}
-                                        <div class="card bg-light">
-                                            <div class="card-body">
-                                                <p class="text-dark mb-0">{{ session.planning_notes|linebreaks }}</p>
-                                            </div>
-                                        </div>
+                                        <p class="text-white">{{ session.planning_notes|linebreaks }}</p>
                                     {% else %}
-                                        <p class="text-muted fst-italic">No planning notes provided</p>
+                                        <p class="text-white fst-italic">No planning notes provided</p>
                                     {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <h6 class="text-primary">
+                                    <h6 class="text-purple">
                                         <i class="fas fa-sticky-note"></i> Session Notes
                                     </h6>
                                     {% if session.session_notes %}
-                                        <div class="card bg-light">
-                                            <div class="card-body">
-                                                <p class="text-dark mb-0">{{ session.session_notes|linebreaks }}</p>
-                                            </div>
-                                        </div>
+                                        <p class="text-white">{{ session.session_notes|linebreaks }}</p>
                                     {% else %}
-                                        <p class="text-muted fst-italic">No session notes provided</p>
+                                        <p class="text-white fst-italic">No session notes provided</p>
                                     {% endif %}
                                 </div>
                             </div>

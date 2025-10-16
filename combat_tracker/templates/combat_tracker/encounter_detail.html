@@ -34,44 +34,34 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <h6 class="text-primary">
+                                    <h6 class="text-purple">
                                         <i class="fas fa-book"></i> Campaign
                                     </h6>
-                                    <p class="text-muted">
+                                    <p class="text-white">
                                         <a href="{% url 'campaigns:campaign_detail' encounter.campaign.pk %}"
                                            class="text-decoration-none">{{ encounter.campaign.title }}</a>
                                     </p>
                                 </div>
                                 <div class="mb-3">
-                                    <h6 class="text-primary">
+                                    <h6 class="text-purple">
                                         <i class="fas fa-calendar"></i> Created
                                     </h6>
-                                    <p class="text-muted">{{ encounter.created_at|date:"F d, Y" }}</p>
+                                    <p class="text-white">{{ encounter.created_at|date:"F d, Y" }}</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <h6 class="text-primary">
-                                        <i class="fas fa-scroll"></i> Description
-                                    </h6>
-                                    {% if encounter.description %}
-                                        <div class="card bg-light">
-                                            <div class="card-body">
-                                                <p class="text-dark mb-0">{{ encounter.description|linebreaks }}</p>
-                                            </div>
-                                        </div>
-                                    {% else %}
-                                        <p class="text-muted fst-italic">No description provided</p>
-                                    {% endif %}
-                                </div>
+                        {% if encounter.description %}
+                            <div class="mb-3">
+                                <h6 class="text-purple">
+                                    <i class="fas fa-scroll"></i> Description
+                                </h6>
+                                <p class="text-white">{{ encounter.description|linebreaks }}</p>
                             </div>
-                        </div>
+                        {% endif %}
                         <!-- Players Combat Stats -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h5 class="text-primary mb-3">
+                                <h5 class="text-purple mb-3">
                                     <i class="fas fa-users"></i> Players Combat Stats
                                 </h5>
                             </div>
@@ -110,7 +100,7 @@
                         <!-- Monsters Combat Stats -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h5 class="text-primary mb-3">
+                                <h5 class="text-purple mb-3">
                                     <i class="fas fa-dragon"></i> Monsters Combat Stats
                                 </h5>
                             </div>

@@ -3,58 +3,68 @@
     Update HP: {{ participant.name }} - D&D Tracker
 {% endblock title %}
 {% block content %}
-    <div class="container-fluid mt-4 mb-5 px-4">
-        <div class="row justify-content-center">
-            <div class="col-lg-6">
+    <div class="container-fluid mt-4 mb-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="auth-header mb-4">
+                    <h2>
+                        <i class="fas fa-heart"></i> Update HP: {{ participant.name }}
+                    </h2>
+                    <p>Track damage or healing for this participant</p>
+                </div>
                 <div class="card">
-                    <div class="card-header {% if participant.participant_type == 'player' %}bg-primary{% else %}bg-danger{% endif %} text-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-heart"></i> Update HP: {{ participant.name }}
+                    <div class="card-header">
+                        <h5>
+                            <i class="fas fa-heart"></i> HP Update Details
                         </h5>
                     </div>
                     <div class="card-body">
                         <div class="alert alert-info mb-4">
-                            <h6 class="alert-heading">Monster Status</h6>
-                            <p class="mb-0">
+                            <h6 class="alert-heading text-purple">Monster Status</h6>
+                            <p class="mb-0 text-white">
                                 <strong>Current HP:</strong> {{ participant.current_hp }}/{{ participant.max_hp }}
                                 {% if participant.is_dead %}<span class="badge bg-danger ms-2">Dead</span>{% endif %}
                             </p>
-                            <small class="text-muted">Note: Players manage their own HP</small>
+                            <small class="text-white">Note: Players manage their own HP</small>
                         </div>
                         <form method="post">
                             {% csrf_token %}
-                            <div class="mb-3">
-                                <label for="{{ form.change_type.id_for_label }}" class="form-label">
-                                    <i class="fas fa-arrow-up-down"></i> Change Type
-                                </label>
-                                {{ form.change_type }}
-                                {% if form.change_type.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {% for error in form.change_type.errors %}{{ error }}{% endfor %}
-                                    </div>
-                                {% endif %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.change_type.id_for_label }}" class="form-label">
+                                        <i class="fas fa-arrow-up-down"></i> Change Type <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.change_type }}
+                                    {% if form.change_type.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.change_type.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.amount.id_for_label }}" class="form-label">
+                                        <i class="fas fa-calculator"></i> Amount <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.amount }}
+                                    {% if form.amount.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.amount.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="{{ form.amount.id_for_label }}" class="form-label">
-                                    <i class="fas fa-calculator"></i> Amount
-                                </label>
-                                {{ form.amount }}
-                                {% if form.amount.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {% for error in form.amount.errors %}{{ error }}{% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="mb-3">
-                                <label for="{{ form.notes.id_for_label }}" class="form-label">
-                                    <i class="fas fa-sticky-note"></i> Notes (Optional)
-                                </label>
-                                {{ form.notes }}
-                                {% if form.notes.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {% for error in form.notes.errors %}{{ error }}{% endfor %}
-                                    </div>
-                                {% endif %}
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label for="{{ form.notes.id_for_label }}" class="form-label">
+                                        <i class="fas fa-sticky-note"></i> Notes (Optional)
+                                    </label>
+                                    {{ form.notes }}
+                                    {% if form.notes.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.notes.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <a href="{% url 'combat_tracker:combat_interface' encounter.pk %}"

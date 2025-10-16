@@ -17,7 +17,7 @@
                         <h5>
                             <i class="fas fa-sword"></i> {{ encounter.name }}
                         </h5>
-                        <p class="mb-0 text-muted">
+                        <p class="mb-0 text-white">
                             <strong>Campaign:</strong> {{ encounter.campaign.title }}
                         </p>
                     </div>
@@ -26,13 +26,13 @@
                             {% csrf_token %}
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h6 class="text-primary mb-3">
+                                    <h6 class="text-purple mb-3">
                                         <i class="fas fa-users"></i> Player Initiative Rolls
                                     </h6>
                                     {% for player in encounter.players.all %}
                                         <div class="mb-3">
                                             <label for="player_{{ player.id }}_initiative" class="form-label">
-                                                {{ player.character_name }} ({{ player.player_name }})
+                                                <i class="fas fa-user"></i> {{ player.character_name }} ({{ player.player_name }}) <span class="text-danger">*</span>
                                             </label>
                                             <input type="number"
                                                    class="form-control"
@@ -46,12 +46,14 @@
                                     {% endfor %}
                                 </div>
                                 <div class="col-md-6">
-                                    <h6 class="text-primary mb-3">
+                                    <h6 class="text-purple mb-3">
                                         <i class="fas fa-dragon"></i> Monster Initiative Rolls
                                     </h6>
                                     {% for monster in encounter.monsters.all %}
                                         <div class="mb-3">
-                                            <label for="monster_{{ monster.id }}_initiative" class="form-label">{{ monster.name }}</label>
+                                            <label for="monster_{{ monster.id }}_initiative" class="form-label">
+                                                <i class="fas fa-dragon"></i> {{ monster.name }} <span class="text-danger">*</span>
+                                            </label>
                                             <input type="number"
                                                    class="form-control"
                                                    id="monster_{{ monster.id }}_initiative"

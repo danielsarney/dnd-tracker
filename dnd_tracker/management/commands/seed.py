@@ -21,7 +21,7 @@ Features:
 """
 
 from django.core.management.base import BaseCommand
-from django.db import transaction
+from django.db import transaction, connection
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import date, timedelta
@@ -69,6 +69,15 @@ class Command(BaseCommand):
             self.style.SUCCESS("🎲 Starting D&D Tracker Database Seeding...")
         )
 
+        # Check if migrations have been applied
+        if not self._check_migrations_applied():
+            self.stdout.write(
+                self.style.ERROR("❌ Database migrations have not been applied!")
+            )
+            self.stdout.write(self.style.WARNING("💡 Please run migrations first:"))
+            self.stdout.write(self.style.WARNING("   python manage.py migrate"))
+            return
+
         try:
             with transaction.atomic():
                 if clear_data:
@@ -93,24 +102,55 @@ class Command(BaseCommand):
 
         except Exception as e:
             self.stdout.write(self.style.ERROR(f"❌ Error during seeding: {str(e)}"))
+            self.stdout.write(
+                self.style.WARNING("💡 Tip: Make sure you've run migrations first:")
+            )
+            self.stdout.write(self.style.WARNING("   python manage.py migrate"))
             raise
 
     def clear_existing_data(self):
         """Clear ALL existing data from all models"""
         self.stdout.write("🧹 Clearing ALL existing data...")
 
-        # Clear in reverse dependency order to avoid foreign key constraints
-        CombatParticipant.objects.all().delete()
-        CombatSession.objects.all().delete()
-        Encounter.objects.all().delete()
-        Session.objects.all().delete()
-        Player.objects.all().delete()
-        Monster.objects.all().delete()
-        Campaign.objects.all().delete()
-        TwoFactorCode.objects.all().delete()
-        User.objects.all().delete()
+        # Check if tables exist before trying to clear them
+        tables_to_clear = [
+            ("CombatParticipant", CombatParticipant),
+            ("CombatSession", CombatSession),
+            ("Encounter", Encounter),
+            ("Session", Session),
+            ("Player", Player),
+            ("Monster", Monster),
+            ("Campaign", Campaign),
+            ("TwoFactorCode", TwoFactorCode),
+            ("User", User),
+        ]
 
-        self.stdout.write("   ✓ ALL existing data cleared")
+        cleared_count = 0
+        for table_name, model_class in tables_to_clear:
+            if self._table_exists(model_class._meta.db_table):
+                try:
+                    count = model_class.objects.count()
+                    if count > 0:
+                        model_class.objects.all().delete()
+                        self.stdout.write(
+                            f"   ✓ Cleared {count} records from {table_name}"
+                        )
+                        cleared_count += count
+                    else:
+                        self.stdout.write(f"   ✓ {table_name} table is already empty")
+                except Exception as e:
+                    self.stdout.write(
+                        f"   ⚠️  Warning: Could not clear {table_name}: {str(e)}"
+                    )
+            else:
+                self.stdout.write(
+                    f"   ℹ️  {table_name} table does not exist yet (skipping)"
+                )
+
+        if cleared_count > 0:
+            self.stdout.write(f"   ✓ Cleared {cleared_count} total records")
+        else:
+            self.stdout.write("   ✓ No existing data to clear")
 
     def seed_users(self):
         """Create test users with different configurations"""
@@ -910,3 +950,31 @@ class Command(BaseCommand):
         )
 
         self.stdout.write("   ✓ Additional random data created successfully")
+
+    def _table_exists(self, table_name):
+        """Check if a database table exists"""
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT EXISTS (
+                    SELECT FROM information_schema.tables 
+                    WHERE table_name = %s
+                );
+            """,
+                [table_name],
+            )
+            return cursor.fetchone()[0]
+
+    def _check_migrations_applied(self):
+        """Check if essential migrations have been applied by verifying key tables exist"""
+        essential_tables = [
+            User._meta.db_table,
+            Campaign._meta.db_table,
+            Player._meta.db_table,
+            Monster._meta.db_table,
+        ]
+
+        for table_name in essential_tables:
+            if not self._table_exists(table_name):
+                return False
+        return True

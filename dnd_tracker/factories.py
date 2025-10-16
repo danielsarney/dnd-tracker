@@ -119,7 +119,7 @@ class MonsterFactory(factory.django.DjangoModelFactory):
     initiative = factory.Faker(
         "random_element", elements=["+0", "+1", "+2", "+3", "+4", "+5"]
     )
-    hp = factory.Faker("random_int", min=10, max=200)
+    hp = factory.Faker("text", max_nb_chars=100)
     speed = factory.Faker(
         "random_element", elements=["30 ft", "40 ft", "50 ft", "60 ft"]
     )

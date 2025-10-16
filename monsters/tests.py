@@ -563,7 +563,7 @@ class MonsterViewTest(TestCase):
         response = self.client.post(reverse("monsters:monster_create"), form_data)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "form")
-        self.assertContains(response, "error")
+        self.assertContains(response, "This field is required.")
 
     def test_monster_create_view_unauthenticated(self):
         """Test monster create view redirects for unauthenticated user"""

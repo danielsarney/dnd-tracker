@@ -327,7 +327,7 @@ class PlayerViewTest(TestCase):
         response = self.client.post(reverse("players:player_create"), form_data)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "form")
-        self.assertContains(response, "error")
+        self.assertContains(response, "This field is required.")
 
     def test_player_create_view_unauthenticated(self):
         """Test player create view redirects for unauthenticated user"""

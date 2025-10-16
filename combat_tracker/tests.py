@@ -72,8 +72,12 @@ class CombatTrackerModelTest(TestCase):
 
     def test_combat_session_ordering(self):
         """Test that combat sessions are ordered by started_at descending"""
-        session1 = CombatSessionFactory(encounter=self.encounter)
-        session2 = CombatSessionFactory(encounter=self.encounter)
+        # Create different encounters for each session since CombatSession has OneToOneField with Encounter
+        encounter1 = EncounterFactory(campaign=self.campaign)
+        encounter2 = EncounterFactory(campaign=self.campaign)
+
+        session1 = CombatSessionFactory(encounter=encounter1)
+        session2 = CombatSessionFactory(encounter=encounter2)
 
         sessions = CombatSession.objects.all()
         # Most recent first
@@ -271,10 +275,16 @@ class CombatTrackerFormTest(TestCase):
 
     def test_initiative_form_valid_data(self):
         """Test InitiativeForm with valid data"""
-        form_data = {
-            f"player_{self.player.id}_initiative": 15,
-            f"monster_{self.monster.id}_initiative": 12,
-        }
+        # Get all players and monsters from the encounter
+        players = list(self.encounter.players.all())
+        monsters = list(self.encounter.monsters.all())
+
+        form_data = {}
+        for player in players:
+            form_data[f"player_{player.id}_initiative"] = 15
+        for monster in monsters:
+            form_data[f"monster_{monster.id}_initiative"] = 12
+
         form = InitiativeForm(self.encounter, data=form_data)
         self.assertTrue(form.is_valid())
 
@@ -491,10 +501,17 @@ class CombatTrackerViewTest(TestCase):
     def test_start_encounter_view_post_valid(self):
         """Test start encounter view POST with valid data"""
         self.client.force_login(self.user)
-        form_data = {
-            f"player_{self.player.id}_initiative": 15,
-            f"monster_{self.monster.id}_initiative": 12,
-        }
+
+        # Get all players and monsters from the encounter
+        players = list(self.encounter.players.all())
+        monsters = list(self.encounter.monsters.all())
+
+        form_data = {}
+        for player in players:
+            form_data[f"player_{player.id}_initiative"] = 15
+        for monster in monsters:
+            form_data[f"monster_{monster.id}_initiative"] = 12
+
         response = self.client.post(
             reverse("combat_tracker:start_encounter", kwargs={"pk": self.encounter.pk}),
             form_data,
@@ -556,9 +573,14 @@ class CombatTrackerViewTest(TestCase):
         )
         self.assertEqual(response.status_code, 302)  # Redirect after turn advancement
 
-        # Check that turn was marked as completed
-        updated_participant = CombatParticipant.objects.get(pk=participant.pk)
-        self.assertTrue(updated_participant.turn_completed)
+        # Check that combat session was updated (round incremented, turn index reset)
+        updated_session = CombatSession.objects.get(pk=combat_session.pk)
+        self.assertEqual(
+            updated_session.current_round, 2
+        )  # Should be round 2 after completing round 1
+        self.assertEqual(
+            updated_session.current_turn_index, 0
+        )  # Should reset to 0 for new round
 
     def test_end_combat_view_requires_login(self):
         """Test that end combat view requires login"""

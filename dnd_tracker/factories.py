@@ -119,9 +119,7 @@ class MonsterFactory(factory.django.DjangoModelFactory):
     initiative = factory.Faker(
         "random_element", elements=["+0", "+1", "+2", "+3", "+4", "+5"]
     )
-    hp = factory.LazyFunction(
-        lambda: f"{factory.Faker('random_int', min=10, max=200).generate()}"
-    )
+    hp = factory.Faker("random_int", min=10, max=200)
     speed = factory.Faker(
         "random_element", elements=["30 ft", "40 ft", "50 ft", "60 ft"]
     )
@@ -248,8 +246,8 @@ class CombatSessionFactory(factory.django.DjangoModelFactory):
         model = CombatSession
 
     encounter = factory.SubFactory(EncounterFactory)
-    current_round = factory.Faker("random_int", min=1, max=10)
-    current_turn_index = factory.Faker("random_int", min=0, max=5)
+    current_round = 1
+    current_turn_index = 0
     is_active = True
 
 

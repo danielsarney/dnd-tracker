@@ -31,8 +31,7 @@
           D&D Tracker
         </a>
         {% if user.is_authenticated %}
-          {% if user.two_factor_enabled and not request.resolver_match.url_name ==
-            'verify_2fa' and not request.resolver_match.url_name == 'setup_2fa' %}
+          {% if user.two_factor_enabled and not request.resolver_match.url_name == 'verify_2fa' and not request.resolver_match.url_name == 'setup_2fa' %}
             <button class="navbar-toggler"
                     type="button"
                     data-bs-toggle="collapse"

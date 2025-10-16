@@ -44,7 +44,7 @@ def login_view(request):
                     request.session["user_id"] = user.id
                     return redirect("accounts:setup_2fa")
             else:
-                pass  # Invalid credentials - no flash message
+                form.add_error(None, "Invalid email or password")
     else:
         form = LoginForm()
 
@@ -73,7 +73,7 @@ def verify_2fa_view(request):
                 del request.session["user_id"]
                 return redirect("accounts:profile")
             else:
-                pass  # Invalid verification code - no flash message
+                form.add_error(None, "Invalid verification code")
     else:
         form = TwoFactorForm()
 
@@ -81,15 +81,22 @@ def verify_2fa_view(request):
 
 
 def setup_2fa_view(request):
-    """Setup 2FA for user (can be accessed without login for mandatory setup)"""
-    user_id = request.session.get("user_id")
-    if not user_id:
-        return redirect("accounts:login")
+    """Setup 2FA for user"""
+    # Check if user is logged in normally
+    if request.user.is_authenticated:
+        user = request.user
+    else:
+        # Check if user is in session (for mandatory setup after login)
+        user_id = request.session.get("user_id")
+        if not user_id:
+            from django.contrib.auth.views import redirect_to_login
 
-    try:
-        user = User.objects.get(id=user_id)
-    except User.DoesNotExist:
-        return redirect("accounts:login")
+            return redirect_to_login(request.get_full_path())
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return redirect("accounts:login")
 
     if request.method == "POST":
         form = TwoFactorForm(request.POST)
@@ -99,10 +106,11 @@ def setup_2fa_view(request):
                 user.two_factor_enabled = True
                 user.save()
                 login(request, user)
-                del request.session["user_id"]
+                if "user_id" in request.session:
+                    del request.session["user_id"]
                 return redirect("accounts:profile")
             else:
-                pass  # Invalid verification code - no flash message
+                form.add_error(None, "Invalid verification code")
     else:
         form = TwoFactorForm()
 

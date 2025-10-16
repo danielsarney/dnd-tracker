@@ -10,9 +10,17 @@
                     <div class="auth-card">
                         <div class="auth-header">
                             <h2>
-                                <i class="fas fa-shield-alt"></i> Enable Two-Factor Authentication
+                                <i class="fas fa-shield-alt"></i> Setup Two-Factor Authentication
                             </h2>
                             <p>Secure your account with 2FA</p>
+                        </div>
+                        <div class="mb-4">
+                            <h5>Setup Instructions</h5>
+                            <ol>
+                                <li>Install an authenticator app on your phone (Google Authenticator, Authy, etc.)</li>
+                                <li>Scan the QR code below with your authenticator app</li>
+                                <li>Enter the 6-digit code from your app to verify setup</li>
+                            </ol>
                         </div>
                         <div class="text-center mb-4">
                             <div class="qr-code-container">
@@ -25,6 +33,11 @@
                         </div>
                         <form method="post">
                             {% csrf_token %}
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
                             <div class="mb-3">
                                 <label for="{{ form.code.id_for_label }}" class="form-label">
                                     <i class="fas fa-key"></i> Verification Code

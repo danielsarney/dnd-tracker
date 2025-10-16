@@ -256,8 +256,20 @@ class SessionViewTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.session.campaign.title)
-        self.assertContains(response, self.session.planning_notes)
-        self.assertContains(response, self.session.session_notes)
+
+        # Check for planning notes content - the template uses |linebreaks filter which converts \n to <br>
+        # So we need to check for the content with HTML line breaks
+        planning_notes_with_html_breaks = self.session.planning_notes.replace(
+            "\n", "<br>"
+        )
+        self.assertContains(response, planning_notes_with_html_breaks)
+
+        # Check for session notes content - the template uses |linebreaks filter which converts \n to <br>
+        # So we need to check for the content with HTML line breaks
+        session_notes_with_html_breaks = self.session.session_notes.replace(
+            "\n", "<br>"
+        )
+        self.assertContains(response, session_notes_with_html_breaks)
 
     def test_session_detail_view_nonexistent(self):
         """Test session detail view with nonexistent session"""
